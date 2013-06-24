@@ -5,6 +5,8 @@ Penguicon Scheduling Web App
 
 First, an event submission/feedback website. Later there will be a site to assign rooms and times to the events. These sites will interact but will be two different sites.
 
+An important schema design element is the distinction between actual events and merely requests for events. 
+
 USER STORIES:
 
 001 A form to submit an event suggestion. A message at the top reads “this form doesn’t work yet”. -DONE
