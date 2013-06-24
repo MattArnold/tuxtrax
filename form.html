@@ -1,0 +1,163 @@
+<html>
+<head>
+	<script src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript">
+		// blurb should have 700 characters max. title should have 80 characters max. person should have 24 characters max.
+		function countChar(thebox, limit) {
+			var len = thebox.value.length;
+			if (len >= limit) {
+				thebox.value = thebox.value.substring(0, limit);
+			} else {
+				remaining = limit - len;
+				$('#charnum').text(remaining + " characters remaining in " + thebox.name);
+			}
+		};
+		var people = 0;
+	</script>
+	<script src="js/jquery.dropkick-1.0.0.js"></script>
+	<link href='mystyles.css' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<div class="header">Penguin T.R.A.X. (Tentative Requested Activity Xperiment)</div>
+<form name="eventsubmission" action="insert.php" method="post" >
+<div class="section where" >
+	<div class="header">
+		WHERE
+	</div>
+	<div class="question" id="type" >
+		<select value="" class="span3" tabindex="1" name="typelist">
+            <option value="0">Type of room layout</option>
+            <option value="1">An audience sits and watches a presenter talk.</option>
+            <option value="2">Hands-on participatory activity.</option>
+            <option value="3">Open discussion with no presenter or organizer.</option>
+            <option value="4">Tabletop game.</option>
+            <option value="5">Concert, skit, movie, or other onstage performance.</option>
+            <option value="6">Activity located throughout the hotel or elsewhere.</option>
+        </select>
+	</div>
+	<div class="question" >
+	    <label for="projector"><input type="checkbox" value="" id="projector">Projector</label>
+	</div>
+	<div class="question" id="" >
+	    <label for="microphone"><input type="checkbox" value="" id="microphone"> Microphone</label>
+	</div>
+	<div class="question" id="" >
+	    <label for="soundsystem"><input type="checkbox" value="" id="soundsystem"> Sound system</label>
+	</div>
+	<div class="question" id="" >
+		<label for="water"><input type="checkbox" value="" id="water"> Drinking water</label>
+	</div>
+	<div class="question" id="" >
+		<label for="water"><input type="checkbox" value="" id="water"> Quiet (no airwalls)</label>
+	</div>
+	<div class="question" id="" >
+		Round tables:
+		<select value="" class="span3" tabindex="" name="roundtables">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="5">more</option>
+        </select>
+		Long tables:
+		<select value="" class="span3" tabindex="" name="longtables">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="5">more</option>
+        </select>
+	</div>
+	<div class="question" >
+		<textarea name="facilityrequest" rows="1" cols="50" />other facility requests</textarea> <br />
+	</div>
+</div>
+<div class="section when" >
+	<div class="header">
+		WHEN
+	</div>
+	<div class="question" >
+		Duration: 
+			<select value="" class="span3" tabindex="2" name="repeatlist">
+				<option value="1">50 mins</option>
+				<option value="2">1 hr 50 mins</option>
+				<option value="3">2 hrs 50 mins</option>
+				<option value="4">more</option>
+				<option value="5">all weekend</option>
+			</select><br />
+	</div>
+	<div class="question" >
+		Setup time: 
+			<select value="" class="span3" tabindex="2" name="repeatlist">
+				<option value="0">No</option>
+				<option value="1">1 hour</option>
+				<option value="2">2 hours</option>
+				<option value="3">more</option>
+			</select><br />
+	</div>
+	<div class="question" >
+		Repeat:
+		<select value="" class="span3" tabindex="2" name="repeatlist">
+			<option value="1">No</option>
+			<option value="2">twice</option>
+			<option value="3">thrice</option>
+			<option value="4">more</option>
+		</select><br />
+	</div>
+	<div class="question" >
+		<textarea name="timerequest" rows="1" cols="50" />other time requests</textarea> <br />
+	</div>
+</div>
+<div class="section who" id="pp">
+	<div class="header">
+		WHO
+	</div>
+	Your email:
+	<input name="email" type="text" size="24" />
+	Program Participant(s):
+	<input name="person" type="text" size="24" onkeyup="countChar(this, 24)" />
+	<div id="newperson" >+ someone else</div>
+</div>
+<div class="section what" >
+	<div class="header">
+		WHAT
+	</div>
+	<div class="question">
+		The following information will appear to attendees on the website and in the schedule book, so please do not leave comments here for the programming team:
+	</div>
+	<div class="question" >
+		Title: <br />
+		<textarea name="title" id="title" rows="2" cols="36" onkeyup="countChar(this, 80)" />try typing something</textarea>
+	</div>
+	<div class="question" >
+		Descriptive blurb: <br />
+		<textarea name="description" id="blurb" rows="8" cols="72" onkeyup="countChar(this, 700)">see what happens when you type something here</textarea>
+	</div>
+</div>
+<div class="section" >
+	<div class="header">
+		WHY NOT
+	</div>
+	<div class="question">
+	<input type="button" value="SUBMIT" class="buttons" style="color:#ecf0f1; background-color:#e74c3c;" onClick="location.href='http://gort.elplatt.com/~nemorathwald/penguicon/'" />	
+	</div>
+	<div class="question">
+		<span id="charnum" ></span>
+	</div>
+</div>
+<div class="section"><span style="color:#7f8c8d;">
+Work in progress 5/8/2013. Right now this button just goes back to the listing. </span><br />
+</div>
+</form>
+<script type="text/javascript">
+	var people = 0;
+	$("#newperson").click(function() {
+		if(people<8){
+			$("#pp").append('<input name="person" type="text" size="24" onkeyup="countChar(this, 24)" />');
+			people = people + 1;
+		}
+	});
+</script>
+</body>
+</html>
