@@ -5,7 +5,7 @@ Penguicon Scheduling Web App
 
 First, an event submission/feedback website. Later there will be a site to assign rooms and times to the events. These sites will interact but will be two different sites.
 
-An important schema design element is the distinction between actual events and merely requests for events. 
+An important schema design element is the distinction between actual events and merely requests for events. See the milestone "Site Moves Event Requests Through Statuses" for more details.
 
 USER STORIES:
 
