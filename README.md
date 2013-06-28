@@ -31,11 +31,11 @@ USER STORIES:
 
 011 Add a "confirmed" button on each entry that the concom can see. The "confirmed" button is only there if the "followed up" button was already clicked. 
 
-012 When a concom clicks "confirmed" on an event, it now shows up as red. Put a line at the top of the page saying "Red events are confirmed." 
+012 When a concom clicks "confirmed" on an event, it now shows up as purple. Put a line at the top of the page saying "Purple events are confirmed." 
 
 013 To reject an event, when the concom clicks "hide" on an event, it is no longer displayed on the page.
 
-014 Hidden events are now displayed on a separate page with a link from the main page. This page starts with "We regret that for various reasons, we can’t use these event suggestions this year. Maybe next year! Also, some of them may be here in error, in which case bear with us while we fix it."
+014 Hidden events are now displayed on a separate page with a link from the main page. Their color changes to red when hidden. This page starts with "We regret that for various reasons, we can’t use these event suggestions this year. Maybe next year! Also, some of them may be here in error, in which case bear with us while we fix it."
 
 015 Add a "Oops, unhide" button on each entry on the page of rejected events. Only the concom can see the button. It puts the event back on the main page. 
 
