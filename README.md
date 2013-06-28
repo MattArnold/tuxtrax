@@ -11,7 +11,7 @@ USER STORIES:
 
 001 A form to submit an event suggestion. A message at the top reads “this form doesn’t work yet”. -DONE
 
-002 Now the form saves to a database. The message now reads “we’re going to make these form results publicly visible soon.” 
+002 Now the form saves to a database. The message now reads “we’re going to make these form results publicly visible soon.” - DONE (Although it's just hacked together with a PHP script.)
 
 003 A public-facing webpage lists every entry in the database. At the top of the page is the headline “Penguicon Events Suggested So Far!” Next to that is “Suggest An Event” with a link to the form. For now, just manually put the database on the page.
  
