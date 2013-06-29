@@ -1,0 +1,16 @@
+<!doctype html>
+<title>TRAX</title>
+<head>
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$(".event").hide();
+			$("#report").hide();
+		} );
+	</script>
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">  
+	<link href="{{ url_for('static', filename='mystyles2.css') }}" rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+</head>
+  {% block body %}{% endblock %}
+</div>

@@ -1,0 +1,237 @@
+@media screen and (orientation:landscape) {
+.tag { font-size:small;}	
+.withmenu { margin-left: 10em; }
+#leftmenu {
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 10em;
+	z-index: 2; }
+#penguin {
+	top:.2em; }
+}
+@media screen and (max-device-width:1281px) and (orientation:landscape){
+.tag { font-size:100%;}	
+}
+@media screen and (max-device-width:769px) and (orientation:portrait){
+.tag { font-size:x-large;}	
+.withmenu { margin-left: 0;}
+#leftmenu {
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 2; }
+#spacer,#leftmenu {
+	height:18em; }
+#penguin {
+	top:12.2em; }
+}
+body {
+	background-color: #2c3e50;
+	color: #34495e;
+	font-family: "Droid Sans";
+	font-style: bold; }
+
+/* Representing different kinds of database fields for an event */	
+
+
+.where { background-color: #e67e22; }
+ 
+.when { background-color: #9b59b6; }
+ 
+.who { background-color: #1abc9c; }
+ 
+.what { background-color: #bdc3c7; }
+
+.emp { font-weight: 600; }
+ 
+.section {
+	clear: both;
+	overflow: hidden;
+	padding: 10px; }
+ 
+.tag,.unit,.answer,.header {
+	float: left;
+	margin: .2em;
+	padding: .2em;
+	width: auto; }
+
+
+/* Main page */
+
+.header {
+	color: #ecf0f1;
+	font-size: x-large;
+	font-weight: 700;
+	opacity: .5;
+	margin-right: 200px; }
+
+#report { 
+	background-color: #bdc3c7;
+	position: relative; }
+
+.event {
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	float: left;
+	padding: 6px;
+	background-color: #ecf0f1;
+	margin: 6px;
+	border: .3 em solid #ecf0f1; }
+	
+.column {
+	width:49%;
+	float:left;
+}
+
+.event:hover {
+	border: .3 em solid #2c3e50; }
+
+#info {
+	background-color: #7f8c8d;
+	clear: left;
+	color: #2c3e50;
+	float: left;
+	padding: .5em;
+	position: relative;
+	margin-top: .4em; }
+ 
+info:after {
+	border-bottom: .5em solid transparent;
+	border-left: 1em solid red;
+	border-top: .5em solid transparent;
+	content: "";
+	height: 0;
+	left: 100px;
+	position: absolute;
+	top: 0;
+	width: 0;
+	z-index: 10; }
+ 
+#penguin {
+	background: url(/images/penguintrax.png) no-repeat center center;
+	height: 194px;
+	position: absolute;
+	right: 1em;
+	width: 194px;
+	z-index: -1; }
+ 
+/* Tags */
+
+#tabs {
+	clear: right;
+	left: 0;
+	top: 0;
+	width: 12em; }
+
+#hidenav {
+	float: left;
+	width: 2em; }
+ 
+#hidenav { background: #2c3e50 url(/images/collapseexpandicon.png) no-repeat center center; }
+ 
+.include { background: #ecf0f1; }
+ 
+.exclude { 
+	background: #34495e;
+	color: #95a5a6;}
+ 
+.require { background: #2ecc71; }
+
+.off { background: #7f8c8d; }
+
+.or,.not,.and { text-align: center; }
+
+.tag{
+	-moz-border-radius: .8em;
+	-webkit-border-radius: .8em;
+	border-radius: .8em; }
+
+.spaninclude {
+	background: #3498db;
+	text-indent: 24px;
+	padding-left:.2em;
+	padding-right:.2em; }
+ 
+.spanexclude { background: #f39c12; }
+ 
+.spanrequire {
+	background: #2ecc71;
+	text-indent: 24px; }
+
+/* "Request an Event" Form */
+
+textarea { height: auto; }
+
+#request, #rsvpbutton {
+	float: left;
+	width: auto; }
+ 
+#charnum { color: #bdc3c7; }
+ 
+#newperson {
+	background-color: #16a085;
+	float: right;
+	width: 8em; }
+ 
+label,input,button,select,textarea {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px; }
+ 
+input,button,select,textarea {
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	background-color: #ecf0f1;
+	border: none;
+	border-radius: 5px;
+	color: #34495e;
+	font-family: "Droid Sans", Tahoma, Arial, Verdana, sans-serif; }
+ 
+.buttons a,.buttons {
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	background-color: #e74c3c;
+	border: 1px solid #dedede;
+	border-left: 1px solid #eee;
+	border-radius: 10px;
+	border-top: 1px solid #eee;
+	color: #ecf0f1;
+	cursor: pointer;
+	display: block;
+	font-weight: 700;
+	line-height: 130%;
+	margin: 0 7px 0 0;
+	padding: 5px 10px 6px 7px;
+	text-decoration: none; }
+
+.selectlist { width: 220px; }
+
+.tagshape {
+	position:relative;
+	height: 1em;
+	width: 2em;
+	float: left;
+}
+.tagshape::before {
+	position:absolute;
+	top:0;
+	left:-1 em;
+	height:.3em;
+	width:.3em;
+    content: "";
+	border: .3em solid #3498db;
+	border-radius: 1em 1em 1em 1em;
+}
+.tagshape::after {
+	position:absolute;
+	top:0;
+	right:0;
+	height:.45em;
+	width:1.2em;
+    content: "";
+	border: .2em solid #3498db;
+	background:#3498db;
+}
