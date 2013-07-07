@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Jinja Changelog &mdash; Jinja Documentation</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <style type="text/css">
+    .syntax  { background: #ffffff; }
+.syntax .c { color: #888888 } /* Comment */
+.syntax .err { color: #a61717; background-color: #e3d2d2 } /* Error */
+.syntax .k { color: #008800; font-weight: bold } /* Keyword */
+.syntax .cm { color: #888888 } /* Comment.Multiline */
+.syntax .cp { color: #cc0000; font-weight: bold } /* Comment.Preproc */
+.syntax .c1 { color: #888888 } /* Comment.Single */
+.syntax .cs { color: #cc0000; font-weight: bold; background-color: #fff0f0 } /* Comment.Special */
+.syntax .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
+.syntax .ge { font-style: italic } /* Generic.Emph */
+.syntax .gr { color: #aa0000 } /* Generic.Error */
+.syntax .gh { color: #303030 } /* Generic.Heading */
+.syntax .gi { color: #000000; background-color: #ddffdd } /* Generic.Inserted */
+.syntax .go { color: #888888 } /* Generic.Output */
+.syntax .gp { color: #555555 } /* Generic.Prompt */
+.syntax .gs { font-weight: bold } /* Generic.Strong */
+.syntax .gu { color: #606060 } /* Generic.Subheading */
+.syntax .gt { color: #aa0000 } /* Generic.Traceback */
+.syntax .kc { color: #008800; font-weight: bold } /* Keyword.Constant */
+.syntax .kd { color: #008800; font-weight: bold } /* Keyword.Declaration */
+.syntax .kp { color: #008800 } /* Keyword.Pseudo */
+.syntax .kr { color: #008800; font-weight: bold } /* Keyword.Reserved */
+.syntax .kt { color: #888888; font-weight: bold } /* Keyword.Type */
+.syntax .m { color: #0000DD; font-weight: bold } /* Literal.Number */
+.syntax .s { color: #dd2200; background-color: #fff0f0 } /* Literal.String */
+.syntax .na { color: #336699 } /* Name.Attribute */
+.syntax .nb { color: #003388 } /* Name.Builtin */
+.syntax .nc { color: #bb0066; font-weight: bold } /* Name.Class */
+.syntax .no { color: #003366; font-weight: bold } /* Name.Constant */
+.syntax .nd { color: #555555 } /* Name.Decorator */
+.syntax .ne { color: #bb0066; font-weight: bold } /* Name.Exception */
+.syntax .nf { color: #0066bb; font-weight: bold } /* Name.Function */
+.syntax .nl { color: #336699; font-style: italic } /* Name.Label */
+.syntax .nn { color: #bb0066; font-weight: bold } /* Name.Namespace */
+.syntax .py { color: #336699; font-weight: bold } /* Name.Property */
+.syntax .nt { color: #bb0066; font-weight: bold } /* Name.Tag */
+.syntax .nv { color: #336699 } /* Name.Variable */
+.syntax .ow { color: #008800 } /* Operator.Word */
+.syntax .w { color: #bbbbbb } /* Text.Whitespace */
+.syntax .mf { color: #0000DD; font-weight: bold } /* Literal.Number.Float */
+.syntax .mh { color: #0000DD; font-weight: bold } /* Literal.Number.Hex */
+.syntax .mi { color: #0000DD; font-weight: bold } /* Literal.Number.Integer */
+.syntax .mo { color: #0000DD; font-weight: bold } /* Literal.Number.Oct */
+.syntax .sb { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Backtick */
+.syntax .sc { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Char */
+.syntax .sd { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Doc */
+.syntax .s2 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Double */
+.syntax .se { color: #0044dd; background-color: #fff0f0 } /* Literal.String.Escape */
+.syntax .sh { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Heredoc */
+.syntax .si { color: #3333bb; background-color: #fff0f0 } /* Literal.String.Interpol */
+.syntax .sx { color: #22bb22; background-color: #f0fff0 } /* Literal.String.Other */
+.syntax .sr { color: #008800; background-color: #fff0ff } /* Literal.String.Regex */
+.syntax .s1 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Single */
+.syntax .ss { color: #aa6600; background-color: #fff0f0 } /* Literal.String.Symbol */
+.syntax .bp { color: #003388 } /* Name.Builtin.Pseudo */
+.syntax .vc { color: #336699 } /* Name.Variable.Class */
+.syntax .vg { color: #dd7700 } /* Name.Variable.Global */
+.syntax .vi { color: #3333bb } /* Name.Variable.Instance */
+.syntax .il { color: #0000DD; font-weight: bold } /* Literal.Number.Integer.Long */
+  </style>
+</head>
+<body>
+  <div id="content">
+    
+      <h1 class="heading"><span>Jinja</span></h1>
+      <h2 class="subheading">Jinja Changelog</h2>
+    
+    
+    <div id="toc">
+      <h2>Navigation</h2>
+      <ul>
+        <li><a href="index.html">back to index</a></li>
+      </ul>
+      
+        <h2>Contents</h2>
+        <ul class="contents">
+        
+          <li><a href="#version-1-2">Version 1.2</a></li>
+        
+          <li><a href="#version-1-1">Version 1.1</a></li>
+        
+          <li><a href="#version-1-0">Version 1.0</a></li>
+        
+        </ul>
+      
+    </div>
+    
+    <div id="contentwrapper">
+      <div class="section">
+<h2><a id="version-1-2" name="version-1-2">Version 1.2</a></h2>
+<p>(codename to be hatsuyuki, released Nov 17th 2007)</p>
+<div class="admonition-backwards-incompatible-changes admonition">
+<p class="first admonition-title">Backwards Incompatible Changes</p>
+<ul class="last simple">
+<li><cite>call</cite> is a keyword now</li>
+<li>the internal parser AST changed</li>
+<li><cite>extends</cite> must be the first tag in a template</li>
+<li>the tuple literal yields tuples now, instead of lists.</li>
+</ul>
+</div>
+<ul class="simple">
+<li>environments now have a <cite>translator_factory</cite> parameter that allows
+to change the translator without subclassing the environment.</li>
+<li>fixed bug in buffet plugin regarding the package loader</li>
+<li>once again improved debugger.</li>
+<li>added <cite>groupby</cite> filter.</li>
+<li>added <cite>sameas</cite> test function.</li>
+<li>standalone parser. Jinja does not use the python parser any more and will
+continue having the same semantics in any future python versions. This
+was done in order to simplify updating Jinja to 2.6 and 3.0 and to support
+non python syntax.</li>
+<li>added support for <tt class="docutils literal"><span class="pre">expr1</span> <span class="pre">if</span> <span class="pre">test</span> <span class="pre">else</span> <span class="pre">expr2</span></tt> (conditional expressions)</li>
+<li><tt class="docutils literal"><span class="pre">foo.0</span></tt> as alias for <tt class="docutils literal"><span class="pre">foo[0]</span></tt> is possible now. This is mainly for
+django compatibility.</li>
+<li>the filter operators has a much higher priority now which makes it
+possible to do <tt class="docutils literal"><span class="pre">foo|filter</span> <span class="pre">+</span> <span class="pre">bar|filter</span></tt>.</li>
+<li>new AST. the return value of <cite>Environment.parse</cite> is now a Jinja AST and not
+a Jinja-Python AST. This is also the only backwards incompatible change but
+should not affect many users because this feature is more or less
+undocumented and has few use cases.</li>
+<li>tuple syntax returns tuples now and not lists any more.</li>
+<li>the print directive and <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">variable</span> <span class="pre">}}</span></tt> syntax now accepts and implicit
+tuple like the <cite>for</cite> and <cite>cycle</cite> tags. (<tt class="docutils literal"><span class="pre">{{</span> <span class="pre">1,</span> <span class="pre">2</span> <span class="pre">}}</span></tt> is an implicit alias
+for <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">(1,</span> <span class="pre">2)</span> <span class="pre">}}`</span> <span class="pre">like</span> <span class="pre">``{%</span> <span class="pre">for</span> <span class="pre">a,</span> <span class="pre">b</span> <span class="pre">in</span> <span class="pre">seq</span> <span class="pre">%}</span></tt> is for
+<tt class="docutils literal"><span class="pre">{%</span> <span class="pre">for</span> <span class="pre">(a,</span> <span class="pre">b)</span> <span class="pre">in</span> <span class="pre">seq</span> <span class="pre">%}</span></tt>.</li>
+<li>tests called with <em>one</em> parameter don't need parentheses. This gives a more
+natural syntax for the <cite>sameas</cite> test and some others:
+<tt class="docutils literal"><span class="pre">{{</span> <span class="pre">foo</span> <span class="pre">is</span> <span class="pre">sameas</span> <span class="pre">bar</span> <span class="pre">}}</span></tt> instead of <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">foo</span> <span class="pre">is</span> <span class="pre">sameas(bar)</span> <span class="pre">}}</span></tt>. If you
+however want to pass more than one argument you have to use parentheses
+because <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">foo</span> <span class="pre">is</span> <span class="pre">sometest</span> <span class="pre">bar,</span> <span class="pre">baz</span> <span class="pre">}}</span></tt> is handled as
+<tt class="docutils literal"><span class="pre">{{</span> <span class="pre">(foo</span> <span class="pre">is</span> <span class="pre">sometest(bar),</span> <span class="pre">baz)</span> <span class="pre">}}</span></tt>, so as tuple expression.</li>
+<li>removed support for octal character definitions in strings such as
+<tt class="docutils literal"><span class="pre">'\14'</span></tt>, use <tt class="docutils literal"><span class="pre">'\x0c'</span></tt> now.</li>
+<li>added regular expression literal. <tt class="docutils literal"><span class="pre">&#64;/expr/flags</span></tt> equals
+<tt class="docutils literal"><span class="pre">re.compile(r'(?flags)expr')</span></tt>. This is useful for the <cite>matching</cite> test and
+probably some others.</li>
+<li>added set literal. We do not use python3's {1, 2} syntax because
+this conflicts with the dict literal. To be compatible with the regex
+literal we use <tt class="docutils literal"><span class="pre">&#64;(1,</span> <span class="pre">2)</span></tt> instead.</li>
+<li>fixed bug in <cite>get_attribute</cite> that disallowed retreiving attributes of objects
+without a <cite>__class__</cite> such as <cite>_sre.SRE_Pattern</cite>.</li>
+<li>addded <cite>django.contrib.jinja</cite> which provides advanced support for django.
+(thanks Bryan McLemore)</li>
+<li>debugger is now able to rewrite the whole traceback, not only the first
+frame. (requires the optional debugger c module which is compiled
+automatically on installation if possible)</li>
+<li>if the set that is postfixed with a bang (!) it acts like the python 3
+&quot;nonlocal&quot; keyword. This means that you can now override variables
+defined in the outer scope from within a loop.</li>
+<li><tt class="docutils literal"><span class="pre">foo</span> <span class="pre">~</span> <span class="pre">bar</span></tt> is now a simpler alternative to <tt class="docutils literal"><span class="pre">foo|string</span> <span class="pre">+</span> <span class="pre">bar|string</span></tt></li>
+<li><cite>PackageLoader</cite> can now work without pkg_resources too</li>
+<li>added <cite>getattribute</cite> and <cite>getitem</cite> filter.</li>
+<li>added support for the <cite>pretty</cite> library.</li>
+<li>changed the way the <cite>MemcachedLoaderMixin</cite> creates the class so that it's
+possible to hook your own client in.</li>
+</ul>
+</div>
+<div class="section">
+<h2><a id="version-1-1" name="version-1-1">Version 1.1</a></h2>
+<p>(codename: sinka, released Jun 1, 2007)</p>
+<ul class="simple">
+<li>blocks now support <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">super()</span> <span class="pre">}}</span></tt> to render the parent output.</li>
+<li>debugging system improved, smaller filesize for the cached files.
+Debugging works now well for any module using linecache.</li>
+<li><tt class="docutils literal"><span class="pre">{{</span> <span class="pre">debug()</span> <span class="pre">}}</span></tt> can now be used to get a list of filters and
+tags.</li>
+<li>the template lexer keeps not track of brace, parenthesis and
+bracket balance in order to not break variable tags apart if they
+are configured to look like this: <tt class="docutils literal"><span class="pre">${expr}</span></tt>. This also fixes
+the problem with nested dicts in variable expressions.</li>
+<li>it's now possible to configure the variable blocks to look the
+same as the block delimiters. Thus you can set the syntax to something
+like <tt class="docutils literal"><span class="pre">{</span> <span class="pre">/</span> <span class="pre">}</span></tt> for both blocks and variables.</li>
+<li>added whitespace management system for the template designer.</li>
+<li>some small bugfixes.</li>
+<li>improved security system regarding function calls and variable
+assignment in for loops.</li>
+<li>added <cite>lipsum</cite> function to generate random text.</li>
+<li>strings without unicode characters are processed as binary strings now
+to workaround problems with <cite>datetime.strftime</cite> which only accepts
+binary strings.</li>
+<li>it's now possible to use newlines in string literals</li>
+<li>developer friendly traceback is now toggleable</li>
+<li>the variable failure is now pluggable by replacing the undefined
+singleton for an environment instance</li>
+<li>fixed issue with old-style classes not implementing <cite>__getitem__</cite>
+(thanks to Axel Böhm for discovering that bug)</li>
+<li>added a bunch of new docstrings to the Jinja classes. Makes fun now to
+use pydoc :-)</li>
+<li>fixed severe memcaching bug. Formerly it wasn't possible to use memcaching
+without enabling disk cache.</li>
+<li>fixed a bug that allowed users to override the special names <cite>_</cite>, <cite>true</cite> etc.</li>
+<li>added <cite>batch</cite> and <cite>slice</cite> filters for batching or slicing sequences</li>
+<li>added <cite>sum</cite>, <cite>abs</cite>, <cite>round</cite> and <cite>sort</cite> filters. This fixes #238</li>
+<li>added <cite>striptags</cite> and <cite>xmlattr</cite> filters for easier SGML/XML processing</li>
+<li>the trans tag does not need explicit naming for variables with the same
+name any more. You can now use <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">trans</span> <span class="pre">foo</span> <span class="pre">%}</span></tt> instead of the verbose
+version <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">trans</span> <span class="pre">foo=foo</span> <span class="pre">%}</span></tt>.</li>
+<li>reimplemented Buffet plugin so that it works at least for pylons</li>
+<li>added <cite>Environment.get_translations_for_string</cite></li>
+<li>fixed a bug in the parser that didn't unescape keyword arguments. (thanks
+to Alexey Melchakov for reporting)</li>
+<li>You can now use the environment to just tokenize a template. This can
+be useful for syntax highlighting or other purposes.</li>
+<li>added optional C-implementation of the context baseclass.</li>
+<li>you can now use optional parentheses around macro defintions. Thus it's
+possible to write <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">macro</span> <span class="pre">foo(a,</span> <span class="pre">b,</span> <span class="pre">c)</span> <span class="pre">%}</span></tt> instead of <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">macro</span>
+<span class="pre">foo</span> <span class="pre">a,</span> <span class="pre">b,</span> <span class="pre">c</span> <span class="pre">%}</span></tt>.</li>
+<li>additional macro arguments now end up in <cite>varargs</cite>.</li>
+<li>implemented the <cite>{% call %}</cite> block. <cite>call</cite> and <cite>endcall</cite> can still be used
+as identifiers until Jinja 1.3</li>
+<li>it's now possible to stream templates.</li>
+<li>fixed a corner case when defining a block inside of a condition</li>
+<li>the cached loader mixin is now able to cache multiple templates from
+different loaders in the same cache folder.</li>
+<li>Translatable strings returned by <tt class="docutils literal"><span class="pre">_()</span></tt> will leave their string formatting
+signs untouched. Thanks to Stefan Ebner for reporting.</li>
+<li><tt class="docutils literal"><span class="pre">{%</span> <span class="pre">block</span> <span class="pre">name</span> <span class="pre">&quot;data&quot;</span> <span class="pre">%}</span></tt> is now an alias for
+<tt class="docutils literal"><span class="pre">{%</span> <span class="pre">block</span> <span class="pre">name</span> <span class="pre">%}data{%</span> <span class="pre">endblock</span> <span class="pre">%}</span></tt>. Note that the second argument can
+be an expression. As soon as you specify an expression as second argument
+the closing tag has to be omitted.</li>
+<li>It's now possible to iterate over iterators additionally to sequences.
+If the iterator is inifite it will crash however, so makes sure you don't
+pass something like that to a template!</li>
+<li>added <cite>rendetemplate</cite> to render included templates in an isolated
+environment and get the outout back.</li>
+<li>added <cite>simplefilter</cite> decorator.</li>
+<li>improved ChoiceLoader error reporting (thanks to Bryan McLemore)</li>
+<li>fixed extended slicing</li>
+<li>reworked loader layer. All the cached loaders now have &quot;private&quot; non cached
+baseclasses so that you can easily mix your own caching layers in.</li>
+<li>added <cite>MemcachedLoaderMixin</cite> and <cite>MemcachedFileSystemLoader</cite> contributed
+by Bryan McLemore.</li>
+</ul>
+</div>
+<div class="section">
+<h2><a id="version-1-0" name="version-1-0">Version 1.0</a></h2>
+<p>(codename: siyutusan, released Mar 23, 2007)</p>
+<ul class="simple">
+<li>Initial release</li>
+</ul>
+</div>
+
+    </div>
+  </div>
+</body>
+<!-- generated on: 2007-11-17 18:18:02.632997
+     file id: changelog -->
+</html>

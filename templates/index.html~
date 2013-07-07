@@ -1,7 +1,37 @@
 <!doctype html>
 <title>TRAX</title>
 <head>
-	<script src="static/jquery-1.9.1.min.js"></script>
+  <script src="static/jquery-1.9.1.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      //$(".event").hide();
+      //$("#report").hide();
+      // Distribute the events between the two columns.
+        leftlen = $("#leftcol").children().length;
+        console.log("leftlen: " + leftlen);
+        rightlen = $("#rightcol").children().length;
+        console.log("rightlen: " + rightlen);
+/*        $("#leftcol").each(function() {
+          leftlen = leftlen + $(this).children().text().length;
+          console.log("2nd leftlen: " + leftlen);
+        });
+        $("#rightcol").each(function() {
+          rightlen = rightlen + $(this).children().text().length;
+          console.log("2nd rightlen: " + rightlen);
+        });
+        while (rightlen < leftlen) {
+          $("#leftcol").children().slice(1).appendTo("#rightcol");
+          $("#leftcol").each(function() {
+            leftlen = leftlen + $(this).children().text().length;
+            console.log("new leftlen: " + leftlen);
+          });
+          $("#rightcol").each(function() {
+            rightlen = rightlen + $(this).children().text().length;
+            console.log("new rightlen: " + rightlen);
+          });
+        };*/
+      });
+	</script>
 	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">  
 	<link href="{{ url_for('static', filename='mystyles2.css') }}" rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -14,8 +44,6 @@
   {% for tag in tags %}
     <div class="tag off">{{ tag }}</div>
   {% endfor %}
-    <div class="tag off" id="leftcolumnsize"></div>
-    <div class="tag off" id="rightcolumnsize"></div>
 </div>
 <div id="spacer" >
 </div>
@@ -47,7 +75,10 @@
   </div>
 </div>
 <script type="text/javascript">
-console.log("Reached the page end js.");
+
+$("div").click(function() {
+        console.log("Clicked.");
+});
 
 //Handle collapsing and expanding the navigation
 
@@ -134,22 +165,5 @@ if (included.length > 0 && excluded.length == 0) {
 }
 
 });
-</script>
-<script>
-	$(document).ready(function() {
-		console.log("Reached the document ready.");
-		$(".event").hide();
-		$("#report").hide();
-		// Distribute the events between the two columns.
-		leftlen = $("#leftcol").children().size();
-		rightlen = $("#rightcol").children().size();
-		$("#leftcolumnsize").text(leftlen+"");			
-		$("#rightcolumnsize").text(rightlen+"");
-/*		while (leftlen > rightlen) {
-			$("#rightcol").append($("#leftcol").slice(1).remove());
-			leftlen = $("#leftcol").children().size();
-			rightlen = $("#rightcol").children().size();
-		}*/
-	} );
 </script>
 </body>

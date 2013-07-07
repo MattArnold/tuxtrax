@@ -46,4 +46,3 @@ INSERT INTO tags ('id', 'name') VALUES (21, 'science');
 INSERT INTO tags ('id', 'name') VALUES (22, 'tech'); 
 INSERT INTO tags ('id', 'name') VALUES (23, 'videogame'); 
 INSERT INTO tags ('id', 'name') VALUES (24, 'violence');
-

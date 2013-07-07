@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Recipies For Developers &mdash; Jinja Documentation</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <style type="text/css">
+    .syntax  { background: #ffffff; }
+.syntax .c { color: #888888 } /* Comment */
+.syntax .err { color: #a61717; background-color: #e3d2d2 } /* Error */
+.syntax .k { color: #008800; font-weight: bold } /* Keyword */
+.syntax .cm { color: #888888 } /* Comment.Multiline */
+.syntax .cp { color: #cc0000; font-weight: bold } /* Comment.Preproc */
+.syntax .c1 { color: #888888 } /* Comment.Single */
+.syntax .cs { color: #cc0000; font-weight: bold; background-color: #fff0f0 } /* Comment.Special */
+.syntax .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
+.syntax .ge { font-style: italic } /* Generic.Emph */
+.syntax .gr { color: #aa0000 } /* Generic.Error */
+.syntax .gh { color: #303030 } /* Generic.Heading */
+.syntax .gi { color: #000000; background-color: #ddffdd } /* Generic.Inserted */
+.syntax .go { color: #888888 } /* Generic.Output */
+.syntax .gp { color: #555555 } /* Generic.Prompt */
+.syntax .gs { font-weight: bold } /* Generic.Strong */
+.syntax .gu { color: #606060 } /* Generic.Subheading */
+.syntax .gt { color: #aa0000 } /* Generic.Traceback */
+.syntax .kc { color: #008800; font-weight: bold } /* Keyword.Constant */
+.syntax .kd { color: #008800; font-weight: bold } /* Keyword.Declaration */
+.syntax .kp { color: #008800 } /* Keyword.Pseudo */
+.syntax .kr { color: #008800; font-weight: bold } /* Keyword.Reserved */
+.syntax .kt { color: #888888; font-weight: bold } /* Keyword.Type */
+.syntax .m { color: #0000DD; font-weight: bold } /* Literal.Number */
+.syntax .s { color: #dd2200; background-color: #fff0f0 } /* Literal.String */
+.syntax .na { color: #336699 } /* Name.Attribute */
+.syntax .nb { color: #003388 } /* Name.Builtin */
+.syntax .nc { color: #bb0066; font-weight: bold } /* Name.Class */
+.syntax .no { color: #003366; font-weight: bold } /* Name.Constant */
+.syntax .nd { color: #555555 } /* Name.Decorator */
+.syntax .ne { color: #bb0066; font-weight: bold } /* Name.Exception */
+.syntax .nf { color: #0066bb; font-weight: bold } /* Name.Function */
+.syntax .nl { color: #336699; font-style: italic } /* Name.Label */
+.syntax .nn { color: #bb0066; font-weight: bold } /* Name.Namespace */
+.syntax .py { color: #336699; font-weight: bold } /* Name.Property */
+.syntax .nt { color: #bb0066; font-weight: bold } /* Name.Tag */
+.syntax .nv { color: #336699 } /* Name.Variable */
+.syntax .ow { color: #008800 } /* Operator.Word */
+.syntax .w { color: #bbbbbb } /* Text.Whitespace */
+.syntax .mf { color: #0000DD; font-weight: bold } /* Literal.Number.Float */
+.syntax .mh { color: #0000DD; font-weight: bold } /* Literal.Number.Hex */
+.syntax .mi { color: #0000DD; font-weight: bold } /* Literal.Number.Integer */
+.syntax .mo { color: #0000DD; font-weight: bold } /* Literal.Number.Oct */
+.syntax .sb { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Backtick */
+.syntax .sc { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Char */
+.syntax .sd { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Doc */
+.syntax .s2 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Double */
+.syntax .se { color: #0044dd; background-color: #fff0f0 } /* Literal.String.Escape */
+.syntax .sh { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Heredoc */
+.syntax .si { color: #3333bb; background-color: #fff0f0 } /* Literal.String.Interpol */
+.syntax .sx { color: #22bb22; background-color: #f0fff0 } /* Literal.String.Other */
+.syntax .sr { color: #008800; background-color: #fff0ff } /* Literal.String.Regex */
+.syntax .s1 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Single */
+.syntax .ss { color: #aa6600; background-color: #fff0f0 } /* Literal.String.Symbol */
+.syntax .bp { color: #003388 } /* Name.Builtin.Pseudo */
+.syntax .vc { color: #336699 } /* Name.Variable.Class */
+.syntax .vg { color: #dd7700 } /* Name.Variable.Global */
+.syntax .vi { color: #3333bb } /* Name.Variable.Instance */
+.syntax .il { color: #0000DD; font-weight: bold } /* Literal.Number.Integer.Long */
+  </style>
+</head>
+<body>
+  <div id="content">
+    
+      <h1 class="heading"><span>Jinja</span></h1>
+      <h2 class="subheading">Recipies For Developers</h2>
+    
+    
+    <div id="toc">
+      <h2>Navigation</h2>
+      <ul>
+        <li><a href="index.html">back to index</a></li>
+      </ul>
+      
+        <h2>Contents</h2>
+        <ul class="contents">
+        
+          <li><a href="#automagic-template-variables">Automagic Template Variables</a></li>
+        
+          <li><a href="#using-django-filters-with-jinja">Using Django Filters with Jinja</a></li>
+        
+          <li><a href="#using-jinja-in-django">Using Jinja in Django</a></li>
+        
+        </ul>
+      
+    </div>
+    
+    <div id="contentwrapper">
+      <p>Here some recipies for application developers.</p>
+<div class="section">
+<h2><a id="automagic-template-variables" name="automagic-template-variables">Automagic Template Variables</a></h2>
+<p>Python allows some magic stack manipulation which can be used to
+pass variables to templates automatically. It's not a recommended
+way to pass variables to templates but it can be useful for some
+small generation scripts etc.</p>
+<p>Just subclass the environment and add an <cite>autorender</cite> function like
+this:</p>
+<div class="syntax"><pre><span class="k">import</span> <span class="nn">sys</span>
+<span class="k">from</span> <span class="nn">jinja</span> <span class="k">import</span> <span class="n">Environment</span>
+
+<span class="k">class</span> <span class="nc">AutoEnvironment</span><span class="p">(</span><span class="n">Environment</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">autorender</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
+        <span class="n">tmpl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tmpl</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">_getframe</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span><span class="o">.</span><span class="n">f_locals</span><span class="p">)</span>
+</pre></div>
+<p>You can use it now like this:</p>
+<div class="syntax"><pre><span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="n">seq</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mf">10</span><span class="p">)</span>
+    <span class="n">foo</span> <span class="o">=</span> <span class="s">&quot;blub&quot;</span>
+    <span class="k">return</span> <span class="n">env</span><span class="o">.</span><span class="n">autorender</span><span class="p">(</span><span class="s">&#39;foo.html&#39;</span><span class="p">)</span>
+</pre></div>
+<p>In the template you can now access the local variables <cite>seq</cite> and <cite>foo</cite>.</p>
+</div>
+<div class="section">
+<h2><a id="using-django-filters-with-jinja" name="using-django-filters-with-jinja">Using Django Filters with Jinja</a></h2>
+<p>If you use Jinja in django and want to use some of the filters that
+are part of the django core you can use this snippet:</p>
+<div class="syntax"><pre><span class="k">def</span> <span class="nf">convert_django_filter</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">filter_factory</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">wrapped</span>
+    <span class="k">return</span> <span class="n">filter_factory</span>
+</pre></div>
+<p>You can now convert django filters for jinja using <cite>convert_filter</cite>. <em>Note</em>:
+Django only supports one filter argument. Because of this limitation you
+shouldn't pass it more arguments than it accepts. Because django uses some
+introspection to find out if a filter accepts an argument weird things can
+happen if you call it with an incompatible argument count.</p>
+<p>You can now register django filters for a jinja environment:</p>
+<div class="syntax"><pre><span class="k">from</span> <span class="nn">django.template.defaultfilters</span> <span class="k">import</span> <span class="n">date</span>
+<span class="n">env</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">convert_django_filter</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+</pre></div>
+<p>And use it:</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="nv">entry.pub_date</span><span class="o">|</span><span class="nf">date</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+<p>Also keep in mind that Jinja knows about keywords, thus you cannot have a filter
+that is called <cite>pluralize</cite> for example.</p>
+<p>Such a conversion function is also part of the djangosupport module which was
+introduced in Jinja 1.2.  It's explained on the <a class="reference" href="./frameworks.html">Framework Integration</a> page.</p>
+</div>
+<div class="section">
+<h2><a id="using-jinja-in-django" name="using-jinja-in-django">Using Jinja in Django</a></h2>
+<div class="admonition-note admonition">
+<p class="first admonition-title">Note</p>
+<p class="last">This section is more or less obsolete as of Jinja 1.2 which provides a
+djangosupport module, covered on the <a class="reference" href="./frameworks.html">Framework Integration</a> page.</p>
+</div>
+<p>This snippet was contributed by Bryan McLemore. It provides a <cite>render_to_response</cite>
+function similar to the one shipped with django just that it uses Jinja for
+rendering. It applies the context processors on the context and consumes a
+<cite>RequestContext</cite>:</p>
+<div class="syntax"><pre><span class="k">from</span> <span class="nn">django.template.context</span> <span class="k">import</span> <span class="n">get_standard_processors</span>
+<span class="k">from</span> <span class="nn">django.http</span> <span class="k">import</span> <span class="n">HttpResponse</span>
+<span class="k">from</span> <span class="nn">jinja</span> <span class="k">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">FileSystemLoader</span><span class="p">,</span> <span class="n">ChoiceLoader</span>
+<span class="k">from</span> <span class="nn">django.conf</span> <span class="k">import</span> <span class="n">settings</span>
+
+<span class="n">loaders</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">TEMPLATE_DIRS</span><span class="p">:</span>
+    <span class="n">loaders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="n">location</span><span class="p">))</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">loader</span><span class="o">=</span><span class="n">ChoiceLoader</span><span class="p">(</span><span class="n">loaders</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">render_to_response</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">processor</span> <span class="ow">in</span> <span class="n">get_standard_processors</span><span class="p">():</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">processor</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">context</span><span class="p">))</span>
+</pre></div>
+<p>If you want to plug Jinja into the Django i18n system you can use this
+environment class:</p>
+<div class="syntax"><pre><span class="k">from</span> <span class="nn">jinja</span> <span class="k">import</span> <span class="n">Environment</span>
+<span class="k">from</span> <span class="nn">django.utils.translation</span> <span class="k">import</span> <span class="n">gettext</span><span class="p">,</span> <span class="n">ngettext</span>
+
+<span class="k">class</span> <span class="nc">DjangoTranslator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gettext</span> <span class="o">=</span> <span class="n">gettext</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ngettext</span> <span class="o">=</span> <span class="n">ngettext</span>
+
+<span class="k">class</span> <span class="nc">DjangoEnvironment</span><span class="p">(</span><span class="n">Environment</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">get_translator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DjangoTranslator</span><span class="p">()</span>
+</pre></div>
+<p>Because Django uses gettext internally we can create just assign the
+ngettext and gettext functions directly to the translator class.</p>
+</div>
+
+    </div>
+  </div>
+</body>
+<!-- generated on: 2007-11-17 18:18:04.861512
+     file id: devrecipies -->
+</html>

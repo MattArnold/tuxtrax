@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Template Internationalization &mdash; Jinja Documentation</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <style type="text/css">
+    .syntax  { background: #ffffff; }
+.syntax .c { color: #888888 } /* Comment */
+.syntax .err { color: #a61717; background-color: #e3d2d2 } /* Error */
+.syntax .k { color: #008800; font-weight: bold } /* Keyword */
+.syntax .cm { color: #888888 } /* Comment.Multiline */
+.syntax .cp { color: #cc0000; font-weight: bold } /* Comment.Preproc */
+.syntax .c1 { color: #888888 } /* Comment.Single */
+.syntax .cs { color: #cc0000; font-weight: bold; background-color: #fff0f0 } /* Comment.Special */
+.syntax .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
+.syntax .ge { font-style: italic } /* Generic.Emph */
+.syntax .gr { color: #aa0000 } /* Generic.Error */
+.syntax .gh { color: #303030 } /* Generic.Heading */
+.syntax .gi { color: #000000; background-color: #ddffdd } /* Generic.Inserted */
+.syntax .go { color: #888888 } /* Generic.Output */
+.syntax .gp { color: #555555 } /* Generic.Prompt */
+.syntax .gs { font-weight: bold } /* Generic.Strong */
+.syntax .gu { color: #606060 } /* Generic.Subheading */
+.syntax .gt { color: #aa0000 } /* Generic.Traceback */
+.syntax .kc { color: #008800; font-weight: bold } /* Keyword.Constant */
+.syntax .kd { color: #008800; font-weight: bold } /* Keyword.Declaration */
+.syntax .kp { color: #008800 } /* Keyword.Pseudo */
+.syntax .kr { color: #008800; font-weight: bold } /* Keyword.Reserved */
+.syntax .kt { color: #888888; font-weight: bold } /* Keyword.Type */
+.syntax .m { color: #0000DD; font-weight: bold } /* Literal.Number */
+.syntax .s { color: #dd2200; background-color: #fff0f0 } /* Literal.String */
+.syntax .na { color: #336699 } /* Name.Attribute */
+.syntax .nb { color: #003388 } /* Name.Builtin */
+.syntax .nc { color: #bb0066; font-weight: bold } /* Name.Class */
+.syntax .no { color: #003366; font-weight: bold } /* Name.Constant */
+.syntax .nd { color: #555555 } /* Name.Decorator */
+.syntax .ne { color: #bb0066; font-weight: bold } /* Name.Exception */
+.syntax .nf { color: #0066bb; font-weight: bold } /* Name.Function */
+.syntax .nl { color: #336699; font-style: italic } /* Name.Label */
+.syntax .nn { color: #bb0066; font-weight: bold } /* Name.Namespace */
+.syntax .py { color: #336699; font-weight: bold } /* Name.Property */
+.syntax .nt { color: #bb0066; font-weight: bold } /* Name.Tag */
+.syntax .nv { color: #336699 } /* Name.Variable */
+.syntax .ow { color: #008800 } /* Operator.Word */
+.syntax .w { color: #bbbbbb } /* Text.Whitespace */
+.syntax .mf { color: #0000DD; font-weight: bold } /* Literal.Number.Float */
+.syntax .mh { color: #0000DD; font-weight: bold } /* Literal.Number.Hex */
+.syntax .mi { color: #0000DD; font-weight: bold } /* Literal.Number.Integer */
+.syntax .mo { color: #0000DD; font-weight: bold } /* Literal.Number.Oct */
+.syntax .sb { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Backtick */
+.syntax .sc { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Char */
+.syntax .sd { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Doc */
+.syntax .s2 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Double */
+.syntax .se { color: #0044dd; background-color: #fff0f0 } /* Literal.String.Escape */
+.syntax .sh { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Heredoc */
+.syntax .si { color: #3333bb; background-color: #fff0f0 } /* Literal.String.Interpol */
+.syntax .sx { color: #22bb22; background-color: #f0fff0 } /* Literal.String.Other */
+.syntax .sr { color: #008800; background-color: #fff0ff } /* Literal.String.Regex */
+.syntax .s1 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Single */
+.syntax .ss { color: #aa6600; background-color: #fff0f0 } /* Literal.String.Symbol */
+.syntax .bp { color: #003388 } /* Name.Builtin.Pseudo */
+.syntax .vc { color: #336699 } /* Name.Variable.Class */
+.syntax .vg { color: #dd7700 } /* Name.Variable.Global */
+.syntax .vi { color: #3333bb } /* Name.Variable.Instance */
+.syntax .il { color: #0000DD; font-weight: bold } /* Literal.Number.Integer.Long */
+  </style>
+</head>
+<body>
+  <div id="content">
+    
+      <h1 class="heading"><span>Jinja</span></h1>
+      <h2 class="subheading">Template Internationalization</h2>
+    
+    
+    <div id="toc">
+      <h2>Navigation</h2>
+      <ul>
+        <li><a href="index.html">back to index</a></li>
+      </ul>
+      
+    </div>
+    
+    <div id="contentwrapper">
+      <p>If the application is configured for i18n, you can define translatable blocks
+for translators using the <cite>trans</cite> tag or the special underscore function:</p>
+<div class="syntax"><pre><span class="cp">{%</span> <span class="k">trans</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    this is a translatable block</span>
+<span class="cp">{%</span> <span class="k">endtrans</span> <span class="cp">%}</span><span class="x"></span>
+
+<span class="cp">{%</span> <span class="k">trans</span> <span class="s2">&quot;This is a translatable string&quot;</span> <span class="cp">%}</span><span class="x"></span>
+
+<span class="cp">{{</span> <span class="kp">_</span><span class="o">(</span><span class="s2">&quot;This is a translatable string&quot;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+<p>The latter one is useful if you want translatable arguments for filters etc.
+If you want to use the <tt class="docutils literal"><span class="pre">_()</span></tt> syntax in an expression and have variables in
+the string you can add a substituation marker (<tt class="docutils literal"><span class="pre">%s</span></tt>) and use the <cite>|format</cite>
+filter to fill the slot:</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="kp">_</span><span class="o">(</span><span class="s1">&#39;Hello %s!&#39;</span><span class="o">)|</span><span class="nf">format</span><span class="o">(</span><span class="nv">username</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+<p>If you have more than one substitution variable consider using the
+<tt class="docutils literal"><span class="pre">{%</span> <span class="pre">trans</span> <span class="pre">%}</span></tt> tags or the <cite>|dformat</cite> filter, the latter however is new
+in Jinja 1.1.</p>
+<p>If you want to have plural forms too, use the <cite>pluralize</cite> block:</p>
+<div class="syntax"><pre><span class="cp">{%</span> <span class="k">trans</span> <span class="nv">users</span><span class="o">=</span><span class="nv">users</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    One user found.</span>
+<span class="cp">{%</span> <span class="k">pluralize</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    </span><span class="cp">{{</span> <span class="nv">users</span> <span class="cp">}}</span><span class="x"> users found.</span>
+<span class="cp">{%</span> <span class="k">endtrans</span> <span class="cp">%}</span><span class="x"></span>
+
+<span class="cp">{%</span> <span class="k">trans</span> <span class="nv">first</span><span class="o">=(</span><span class="nv">users</span><span class="o">|</span><span class="nf">first</span><span class="o">)</span><span class="nv">.username</span><span class="o">|</span><span class="nf">escape</span><span class="o">,</span> <span class="nv">user</span><span class="o">=</span><span class="nv">users</span><span class="o">|</span><span class="nf">length</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    one user </span><span class="cp">{{</span> <span class="nv">first</span> <span class="cp">}}</span><span class="x"> found.</span>
+<span class="cp">{%</span> <span class="k">pluralize</span> <span class="nv">users</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    </span><span class="cp">{{</span> <span class="nv">users</span> <span class="cp">}}</span><span class="x"> users found, the first one is called </span><span class="cp">{{</span> <span class="nv">first</span> <span class="cp">}}</span><span class="x">.</span>
+<span class="cp">{%</span> <span class="k">endtrans</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+<p>If you have multiple arguments, the first one is assumed to be the indicator (the
+number that is used to determine the correct singular or plural form. If you
+don't have the indicator variable on position 1 you have to tell the <cite>pluralize</cite>
+tag the correct variable name.</p>
+<p>Inside translatable blocks you cannot use blocks or expressions (however you can
+still use the <tt class="docutils literal"><span class="pre">raw</span></tt> block which will work as expected). The variable
+print syntax (<tt class="docutils literal"><span class="pre">{{</span> <span class="pre">variablename</span> <span class="pre">}}</span></tt>) is the only way to insert the variables
+defined in the <tt class="docutils literal"><span class="pre">trans</span></tt> header. Filters must be applied in the header.</p>
+<div class="admonition-note admonition">
+<p class="first admonition-title">note</p>
+<p>Please make sure that you always use pluralize blocks where required.
+Many languages have more complex plural forms than the English language.</p>
+<p>Never try to workaround that issue by using something like this:</p>
+<div class="last"><div class="syntax"><pre><span class="cp">{%</span> <span class="k">if</span> <span class="nv">count</span> <span class="p">!</span><span class="o">=</span> <span class="m">1</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    </span><span class="cp">{{</span> <span class="nv">count</span> <span class="cp">}}</span><span class="x"> users found.</span>
+<span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    one user found.</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div></div>
+<p><em>New in Jinja 1.1</em>: It's now possible to use the marker name as implicit
+default:</p>
+<div class="syntax"><pre><span class="x">instead of this version:</span>
+
+<span class="x">    </span><span class="cp">{%</span> <span class="k">trans</span> <span class="nv">username</span><span class="o">=</span><span class="nv">username</span> <span class="cp">%}</span><span class="x">Hello </span><span class="cp">{{</span> <span class="nv">username</span> <span class="cp">}}</span><span class="x">!</span><span class="cp">{%</span> <span class="k">endtrans</span> <span class="cp">%}</span><span class="x"></span>
+
+<span class="x">you can now write this:</span>
+
+<span class="x">    </span><span class="cp">{%</span> <span class="k">trans</span> <span class="nv">username</span> <span class="cp">%}</span><span class="x">Hello </span><span class="cp">{{</span> <span class="nv">username</span> <span class="cp">}}</span><span class="x">!</span><span class="cp">{%</span> <span class="k">endtrans</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+
+    </div>
+  </div>
+</body>
+<!-- generated on: 2007-11-17 18:18:07.896361
+     file id: templatei18n -->
+</html>

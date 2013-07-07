@@ -1,0 +1,4 @@
+
+    [python.templating.engines]
+    jinja = jinja.plugin:BuffetPlugin
+    

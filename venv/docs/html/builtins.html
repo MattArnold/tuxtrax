@@ -1,0 +1,666 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Filters, Tests and Helper Functions &mdash; Jinja Documentation</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <style type="text/css">
+    .syntax  { background: #ffffff; }
+.syntax .c { color: #888888 } /* Comment */
+.syntax .err { color: #a61717; background-color: #e3d2d2 } /* Error */
+.syntax .k { color: #008800; font-weight: bold } /* Keyword */
+.syntax .cm { color: #888888 } /* Comment.Multiline */
+.syntax .cp { color: #cc0000; font-weight: bold } /* Comment.Preproc */
+.syntax .c1 { color: #888888 } /* Comment.Single */
+.syntax .cs { color: #cc0000; font-weight: bold; background-color: #fff0f0 } /* Comment.Special */
+.syntax .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
+.syntax .ge { font-style: italic } /* Generic.Emph */
+.syntax .gr { color: #aa0000 } /* Generic.Error */
+.syntax .gh { color: #303030 } /* Generic.Heading */
+.syntax .gi { color: #000000; background-color: #ddffdd } /* Generic.Inserted */
+.syntax .go { color: #888888 } /* Generic.Output */
+.syntax .gp { color: #555555 } /* Generic.Prompt */
+.syntax .gs { font-weight: bold } /* Generic.Strong */
+.syntax .gu { color: #606060 } /* Generic.Subheading */
+.syntax .gt { color: #aa0000 } /* Generic.Traceback */
+.syntax .kc { color: #008800; font-weight: bold } /* Keyword.Constant */
+.syntax .kd { color: #008800; font-weight: bold } /* Keyword.Declaration */
+.syntax .kp { color: #008800 } /* Keyword.Pseudo */
+.syntax .kr { color: #008800; font-weight: bold } /* Keyword.Reserved */
+.syntax .kt { color: #888888; font-weight: bold } /* Keyword.Type */
+.syntax .m { color: #0000DD; font-weight: bold } /* Literal.Number */
+.syntax .s { color: #dd2200; background-color: #fff0f0 } /* Literal.String */
+.syntax .na { color: #336699 } /* Name.Attribute */
+.syntax .nb { color: #003388 } /* Name.Builtin */
+.syntax .nc { color: #bb0066; font-weight: bold } /* Name.Class */
+.syntax .no { color: #003366; font-weight: bold } /* Name.Constant */
+.syntax .nd { color: #555555 } /* Name.Decorator */
+.syntax .ne { color: #bb0066; font-weight: bold } /* Name.Exception */
+.syntax .nf { color: #0066bb; font-weight: bold } /* Name.Function */
+.syntax .nl { color: #336699; font-style: italic } /* Name.Label */
+.syntax .nn { color: #bb0066; font-weight: bold } /* Name.Namespace */
+.syntax .py { color: #336699; font-weight: bold } /* Name.Property */
+.syntax .nt { color: #bb0066; font-weight: bold } /* Name.Tag */
+.syntax .nv { color: #336699 } /* Name.Variable */
+.syntax .ow { color: #008800 } /* Operator.Word */
+.syntax .w { color: #bbbbbb } /* Text.Whitespace */
+.syntax .mf { color: #0000DD; font-weight: bold } /* Literal.Number.Float */
+.syntax .mh { color: #0000DD; font-weight: bold } /* Literal.Number.Hex */
+.syntax .mi { color: #0000DD; font-weight: bold } /* Literal.Number.Integer */
+.syntax .mo { color: #0000DD; font-weight: bold } /* Literal.Number.Oct */
+.syntax .sb { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Backtick */
+.syntax .sc { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Char */
+.syntax .sd { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Doc */
+.syntax .s2 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Double */
+.syntax .se { color: #0044dd; background-color: #fff0f0 } /* Literal.String.Escape */
+.syntax .sh { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Heredoc */
+.syntax .si { color: #3333bb; background-color: #fff0f0 } /* Literal.String.Interpol */
+.syntax .sx { color: #22bb22; background-color: #f0fff0 } /* Literal.String.Other */
+.syntax .sr { color: #008800; background-color: #fff0ff } /* Literal.String.Regex */
+.syntax .s1 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Single */
+.syntax .ss { color: #aa6600; background-color: #fff0f0 } /* Literal.String.Symbol */
+.syntax .bp { color: #003388 } /* Name.Builtin.Pseudo */
+.syntax .vc { color: #336699 } /* Name.Variable.Class */
+.syntax .vg { color: #dd7700 } /* Name.Variable.Global */
+.syntax .vi { color: #3333bb } /* Name.Variable.Instance */
+.syntax .il { color: #0000DD; font-weight: bold } /* Literal.Number.Integer.Long */
+  </style>
+</head>
+<body>
+  <div id="content">
+    
+      <h1 class="heading"><span>Jinja</span></h1>
+      <h2 class="subheading">Filters, Tests and Helper Functions</h2>
+    
+    
+    <div id="toc">
+      <h2>Navigation</h2>
+      <ul>
+        <li><a href="index.html">back to index</a></li>
+      </ul>
+      
+        <h2>Contents</h2>
+        <ul class="contents">
+        
+          <li><a href="#filters">Filters</a></li>
+        
+          <li><a href="#tests">Tests</a></li>
+        
+          <li><a href="#global-functions">Global Functions</a></li>
+        
+          <li><a href="#global-constants">Global Constants</a></li>
+        
+        </ul>
+      
+    </div>
+    
+    <div id="contentwrapper">
+      <p>This part of the documentation lists the filter-, test- and helper functions
+you can use in templates.</p>
+<div class="section">
+<h2><a id="filters" name="filters">Filters</a></h2>
+<p>In the examples above you might have noticed the pipe symbols. Pipe symbols tell
+the engine that it has to apply a filter on the variable. Here is a small example:</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="nv">variable</span><span class="o">|</span><span class="nf">replace</span><span class="o">(</span><span class="s1">&#39;foo&#39;</span><span class="o">,</span> <span class="s1">&#39;bar&#39;</span><span class="o">)|</span><span class="nf">escape</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+<p>If you want, you can also put whitespace between the filters.</p>
+<p>This will look for a variable <cite>variable</cite>, pass it to the filter <cite>replace</cite>
+with the arguments <tt class="docutils literal"><span class="pre">'foo'</span></tt> and <tt class="docutils literal"><span class="pre">'bar'</span></tt>, and pass the result to the filter
+<cite>escape</cite> that automatically XML-escapes the value. The <cite>e</cite> filter is an alias for
+<cite>escape</cite>. Here is the complete list of supported filters:</p>
+<dl class="docutils">
+<dt><cite>abs</cite></dt>
+<dd><p class="first">Return the absolute value of a number.</p>
+<p class="last"><em>new in Jinja 1.1</em></p>
+</dd>
+<dt><cite>batch</cite></dt>
+<dd><p class="first">A filter that batches items. It works pretty much like <cite>slice</cite>
+just the other way round. It returns a list of lists with the
+given number of items. If you provide a second parameter this
+is used to fill missing items. See this example:</p>
+<div class="syntax"><pre><span class="nt">&lt;table&gt;</span>
+<span class="cp">{%</span>- <span class="k">for</span> <span class="nv">row</span> <span class="k">in</span> <span class="nv">items</span><span class="o">|</span><span class="nf">batch</span><span class="o">(</span><span class="m">3</span><span class="o">,</span> <span class="s1">&#39;&amp;nbsp;&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+  <span class="nt">&lt;tr&gt;</span>
+  <span class="cp">{%</span>- <span class="k">for</span> <span class="nv">column</span> <span class="k">in</span> <span class="nv">row</span> <span class="cp">%}</span>
+    <span class="nt">&lt;tr&gt;</span><span class="cp">{{</span> <span class="nv">column</span> <span class="cp">}}</span><span class="nt">&lt;/td&gt;</span>
+  <span class="cp">{%</span>- <span class="k">endfor</span> <span class="cp">%}</span>
+  <span class="nt">&lt;/tr&gt;</span>
+<span class="cp">{%</span>- <span class="k">endfor</span> <span class="cp">%}</span>
+<span class="nt">&lt;/table&gt;</span>
+</pre></div>
+<p class="last"><em>new in Jinja 1.1</em></p>
+</dd>
+<dt><cite>capitalize</cite></dt>
+<dd>Capitalize a value. The first character will be uppercase, all others
+lowercase.</dd>
+<dt><cite>capture</cite></dt>
+<dd><p class="first">Store the value in a variable called <tt class="docutils literal"><span class="pre">captured</span></tt> or a variable
+with the name provided. Useful for filter blocks:</p>
+<div class="syntax"><pre><span class="cp">{%</span> <span class="k">filter</span> <span class="nf">capture</span><span class="o">(</span><span class="s1">&#39;foo&#39;</span><span class="o">)</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    ...</span>
+<span class="cp">{%</span> <span class="k">endfilter</span> <span class="cp">%}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">foo</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+<p>This will output &quot;...&quot; two times. One time from the filter block
+and one time from the variable. If you don't want the filter to
+output something you can use it in <cite>clean</cite> mode:</p>
+<div class="last"><div class="syntax"><pre><span class="cp">{%</span> <span class="k">filter</span> <span class="nf">capture</span><span class="o">(</span><span class="s1">&#39;foo&#39;</span><span class="o">,</span> <span class="nv">True</span><span class="o">)</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    ...</span>
+<span class="cp">{%</span> <span class="k">endfilter</span> <span class="cp">%}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">foo</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+</div></dd>
+<dt><cite>center</cite></dt>
+<dd>Centers the value in a field of a given width.</dd>
+<dt><cite>default</cite></dt>
+<dd><p class="first">If the value is undefined it will return the passed default value,
+otherwise the value of the variable:</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="nv">my_variable</span><span class="o">|</span><span class="nf">default</span><span class="o">(</span><span class="s1">&#39;my_variable is not defined&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+<p>This will output the value of <tt class="docutils literal"><span class="pre">my_variable</span></tt> if the variable was
+defined, otherwise <tt class="docutils literal"><span class="pre">'my_variable</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">defined'</span></tt>. If you want
+to use default with variables that evaluate to false you have to
+set the second parameter to <cite>true</cite>:</p>
+<div class="last"><div class="syntax"><pre><span class="cp">{{</span> <span class="s1">&#39;&#39;</span><span class="o">|</span><span class="nf">default</span><span class="o">(</span><span class="s1">&#39;the string was empty&#39;</span><span class="o">,</span> <span class="kp">true</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+</div></dd>
+<dt><cite>dformat</cite></dt>
+<dd><p class="first">Apply python mapping string formatting on an object:</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="s2">&quot;Hello %(username)s!&quot;</span><span class="o">|</span><span class="nf">dformat</span><span class="o">({</span><span class="s1">&#39;username&#39;</span><span class="o">:</span> <span class="s1">&#39;John Doe&#39;</span><span class="o">})</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; Hello John Doe!</span>
+</pre></div>
+<p>This is useful when adding variables to translateable
+string expressions.</p>
+<p class="last"><em>New in Jinja 1.1</em></p>
+</dd>
+<dt><cite>dictsort</cite></dt>
+<dd><p class="first">Sort a dict and yield (key, value) pairs. Because python dicts are
+unsorted you may want to use this function to order them by either
+key or value:</p>
+<div class="last"><div class="syntax"><pre><span class="cp">{%</span> <span class="k">for</span> <span class="nv">item</span> <span class="k">in</span> <span class="nv">mydict</span><span class="o">|</span><span class="nf">dictsort</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    sort the dict by key, case insensitive</span>
+
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">item</span> <span class="k">in</span> <span class="nv">mydict</span><span class="o">|</span><span class="nf">dicsort</span><span class="o">(</span><span class="kp">true</span><span class="o">)</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    sort the dict by key, case sensitive</span>
+
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">item</span> <span class="k">in</span> <span class="nv">mydict</span><span class="o">|</span><span class="nf">dictsort</span><span class="o">(</span><span class="kp">false</span><span class="o">,</span> <span class="s1">&#39;value&#39;</span><span class="o">)</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    sort the dict by key, case insensitive, sorted</span>
+<span class="x">    normally and ordered by value.</span>
+</pre></div>
+</div></dd>
+<dt><cite>escape</cite></dt>
+<dd><p class="first">XML escape <tt class="docutils literal"><span class="pre">&amp;</span></tt>, <tt class="docutils literal"><span class="pre">&lt;</span></tt>, and <tt class="docutils literal"><span class="pre">&gt;</span></tt> in a string of data. If the
+optional parameter is <cite>true</cite> this filter will also convert
+<tt class="docutils literal"><span class="pre">&quot;</span></tt> to <tt class="docutils literal"><span class="pre">&amp;quot;</span></tt>. This filter is just used if the environment
+was configured with disabled <cite>auto_escape</cite>.</p>
+<p>This method will have no effect it the value is already escaped.</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Aliases:</th><td class="field-body">e</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><cite>filesizeformat</cite></dt>
+<dd>Format the value like a 'human-readable' file size (i.e. 13 KB, 4.1 MB, 102
+bytes, etc).</dd>
+<dt><cite>first</cite></dt>
+<dd>Return the frist item of a sequence.</dd>
+<dt><cite>float</cite></dt>
+<dd>Convert the value into a floating point number. If the
+conversion doesn't work it will return <tt class="docutils literal"><span class="pre">0.0</span></tt>. You can
+override this default using the first parameter.</dd>
+<dt><cite>format</cite></dt>
+<dd><p class="first">Apply python string formatting on an object:</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="s2">&quot;%s - %s&quot;</span><span class="o">|</span><span class="nf">format</span><span class="o">(</span><span class="s2">&quot;Hello?&quot;</span><span class="o">,</span> <span class="s2">&quot;Foo!&quot;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; Hello? - Foo!</span>
+</pre></div>
+<p class="last">Note that you cannot use the mapping syntax (<tt class="docutils literal"><span class="pre">%(name)s</span></tt>)
+like in python. Use <cite>|dformat</cite> for that.</p>
+</dd>
+<dt><cite>getattribute</cite></dt>
+<dd><p class="first">Get one attribute from an object. Normally you don't have to use this
+filter because the attribute and subscript expressions try to either
+get an attribute of an object or an item. In some situations it could
+be that there is an item <em>and</em> an attribute with the same name. In that
+situation only the item is returned, never the attribute.</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="nv">foo.bar</span> <span class="cp">}}</span><span class="x"> -&gt; </span><span class="cp">{{</span> <span class="nv">foo</span><span class="o">|</span><span class="nf">getattribute</span><span class="o">(</span><span class="s1">&#39;bar&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+<p class="last"><em>New in Jinja 1.2</em></p>
+</dd>
+<dt><cite>getitem</cite></dt>
+<dd><p class="first">This filter basically works like the normal subscript expression but
+it doesn't fall back to attribute lookup. If an item does not exist for
+an object undefined is returned.</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="nv">foo.bar</span> <span class="cp">}}</span><span class="x"> -&gt; </span><span class="cp">{{</span> <span class="nv">foo</span><span class="o">|</span><span class="nf">getitem</span><span class="o">(</span><span class="s1">&#39;bar&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+<p class="last"><em>New in Jinja 1.2</em></p>
+</dd>
+<dt><cite>groupby</cite></dt>
+<dd><p class="first">Group a sequence of objects by a common attribute.</p>
+<p>If you for example have a list of dicts or objects that represent persons
+with <cite>gender</cite>, <cite>first_name</cite> and <cite>last_name</cite> attributes and you want to
+group all users by genders you can do something like the following
+snippet:</p>
+<div class="syntax"><pre><span class="nt">&lt;ul&gt;</span>
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">group</span> <span class="k">in</span> <span class="nv">persons</span><span class="o">|</span><span class="nf">groupby</span><span class="o">(</span><span class="s1">&#39;gender&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+    <span class="nt">&lt;li&gt;</span><span class="cp">{{</span> <span class="nv">group.grouper</span> <span class="cp">}}</span><span class="nt">&lt;ul&gt;</span>
+    <span class="cp">{%</span> <span class="k">for</span> <span class="nv">person</span> <span class="k">in</span> <span class="nv">group.list</span> <span class="cp">%}</span>
+        <span class="nt">&lt;li&gt;</span><span class="cp">{{</span> <span class="nv">person.first_name</span> <span class="cp">}}</span> <span class="cp">{{</span> <span class="nv">person.last_name</span> <span class="cp">}}</span><span class="nt">&lt;/li&gt;</span>
+    <span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span><span class="nt">&lt;/ul&gt;&lt;/li&gt;</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+<span class="nt">&lt;/ul&gt;</span>
+</pre></div>
+<p>As you can see the item we're grouping by is stored in the <cite>grouper</cite>
+attribute and the <cite>list</cite> contains all the objects that have this grouper
+in common.</p>
+<p class="last"><em>New in Jinja 1.2</em></p>
+</dd>
+<dt><cite>indent</cite></dt>
+<dd><p class="first">{{ s|indent[ width[ indentfirst[ usetab]]] }}</p>
+<p>Return a copy of the passed string, each line indented by
+4 spaces. The first line is not indented. If you want to
+change the number of spaces or indent the first line too
+you can pass additional parameters to the filter:</p>
+<div class="last"><div class="syntax"><pre><span class="cp">{{</span> <span class="nv">mytext</span><span class="o">|</span><span class="nf">indent</span><span class="o">(</span><span class="m">2</span><span class="o">,</span> <span class="nv">True</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    indent by two spaces and indent the first line too.</span>
+</pre></div>
+</div></dd>
+<dt><cite>int</cite></dt>
+<dd>Convert the value into an integer. If the
+conversion doesn't work it will return <tt class="docutils literal"><span class="pre">0</span></tt>. You can
+override this default using the first parameter.</dd>
+<dt><cite>join</cite></dt>
+<dd><p class="first">Return a string which is the concatenation of the strings in the
+sequence. The separator between elements is an empty string per
+default, you can define ith with the optional parameter:</p>
+<div class="last"><div class="syntax"><pre><span class="cp">{{</span> <span class="o">[</span><span class="m">1</span><span class="o">,</span> <span class="m">2</span><span class="o">,</span> <span class="m">3</span><span class="o">]|</span><span class="nf">join</span><span class="o">(</span><span class="s1">&#39;|&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; 1|2|3</span>
+
+<span class="cp">{{</span> <span class="o">[</span><span class="m">1</span><span class="o">,</span> <span class="m">2</span><span class="o">,</span> <span class="m">3</span><span class="o">]|</span><span class="nf">join</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; 123</span>
+</pre></div>
+</div></dd>
+<dt><cite>jsonencode</cite></dt>
+<dd><p class="first">JSON dump a variable. just works if simplejson is installed.</p>
+<div class="last"><div class="syntax"><pre><span class="cp">{{</span> <span class="s1">&#39;Hello World&#39;</span><span class="o">|</span><span class="nf">jsonencode</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; &quot;Hello World&quot;</span>
+</pre></div>
+</div></dd>
+<dt><cite>last</cite></dt>
+<dd>Return the last item of a sequence.</dd>
+<dt><cite>length</cite></dt>
+<dd><p class="first">Return the length of the value. In case if getting an integer or float
+it will convert it into a string an return the length of the new
+string. If the object has no length it will of corse return 0.</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Aliases:</th><td class="field-body">count</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><cite>lower</cite></dt>
+<dd>Convert a value to lowercase.</dd>
+<dt><cite>markdown</cite></dt>
+<dd><p class="first">Parse the string using markdown.</p>
+<p class="last">requires the <a class="reference" href="http://www.freewisdom.org/projects/python-markdown/">Python-markdown</a> library.</p>
+</dd>
+<dt><cite>pprint</cite></dt>
+<dd><p class="first">Pretty print a variable. Useful for debugging.</p>
+<p class="last">With Jinja 1.2 onwards you can pass it a parameter.  If this parameter
+is truthy the output will be more verbose (this requires <cite>pretty</cite>)</p>
+</dd>
+<dt><cite>random</cite></dt>
+<dd>Return a random item from the sequence.</dd>
+<dt><cite>replace</cite></dt>
+<dd><p class="first">Return a copy of the value with all occurrences of a substring
+replaced with a new one. The first argument is the substring
+that should be replaced, the second is the replacement string.
+If the optional third argument <tt class="docutils literal"><span class="pre">count</span></tt> is given, only the first
+<tt class="docutils literal"><span class="pre">count</span></tt> occurrences are replaced:</p>
+<div class="last"><div class="syntax"><pre><span class="cp">{{</span> <span class="s2">&quot;Hello World&quot;</span><span class="o">|</span><span class="nf">replace</span><span class="o">(</span><span class="s2">&quot;Hello&quot;</span><span class="o">,</span> <span class="s2">&quot;Goodbye&quot;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; Goodbye World</span>
+
+<span class="cp">{{</span> <span class="s2">&quot;aaaaargh&quot;</span><span class="o">|</span><span class="nf">replace</span><span class="o">(</span><span class="s2">&quot;a&quot;</span><span class="o">,</span> <span class="s2">&quot;d&#39;oh, &quot;</span><span class="o">,</span> <span class="m">2</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; d&#39;oh, d&#39;oh, aaargh</span>
+</pre></div>
+</div></dd>
+<dt><cite>reverse</cite></dt>
+<dd><p class="first">Return a reversed list of the sequence filtered. You can use this
+for example for reverse iteration:</p>
+<div class="last"><div class="syntax"><pre><span class="cp">{%</span> <span class="k">for</span> <span class="nv">item</span> <span class="k">in</span> <span class="nv">seq</span><span class="o">|</span><span class="nf">reverse</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    </span><span class="cp">{{</span> <span class="nv">item</span><span class="o">|</span><span class="nf">e</span> <span class="cp">}}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div></dd>
+<dt><cite>round</cite></dt>
+<dd><p class="first">Round the number to a given precision. The first
+parameter specifies the precision (default is <tt class="docutils literal"><span class="pre">0</span></tt>), the
+second the rounding method:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">'common'</span></tt> rounds either up or down</li>
+<li><tt class="docutils literal"><span class="pre">'ceil'</span></tt> always rounds up</li>
+<li><tt class="docutils literal"><span class="pre">'floor'</span></tt> always rounds down</li>
+</ul>
+<p>If you don't specify a method <tt class="docutils literal"><span class="pre">'common'</span></tt> is used.</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="m">42.55</span><span class="o">|</span><span class="nf">round</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; 43</span>
+<span class="cp">{{</span> <span class="m">42.55</span><span class="o">|</span><span class="nf">round</span><span class="o">(</span><span class="m">1</span><span class="o">,</span> <span class="s1">&#39;floor&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; 42.5</span>
+</pre></div>
+<p class="last"><em>new in Jinja 1.1</em></p>
+</dd>
+<dt><cite>rst</cite></dt>
+<dd><p class="first">Parse the string using the reStructuredText parser from the
+docutils package.</p>
+<p class="last">requires <a class="reference" href="http://docutils.sourceforge.net/">docutils</a>.</p>
+</dd>
+<dt><cite>slice</cite></dt>
+<dd><p class="first">Slice an iterator and return a list of lists containing
+those items. Useful if you want to create a div containing
+three div tags that represent columns:</p>
+<div class="syntax"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;columwrapper&quot;</span><span class="nt">&gt;</span>
+  <span class="cp">{%</span>- <span class="k">for</span> <span class="nv">column</span> <span class="k">in</span> <span class="nv">items</span><span class="o">|</span><span class="nf">slice</span><span class="o">(</span><span class="m">3</span><span class="o">)</span> <span class="cp">%}</span>
+    <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">&quot;column-</span><span class="cp">{{</span> <span class="nb">loop</span><span class="nv">.index</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="nt">&gt;</span>
+    <span class="cp">{%</span>- <span class="k">for</span> <span class="nv">item</span> <span class="k">in</span> <span class="nv">column</span> <span class="cp">%}</span>
+      <span class="nt">&lt;li&gt;</span><span class="cp">{{</span> <span class="nv">item</span> <span class="cp">}}</span><span class="nt">&lt;/li&gt;</span>
+    <span class="cp">{%</span>- <span class="k">endfor</span> <span class="cp">%}</span>
+    <span class="nt">&lt;/ul&gt;</span>
+  <span class="cp">{%</span>- <span class="k">endfor</span> <span class="cp">%}</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+<p>If you pass it a second argument it's used to fill missing
+values on the last iteration.</p>
+<p class="last"><em>new in Jinja 1.1</em></p>
+</dd>
+<dt><cite>sort</cite></dt>
+<dd><p class="first">Sort a sequence. Per default it sorts ascending, if you pass it
+<cite>True</cite> as first argument it will reverse the sorting.</p>
+<p class="last"><em>new in Jinja 1.1</em></p>
+</dd>
+<dt><cite>string</cite></dt>
+<dd>Convert the value into an string.</dd>
+<dt><cite>striptags</cite></dt>
+<dd><p class="first">Strip SGML/XML tags and replace adjacent whitespace by one space.</p>
+<p class="last"><em>new in Jinja 1.1</em></p>
+</dd>
+<dt><cite>sum</cite></dt>
+<dd><p class="first">Sum up the given sequence of numbers.</p>
+<p class="last"><em>new in Jinja 1.1</em></p>
+</dd>
+<dt><cite>textile</cite></dt>
+<dd><p class="first">Prase the string using textile.</p>
+<p class="last">requires the <a class="reference" href="http://dealmeida.net/projects/textile/">PyTextile</a> library.</p>
+</dd>
+<dt><cite>title</cite></dt>
+<dd>Return a titlecased version of the value. I.e. words will start with
+uppercase letters, all remaining characters are lowercase.</dd>
+<dt><cite>trim</cite></dt>
+<dd>Strip leading and trailing whitespace.</dd>
+<dt><cite>truncate</cite></dt>
+<dd><p class="first last">Return a truncated copy of the string. The length is specified
+with the first parameter which defaults to <tt class="docutils literal"><span class="pre">255</span></tt>. If the second
+parameter is <tt class="docutils literal"><span class="pre">true</span></tt> the filter will cut the text at length. Otherwise
+it will try to save the last word. If the text was in fact
+truncated it will append an ellipsis sign (<tt class="docutils literal"><span class="pre">&quot;...&quot;</span></tt>). If you want a
+different ellipsis sign than <tt class="docutils literal"><span class="pre">&quot;...&quot;</span></tt> you can specify it using the
+third parameter.</p>
+<!-- sourcecode jinja::
+
+{{ mytext|truncate(300, false, '&raquo;') }}
+    truncate mytext to 300 chars, don't split up words, use a
+    right pointing double arrow as ellipsis sign. -->
+</dd>
+<dt><cite>upper</cite></dt>
+<dd>Convert a value to uppercase.</dd>
+<dt><cite>urlencode</cite></dt>
+<dd><p class="first">urlencode a string or directory.</p>
+<div class="last"><div class="syntax"><pre><span class="cp">{{</span> <span class="o">{</span><span class="s1">&#39;foo&#39;</span><span class="o">:</span> <span class="s1">&#39;bar&#39;</span><span class="o">,</span> <span class="s1">&#39;blub&#39;</span><span class="o">:</span> <span class="s1">&#39;blah&#39;</span><span class="o">}|</span><span class="nf">urlencode</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; foo=bar&amp;blub=blah</span>
+
+<span class="cp">{{</span> <span class="s1">&#39;Hello World&#39;</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; Hello%20World</span>
+</pre></div>
+</div></dd>
+<dt><cite>urlize</cite></dt>
+<dd><p class="first">Converts URLs in plain text into clickable links.</p>
+<p>If you pass the filter an additional integer it will shorten the urls
+to that number. Also a third argument exists that makes the urls
+&quot;nofollow&quot;:</p>
+<div class="last"><div class="syntax"><pre><span class="cp">{{</span> <span class="nv">mytext</span><span class="o">|</span><span class="nf">urlize</span><span class="o">(</span><span class="m">40</span><span class="o">,</span> <span class="nv">True</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    links are shortened to 40 chars and defined with rel=&quot;nofollow&quot;</span>
+</pre></div>
+</div></dd>
+<dt><cite>wordcount</cite></dt>
+<dd>Count the words in that string.</dd>
+<dt><cite>wordwrap</cite></dt>
+<dd>Return a copy of the string passed to the filter wrapped after
+<tt class="docutils literal"><span class="pre">79</span></tt> characters. You can override this default using the first
+parameter. If you set the second parameter to <cite>true</cite> Jinja will
+also split words apart (usually a bad idea because it makes
+reading hard).</dd>
+<dt><cite>xmlattr</cite></dt>
+<dd><p class="first">Create an SGML/XML attribute string based on the items in a dict.
+All values that are neither <cite>none</cite> nor <cite>undefined</cite> are automatically
+escaped:</p>
+<div class="syntax"><pre><span class="nt">&lt;ul</span><span class="cp">{{</span> <span class="o">{</span><span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;my_list&#39;</span><span class="o">,</span> <span class="s1">&#39;missing&#39;</span><span class="o">:</span> <span class="nv">None</span><span class="o">,</span>
+        <span class="s1">&#39;id&#39;</span><span class="o">:</span> <span class="s1">&#39;list-%d&#39;</span><span class="o">|</span><span class="nf">format</span><span class="o">(</span><span class="nv">variable</span><span class="o">)}|</span><span class="nf">xmlattr</span> <span class="cp">}}</span><span class="nt">&gt;</span>
+...
+<span class="nt">&lt;/ul&gt;</span>
+</pre></div>
+<p>Results in something like this:</p>
+<div class="syntax"><pre><span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">&quot;my_list&quot;</span> <span class="na">id=</span><span class="s">&quot;list-42&quot;</span><span class="nt">&gt;</span>
+...
+<span class="nt">&lt;/ul&gt;</span>
+</pre></div>
+<p>As you can see it automatically prepends a space in front of the item
+if the filter returned something. You can disable this by passing
+<cite>false</cite> as only argument to the filter.</p>
+<p class="last"><em>New in Jinja 1.1</em></p>
+</dd>
+</dl>
+<div class="admonition-note admonition">
+<p class="first admonition-title">note</p>
+<p><em>Jinja 1.0 and 1.1 notice</em></p>
+<p>The filter operator has a pretty low priority in Jinja 1.0 and 1.1. If you
+want to add fitered values you have to put them into parentheses. The same
+applies if you want to access attributes or return values:</p>
+<div class="syntax"><pre><span class="x">correct:</span>
+<span class="x">    </span><span class="cp">{{</span> <span class="o">(</span><span class="nv">foo</span><span class="o">|</span><span class="nf">filter</span><span class="o">)</span> <span class="o">+</span> <span class="o">(</span><span class="nv">bar</span><span class="o">|</span><span class="nf">filter</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">wrong:</span>
+<span class="x">    </span><span class="cp">{{</span> <span class="nv">foo</span><span class="o">|</span><span class="nf">filter</span> <span class="o">+</span> <span class="nv">bar</span><span class="o">|</span><span class="nf">filter</span> <span class="cp">}}</span><span class="x"></span>
+
+<span class="x">correct:</span>
+<span class="x">    </span><span class="cp">{{</span> <span class="o">(</span><span class="nv">foo</span><span class="o">|</span><span class="nf">filter</span><span class="o">)</span><span class="nv">.attribute</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">wrong:</span>
+<span class="x">    </span><span class="cp">{{</span> <span class="nv">foo</span><span class="o">|</span><span class="nf">filter</span><span class="nv">.attribute</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+<p class="last">This changed in Jinja 1.2, from that version one the filter operator has
+the highest priority so you can do <tt class="docutils literal"><span class="pre">foo|filter</span> <span class="pre">+</span> <span class="pre">bar|filter</span></tt>.</p>
+</div>
+<p><em>new in Jinja 1.1</em>:</p>
+<p>Because the application can provide additional filters you can get a documentation
+of all the provided filters by calling <tt class="docutils literal"><span class="pre">debug.filters()</span></tt>:</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="nv">debug.filters</span><span class="o">()</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; returns a plain text representation of all the filters</span>
+
+<span class="cp">{{</span> <span class="nv">debug.filters</span><span class="o">(</span><span class="nv">False</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; same as above but without the builtin ones.</span>
+</pre></div>
+</div>
+<div class="section">
+<h2><a id="tests" name="tests">Tests</a></h2>
+<p>You can use the <cite>is</cite> operator to perform tests on a value:</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="m">42</span> <span class="k">is</span> <span class="nf">numeric</span> <span class="cp">}}</span><span class="x"> -&gt; true</span>
+<span class="cp">{{</span> <span class="s2">&quot;foobar&quot;</span> <span class="k">is</span> <span class="nf">numeric</span> <span class="cp">}}</span><span class="x"> -&gt; false</span>
+<span class="cp">{{</span> <span class="s1">&#39;FOO&#39;</span> <span class="k">is</span> <span class="nf">upper</span> <span class="cp">}}</span><span class="x"> -&gt; true</span>
+</pre></div>
+<p>These tests are especially useful when used in <cite>if</cite> conditions.</p>
+<dl class="docutils">
+<dt><cite>defined</cite></dt>
+<dd><p class="first">Return true if the variable is defined:</p>
+<div class="syntax"><pre><span class="cp">{%</span> <span class="k">if</span> <span class="nv">variable</span> <span class="k">is</span> <span class="nf">defined</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    value of variable: </span><span class="cp">{{</span> <span class="nv">variable</span> <span class="cp">}}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    variable is not defined</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+<p class="last">See also the <tt class="docutils literal"><span class="pre">default</span></tt> filter.</p>
+</dd>
+<dt><cite>even</cite></dt>
+<dd>Return true of the variable is even.</dd>
+<dt><cite>lower</cite></dt>
+<dd>Return true if the variable is lowercase.</dd>
+<dt><cite>matching</cite></dt>
+<dd><p class="first">Test if the variable matches the regular expression given. Note that
+you have to escape special chars using <em>two</em> backslashes, these are
+<em>not</em> raw strings.</p>
+<div class="last"><div class="syntax"><pre><span class="cp">{%</span> <span class="k">if</span> <span class="nv">var</span> <span class="k">is</span> <span class="nf">matching</span> <span class="p">@</span><span class="o">/</span><span class="p">^\</span><span class="nv">d</span><span class="o">+</span><span class="p">$</span><span class="o">/</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    var looks like a number</span>
+<span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    var doesn&#39;t really look like a number</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div></dd>
+<dt><cite>numeric</cite></dt>
+<dd>Return true if the variable is numeric.</dd>
+<dt><cite>odd</cite></dt>
+<dd>Return true if the variable is odd.</dd>
+<dt><cite>sameas</cite></dt>
+<dd><p class="first">Check if an object points to the same memory address than another
+object:</p>
+<div class="syntax"><pre><span class="cp">{%</span> <span class="k">if</span> <span class="nv">foo.attribute</span> <span class="k">is</span> <span class="nf">sameas</span><span class="o">(</span><span class="kp">false</span><span class="o">)</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    the foo attribute really is the `False` singleton</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+<p class="last"><em>New in Jinja 1.2</em></p>
+</dd>
+<dt><cite>sequence</cite></dt>
+<dd>Return true if the variable is a sequence. Sequences are variables
+that are iterable.</dd>
+<dt><cite>upper</cite></dt>
+<dd>Return true if the variable is uppercase.</dd>
+</dl>
+<p><em>new in Jinja 1.1</em>:</p>
+<p>Because the application can provide additional tests you can get a documentation
+of all the provided tests by calling <tt class="docutils literal"><span class="pre">debug.tests()</span></tt>:</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="nv">debug.tests</span><span class="o">()</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; returns a plain text representation of all the tests</span>
+
+<span class="cp">{{</span> <span class="nv">debug.tests</span><span class="o">(</span><span class="nv">False</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    -&gt; same as above but without the builtin ones.</span>
+</pre></div>
+<p><em>new in Jinja 1.2</em>:</p>
+<p>If a test function expects one or no argument you can leave out the parentheses.
+Previously this was only possible for text functions without arguments:</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="nv">foo</span> <span class="k">is</span> <span class="nf">matching</span> <span class="err">@</span><span class="o">/</span><span class="err">\</span><span class="nv">s</span><span class="o">+/</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    is the same as</span>
+<span class="cp">{{</span> <span class="nv">foo</span> <span class="k">is</span> <span class="nf">matching</span><span class="o">(</span><span class="err">@</span><span class="o">/</span><span class="err">\</span><span class="nv">s</span><span class="o">+/)</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+</div>
+<div class="section">
+<h2><a id="global-functions" name="global-functions">Global Functions</a></h2>
+<p>Test functions and filter functions live in their own namespace. Global
+functions not. They behave like normal objects in the context. Beside the
+functions added by the application or framewhere there are two functions
+available per default:</p>
+<p><cite>range</cite></p>
+<blockquote>
+Works like the python <a class="reference" href="http://docs.python.org/tut/node6.html#SECTION006300000000000000000">range function</a> just that it doesn't support
+ranges greater than <tt class="docutils literal"><span class="pre">1000000</span></tt>.</blockquote>
+<p><cite>debug</cite></p>
+<blockquote>
+Function that outputs the contents of the context.</blockquote>
+<p><cite>lipsum</cite></p>
+<blockquote>
+<p>Generate some paragraphs of random text:</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="nv">lipsum</span><span class="o">(</span><span class="m">5</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    five html paragraphs</span>
+
+<span class="cp">{{</span> <span class="nv">lipsum</span><span class="o">(</span><span class="m">2</span><span class="o">,</span> <span class="nv">False</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    two ascii only paragraphs</span>
+</pre></div>
+<p>Per default a paragraph is between 20 and 100 words long. You can
+override this default with the third and fourth parameter:</p>
+<div class="syntax"><pre><span class="cp">{{</span> <span class="nv">lipsum</span><span class="o">(</span><span class="m">10</span><span class="o">,</span> <span class="nv">True</span><span class="o">,</span> <span class="m">50</span><span class="o">,</span> <span class="m">200</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    generate 10 HTML paragraphs between 50 and 200 words.</span>
+</pre></div>
+<p><em>new in Jinja 1.1</em></p>
+</blockquote>
+<p><cite>watchchanges</cite></p>
+<blockquote>
+<p>Jinja does not provide an django like <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">ifchanged</span> <span class="pre">%}</span></tt> tag. As
+replacement for this tag there is a special function in the namespace
+called <cite>watchchanges</cite>.</p>
+<p>You can use it like this:</p>
+<div class="syntax"><pre><span class="cp">{%</span> <span class="k">for</span> <span class="nv">changed</span><span class="o">,</span> <span class="nv">article</span> <span class="k">in</span> <span class="nv">watchchanges</span><span class="o">(</span><span class="nv">articles</span><span class="o">,</span> <span class="s1">&#39;date&#39;</span><span class="o">,</span> <span class="s1">&#39;day&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+    <span class="cp">{%</span> <span class="k">if</span> <span class="nv">changed</span> <span class="cp">%}</span><span class="nt">&lt;h3&gt;</span><span class="cp">{{</span> <span class="nv">articles.date.day</span> <span class="cp">}}</span><span class="nt">&lt;/h3&gt;</span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+    <span class="nt">&lt;h4&gt;</span><span class="cp">{{</span> <span class="nv">article.title</span><span class="o">|</span><span class="nf">e</span> <span class="cp">}}</span><span class="nt">&lt;/h4&gt;</span>
+    <span class="nt">&lt;p&gt;</span><span class="cp">{{</span> <span class="nv">article.body</span><span class="o">|</span><span class="nf">e</span> <span class="cp">}}</span><span class="nt">&lt;/p&gt;</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+</pre></div>
+<p>For each iteration <cite>watchchanges</cite> will check the given attribute. If it
+changed to the former iteration the first yielded item (in this example
+it's called <cite>changed</cite>) will be <cite>true</cite>, else <cite>false</cite>.</p>
+<p>In this example <cite>articles</cite> is a list of articles for the template with
+an attribute called <cite>date.day</cite> which represents the current day. To only
+add a new day headline if the day has changed <cite>watchchanges</cite> is now told
+to check <cite>articles.date.days</cite>.</p>
+<p>If you want to observe more than one attribute you can provide pairs:</p>
+<div class="syntax"><pre><span class="cp">{%</span> <span class="k">for</span> <span class="nv">changed</span><span class="o">,</span> <span class="nv">item</span> <span class="k">in</span> <span class="nv">watchchanges</span><span class="o">(</span><span class="nv">foo</span><span class="o">,</span> <span class="o">(</span><span class="s1">&#39;a&#39;</span><span class="o">,</span> <span class="s1">&#39;b&#39;</span><span class="o">),</span> <span class="o">(</span><span class="s1">&#39;a&#39;</span><span class="o">,</span> <span class="s1">&#39;c&#39;</span><span class="o">))</span> <span class="cp">%}</span>
+    ...
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+</pre></div>
+<p>Note that if you want to watch two first level attributes you have to
+either use the list syntax <cite>[]</cite> or add a colon:</p>
+<div class="syntax"><pre><span class="cp">{%</span> <span class="k">for</span> <span class="nv">changed</span><span class="o">,</span> <span class="nv">item</span> <span class="k">in</span> <span class="nv">watchchanges</span><span class="o">(</span><span class="nv">foo</span><span class="o">,</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="o">],</span> <span class="o">(</span><span class="s1">&#39;b&#39;</span><span class="o">,))</span> <span class="cp">%}</span>
+    ...
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+</pre></div>
+<p>otherwise Jinja cannot differ between a pair of parentheses to group
+expressions or the sequence syntax.</p>
+<p>If you don't provide any arguments the value of the variable itself
+is checked.</p>
+<p><em>new in Jinja 1.1</em></p>
+</blockquote>
+<p><cite>rendertemplate</cite></p>
+<blockquote>
+<p>Loads and renders a template with a copy of the current context. This works
+in many situations like the <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">include</span> <span class="pre">%}</span></tt> tag, just that it does not
+include a template and merges it into the template structure but renders
+it completely independent and returns the rendered data as string.</p>
+<p><em>new in Jinja 1.1</em></p>
+</blockquote>
+</div>
+<div class="section">
+<h2><a id="global-constants" name="global-constants">Global Constants</a></h2>
+<p>Jinja provides some special variables which cannot be overridden in templates.
+Those are not affected by the variable lookup:</p>
+<blockquote>
+<cite>_</cite>, <cite>true</cite>, <cite>false</cite>, <cite>none</cite>, <cite>undefined</cite></blockquote>
+<p>You cannot use those names for your own variables or macros. It's however no
+problem to have blocks with that name.</p>
+<p><strong>Notice</strong> due to a bug in Jinja 1.0 it was possible to override <cite>_</cite>, <cite>true</cite>,
+<cite>false</cite>, <cite>none</cite> and <cite>undefined</cite> from the template by either using <cite>{% set %}</cite>
+or in a for loop. While overriding <cite>true</cite>, <cite>false</cite> etc just caused nothing
+overriding the translation marker <cite>_</cite> would crash the translation interface.
+If you want to use <cite>_</cite> for unpacking in for loops (eg. skipping items) you
+have to give it a proper name:</p>
+<div class="syntax"><pre><span class="cp">{%</span> <span class="k">for</span> <span class="nv">key</span><span class="o">,</span> <span class="nv">ignore</span> <span class="k">in</span> <span class="nv">mydict</span><span class="o">|</span><span class="nf">dictsort</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    </span><span class="cp">{{</span> <span class="nv">key</span><span class="o">|</span><span class="nf">e</span> <span class="cp">}}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+
+    </div>
+  </div>
+</body>
+<!-- generated on: 2007-11-17 18:18:01.698716
+     file id: builtins -->
+</html>

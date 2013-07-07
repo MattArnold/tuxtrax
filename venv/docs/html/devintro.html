@@ -1,0 +1,374 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Developer Quickstart &mdash; Jinja Documentation</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <style type="text/css">
+    .syntax  { background: #ffffff; }
+.syntax .c { color: #888888 } /* Comment */
+.syntax .err { color: #a61717; background-color: #e3d2d2 } /* Error */
+.syntax .k { color: #008800; font-weight: bold } /* Keyword */
+.syntax .cm { color: #888888 } /* Comment.Multiline */
+.syntax .cp { color: #cc0000; font-weight: bold } /* Comment.Preproc */
+.syntax .c1 { color: #888888 } /* Comment.Single */
+.syntax .cs { color: #cc0000; font-weight: bold; background-color: #fff0f0 } /* Comment.Special */
+.syntax .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
+.syntax .ge { font-style: italic } /* Generic.Emph */
+.syntax .gr { color: #aa0000 } /* Generic.Error */
+.syntax .gh { color: #303030 } /* Generic.Heading */
+.syntax .gi { color: #000000; background-color: #ddffdd } /* Generic.Inserted */
+.syntax .go { color: #888888 } /* Generic.Output */
+.syntax .gp { color: #555555 } /* Generic.Prompt */
+.syntax .gs { font-weight: bold } /* Generic.Strong */
+.syntax .gu { color: #606060 } /* Generic.Subheading */
+.syntax .gt { color: #aa0000 } /* Generic.Traceback */
+.syntax .kc { color: #008800; font-weight: bold } /* Keyword.Constant */
+.syntax .kd { color: #008800; font-weight: bold } /* Keyword.Declaration */
+.syntax .kp { color: #008800 } /* Keyword.Pseudo */
+.syntax .kr { color: #008800; font-weight: bold } /* Keyword.Reserved */
+.syntax .kt { color: #888888; font-weight: bold } /* Keyword.Type */
+.syntax .m { color: #0000DD; font-weight: bold } /* Literal.Number */
+.syntax .s { color: #dd2200; background-color: #fff0f0 } /* Literal.String */
+.syntax .na { color: #336699 } /* Name.Attribute */
+.syntax .nb { color: #003388 } /* Name.Builtin */
+.syntax .nc { color: #bb0066; font-weight: bold } /* Name.Class */
+.syntax .no { color: #003366; font-weight: bold } /* Name.Constant */
+.syntax .nd { color: #555555 } /* Name.Decorator */
+.syntax .ne { color: #bb0066; font-weight: bold } /* Name.Exception */
+.syntax .nf { color: #0066bb; font-weight: bold } /* Name.Function */
+.syntax .nl { color: #336699; font-style: italic } /* Name.Label */
+.syntax .nn { color: #bb0066; font-weight: bold } /* Name.Namespace */
+.syntax .py { color: #336699; font-weight: bold } /* Name.Property */
+.syntax .nt { color: #bb0066; font-weight: bold } /* Name.Tag */
+.syntax .nv { color: #336699 } /* Name.Variable */
+.syntax .ow { color: #008800 } /* Operator.Word */
+.syntax .w { color: #bbbbbb } /* Text.Whitespace */
+.syntax .mf { color: #0000DD; font-weight: bold } /* Literal.Number.Float */
+.syntax .mh { color: #0000DD; font-weight: bold } /* Literal.Number.Hex */
+.syntax .mi { color: #0000DD; font-weight: bold } /* Literal.Number.Integer */
+.syntax .mo { color: #0000DD; font-weight: bold } /* Literal.Number.Oct */
+.syntax .sb { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Backtick */
+.syntax .sc { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Char */
+.syntax .sd { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Doc */
+.syntax .s2 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Double */
+.syntax .se { color: #0044dd; background-color: #fff0f0 } /* Literal.String.Escape */
+.syntax .sh { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Heredoc */
+.syntax .si { color: #3333bb; background-color: #fff0f0 } /* Literal.String.Interpol */
+.syntax .sx { color: #22bb22; background-color: #f0fff0 } /* Literal.String.Other */
+.syntax .sr { color: #008800; background-color: #fff0ff } /* Literal.String.Regex */
+.syntax .s1 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Single */
+.syntax .ss { color: #aa6600; background-color: #fff0f0 } /* Literal.String.Symbol */
+.syntax .bp { color: #003388 } /* Name.Builtin.Pseudo */
+.syntax .vc { color: #336699 } /* Name.Variable.Class */
+.syntax .vg { color: #dd7700 } /* Name.Variable.Global */
+.syntax .vi { color: #3333bb } /* Name.Variable.Instance */
+.syntax .il { color: #0000DD; font-weight: bold } /* Literal.Number.Integer.Long */
+  </style>
+</head>
+<body>
+  <div id="content">
+    
+      <h1 class="heading"><span>Jinja</span></h1>
+      <h2 class="subheading">Developer Quickstart</h2>
+    
+    
+    <div id="toc">
+      <h2>Navigation</h2>
+      <ul>
+        <li><a href="index.html">back to index</a></li>
+      </ul>
+      
+        <h2>Contents</h2>
+        <ul class="contents">
+        
+          <li><a href="#starting-up">Starting Up</a></li>
+        
+          <li><a href="#the-environment">The Environment</a></li>
+        
+          <li><a href="#undefined-values">Undefined Values</a></li>
+        
+          <li><a href="#automatic-escaping">Automatic Escaping</a></li>
+        
+          <li><a href="#loading-templates-from-files">Loading Templates From Files</a></li>
+        
+          <li><a href="#adding-filters">Adding Filters</a></li>
+        
+          <li><a href="#adding-tests">Adding Tests</a></li>
+        
+        </ul>
+      
+    </div>
+    
+    <div id="contentwrapper">
+      <p>This part of the documentation shows you how to embed Jinja into your
+application.</p>
+<div class="section">
+<h2><a id="starting-up" name="starting-up">Starting Up</a></h2>
+<p>Here the quickest way to create a template from a string and render it:</p>
+<div class="syntax"><pre><span class="k">from</span> <span class="nn">jinja</span> <span class="k">import</span> <span class="n">Environment</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">()</span>
+<span class="n">tmpl</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="s">&#39;Hello {{ name }}!&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">tmpl</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;John Doe&#39;</span><span class="p">)</span>
+</pre></div>
+<p>This example should output the following string after execution:</p>
+<pre class="literal-block">
+Hello John Doe!
+</pre>
+<p>If you receive an error, check if you have a typo in your code. If not, have
+a look at the <a class="reference" href="./installation.html">installation</a> page for troubleshooting.</p>
+<p>Basically the important method on a template is the <cite>render</cite> method. It
+takes either a dict or keyword arguments. All keyword arguments appear
+in the template as variables.</p>
+<p>So these two snippets do the same:</p>
+<div class="syntax"><pre><span class="n">tmpl</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+    <span class="n">knights</span><span class="o">=</span><span class="s">&#39;we say nih&#39;</span><span class="p">,</span>
+    <span class="n">spam</span><span class="o">=</span><span class="s">&#39;and eggs&#39;</span>
+<span class="p">)</span>
+</pre></div>
+<div class="syntax"><pre><span class="n">tmpl</span><span class="o">.</span><span class="n">render</span><span class="p">({</span>
+    <span class="s">&#39;knights&#39;</span><span class="p">:</span>  <span class="s">&#39;we say nih&#39;</span><span class="p">,</span>
+    <span class="s">&#39;spam&#39;</span><span class="p">:</span>     <span class="s">&#39;and eggs&#39;</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<div class="section">
+<h2><a id="the-environment" name="the-environment">The Environment</a></h2>
+<p>The Jinja environment.</p>
+<p>The core component of Jinja is the <cite>Environment</cite>. It contains
+important shared variables like configuration, filters, tests,
+globals and others.</p>
+<p>Here the possible initialization parameters:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<tbody valign="top">
+<tr><td><cite>block_start_string</cite> *</td>
+<td>the string marking the begin of a block.
+this defaults to <tt class="docutils literal"><span class="pre">'{%'</span></tt>.</td>
+</tr>
+<tr><td><cite>block_end_string</cite> *</td>
+<td>the string marking the end of a block.
+defaults to <tt class="docutils literal"><span class="pre">'%}'</span></tt>.</td>
+</tr>
+<tr><td><cite>variable_start_string</cite> *</td>
+<td>the string marking the begin of a print
+statement. defaults to <tt class="docutils literal"><span class="pre">'{{'</span></tt>.</td>
+</tr>
+<tr><td><cite>comment_start_string</cite> *</td>
+<td>the string marking the begin of a
+comment. defaults to <tt class="docutils literal"><span class="pre">'{#'</span></tt>.</td>
+</tr>
+<tr><td><cite>comment_end_string</cite> *</td>
+<td>the string marking the end of a comment.
+defaults to <tt class="docutils literal"><span class="pre">'#}'</span></tt>.</td>
+</tr>
+<tr><td><cite>trim_blocks</cite> *</td>
+<td>If this is set to <tt class="docutils literal"><span class="pre">True</span></tt> the first newline
+after a block is removed (block, not
+variable tag!). Defaults to <tt class="docutils literal"><span class="pre">False</span></tt>.</td>
+</tr>
+<tr><td><cite>auto_escape</cite></td>
+<td>If this is set to <tt class="docutils literal"><span class="pre">True</span></tt> Jinja will
+automatically escape all variables using xml
+escaping methods. If you don't want to
+escape a string you have to wrap it in a
+<tt class="docutils literal"><span class="pre">Markup</span></tt> object from the
+<tt class="docutils literal"><span class="pre">jinja.datastructure</span></tt> module. If
+<cite>auto_escape</cite> is <tt class="docutils literal"><span class="pre">True</span></tt> there will be also
+a <tt class="docutils literal"><span class="pre">Markup</span></tt> object in the template
+namespace to define partial html fragments.
+Note that we do not recommend this feature.</td>
+</tr>
+<tr><td><cite>default_filters</cite></td>
+<td>list of tuples in the form (<tt class="docutils literal"><span class="pre">filter_name</span></tt>,
+<tt class="docutils literal"><span class="pre">arguments</span></tt>) where <tt class="docutils literal"><span class="pre">filter_name</span></tt> is the
+name of a registered filter and
+<tt class="docutils literal"><span class="pre">arguments</span></tt> a tuple with the filter
+arguments. The filters specified here will
+always be applied when printing data to the
+template. <em>new in Jinja 1.1</em></td>
+</tr>
+<tr><td><cite>template_charset</cite></td>
+<td>The charset of the templates. Defaults
+to <tt class="docutils literal"><span class="pre">'utf-8'</span></tt>.</td>
+</tr>
+<tr><td><cite>charset</cite></td>
+<td>Charset of all string input data. Defaults
+to <tt class="docutils literal"><span class="pre">'utf-8'</span></tt>.</td>
+</tr>
+<tr><td><cite>namespace</cite></td>
+<td>Global namespace for all templates.</td>
+</tr>
+<tr><td><cite>loader</cite></td>
+<td>Specify a template loader.</td>
+</tr>
+<tr><td><cite>filters</cite></td>
+<td>dict of filters or the default filters if
+not defined.</td>
+</tr>
+<tr><td><cite>tests</cite></td>
+<td>dict of tests of the default tests if not
+defined.</td>
+</tr>
+<tr><td><cite>context_class</cite></td>
+<td>the context class this template should use.
+See the <cite>Context</cite> documentation for more
+details.</td>
+</tr>
+<tr><td><cite>undefined_singleton</cite></td>
+<td>The singleton value that is used for missing
+variables. <em>new in Jinja 1.1</em></td>
+</tr>
+<tr><td><cite>disable_regexps</cite></td>
+<td>Disable support for regular expresssions.</td>
+</tr>
+<tr><td><cite>friendly_traceback</cite></td>
+<td>Set this to <cite>False</cite> to disable the developer
+friendly traceback rewriting. Whenever an
+runtime or syntax error occours jinja will
+try to make a developer friendly traceback
+that shows the error in the template line.
+This however can be annoying when debugging
+broken functions that are called from the
+template. <em>new in Jinja 1.1</em></td>
+</tr>
+<tr><td><cite>translator_factory</cite></td>
+<td>A callback function that is called with
+the context as first argument to get the
+translator for the current instance.
+<em>new in Jinja 1.2</em></td>
+</tr>
+</tbody>
+</table>
+<p>All of these variables except those marked with a star (*) are
+modifiable after environment initialization.</p>
+<p>The environment provides the following useful functions and properties in
+addition to the initialization values:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="35%" />
+<col width="65%" />
+</colgroup>
+<tbody valign="top">
+<tr><td><tt class="docutils literal"><span class="pre">parse(source,</span> <span class="pre">filename)</span></tt></td>
+<td>Parse the sourcecode and return the abstract
+syntax tree. This tree of nodes is used by the
+<a class="reference" href="./translators.html">translators</a> to convert the template into
+executable source- or bytecode.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">lex(source,</span> <span class="pre">filename)</span></tt></td>
+<td>Tokenize the given sourcecode and return a
+generator of tuples in the form
+<tt class="docutils literal"><span class="pre">(lineno,</span> <span class="pre">token,</span> <span class="pre">value)</span></tt>. The filename is just
+used in the exceptions raised.
+<strong>New in Jinja 1.1</strong></td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">from_string(source)</span></tt></td>
+<td>Load and parse a template source and translate it
+into eval-able Python code. This code is wrapped
+within a <cite>Template</cite> class that allows you to
+render it.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">get_template(name)</span></tt></td>
+<td>Load a template from a loader. If the template
+does not exist, you will get a <cite>TemplateNotFound</cite>
+exception.</td>
+</tr>
+</tbody>
+</table>
+<p>There are also some internal functions on the environment used by the template
+evaluation code to keep it sandboxed.</p>
+</div>
+<div class="section">
+<h2><a id="undefined-values" name="undefined-values">Undefined Values</a></h2>
+<p>If a template designer tries to access a not defined value the return value
+will be the <cite>undefined_singleton</cite> specified in the environment. The default
+one is the <cite>SilentUndefined</cite> which fails in no case. Additionally there is
+a special undefined type called the <cite>ComplainingUndefined</cite> which is located
+in the <cite>jinja.datastructure</cite> module. It will raise exceptions when compared
+with other types, or when rendered.</p>
+<p>Theoretically you can provide your own singleton by subclassing
+<cite>AbstractUndefindedType</cite> and creating an instance of it using <cite>make_undefined</cite>
+(both located in <cite>jinja.datastructure</cite>) but those two types should cover
+the basic use cases. The <cite>Undefined</cite> object in that module exists for
+backwards compatibility and is an alias for <cite>SilentUndefined</cite>.</p>
+<p>To create your own undefined singleton do something like this:</p>
+<div class="syntax"><pre><span class="x">from jinja.datastructure import AbstractUndefinedType, make_undefined</span>
+
+<span class="x">class MyUndefinedType(AbstractUndefindedType):</span>
+<span class="x">    __slots__ = ()</span>
+
+<span class="x">    def __iter__(self):</span>
+<span class="x">        return iter(int, 0)</span>
+
+<span class="x">    def __reduce__(self):</span>
+<span class="x">        return &#39;MyUndefined&#39;</span>
+
+<span class="x">MyUndefined = make_undefined(MyUndefinedType)</span>
+</pre></div>
+<p>The only thing you have to do is to override <cite>__reduce__</cite> so that it returns
+the name of the singleton instance and create the instance using
+<cite>make_undefined</cite>. Everything else is up to you. Note that currently attributes
+on undefined objects are available in the Jinja layer too which however
+will change in one of the next Jinja versions. So if you put a <cite>foo</cite> attribute
+on your undefined singleton you will be able to do <tt class="docutils literal"><span class="pre">{{</span> <span class="pre">undefined.foo</span> <span class="pre">}}</span></tt>
+by now but certainly not in the future.</p>
+<p>This limitation currently exists because undefined is treated as normal object
+and thus affected by normal getattr calls.</p>
+</div>
+<div class="section">
+<h2><a id="automatic-escaping" name="automatic-escaping">Automatic Escaping</a></h2>
+<p>Jinja provides a way for automatic escaping, but we do not recommend using it.
+Because Jinja was designed as multi purpose template engine there are some
+issues with automatic escaping. For example filters don't deal with markup
+data. Also you can easily bypass the automatic escaping so it's not something
+you can expect to &quot;just work&quot;. Also there is a huge overhead when escaping
+everything.</p>
+<p>The best idea is to think about which data already contains html, which will
+probably contain (eg: every user input, etc) etc. And live with self escaping.</p>
+<p>That's usually a much better idea.</p>
+</div>
+<div class="section">
+<h2><a id="loading-templates-from-files" name="loading-templates-from-files">Loading Templates From Files</a></h2>
+<p>Loading templates from a string is always a bad idea. It doesn't allow template
+inheritance and is also slow since it parses and compiles the template again
+and again whereas loaders can cache the template code.</p>
+<p>All you have to do is to define a loader and use the <cite>get_template</cite> function.</p>
+<div class="syntax"><pre><span class="k">from</span> <span class="nn">jinja</span> <span class="k">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">FileSystemLoader</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">loader</span><span class="o">=</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="s">&#39;templates&#39;</span><span class="p">))</span>
+<span class="n">tmpl</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;index.html&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">tmpl</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;John Doe&#39;</span><span class="p">)</span>
+</pre></div>
+<p>This tells jinja to look for templates in the <tt class="docutils literal"><span class="pre">templates</span></tt> folder. It's a
+better idea to use an absolute path here though. For a list of supported
+loaders or how to write your own, head over to the <a class="reference" href="./loaders.html">loader</a> documentation.</p>
+</div>
+<div class="section">
+<h2><a id="adding-filters" name="adding-filters">Adding Filters</a></h2>
+<p>If you want to add additional filters to the environment, the best way is to
+modify the <tt class="docutils literal"><span class="pre">filters</span></tt> attribute and not to pass a dict to the environment.
+If you pass it a dict it will not include the default filters!</p>
+<div class="syntax"><pre><span class="k">from</span> <span class="nn">mylib</span> <span class="k">import</span> <span class="n">my_cool_filter</span>
+<span class="n">env</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="s">&#39;mycoolfilter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">my_cool_filter</span>
+</pre></div>
+<p>Writing filter functions is explained in the <a class="reference" href="./filters.html">filter development</a> section.</p>
+</div>
+<div class="section">
+<h2><a id="adding-tests" name="adding-tests">Adding Tests</a></h2>
+<p>Adding additional tests works analogous to filters:</p>
+<div class="syntax"><pre><span class="k">from</span> <span class="nn">mylib</span> <span class="k">import</span> <span class="n">my_cool_test</span>
+<span class="n">env</span><span class="o">.</span><span class="n">tests</span><span class="p">[</span><span class="s">&#39;mycooltest&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">my_cool_test</span>
+</pre></div>
+<p>Writing tests is explained in the <a class="reference" href="./tests.html">test development</a> section.</p>
+</div>
+
+    </div>
+  </div>
+</body>
+<!-- generated on: 2007-11-17 18:18:04.287179
+     file id: devintro -->
+</html>

@@ -42,6 +42,32 @@ def index():
                    lastname=row[8]) for row in eventrqdb.fetchall()]
     return render_template('index.html', tags=tags, submissions=submissions)
 
+@app.route('/eventform')
+def event_form():
+    return render_template('form.html')
+
+@app.route('/submitevent', methods=['POST'])
+def submitevent():
+    g.db.execute('''INSERT INTO submissions (email, title, description, 
+                 duration, setuptime, repetition, comments, firstname,
+                 lastname) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                 [request.form['email'], 
+                 request.form['title'], 
+                 request.form['description'], 
+                 request.form['duration'], 
+                 request.form['setuptime'], 
+                 request.form['repetition'], 
+                 request.form['comments'], 
+                 request.form['firstname'], 
+                 request.form['lastname']])
+    g.db.commit()
+    return render_template('index.html')
+
+@app.route('/createtag', methods=['POST'])
+def createtag():
+    g.db.execute("INSERT INTO tags (name) VALUES (?)", [request.form['tagname']])
+    g.db.commit()
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run()

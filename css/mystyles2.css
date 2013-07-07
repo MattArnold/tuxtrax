@@ -165,7 +165,7 @@ info:after {
 
 textarea { height: auto; }
 
-#request, #rsvpbutton {
+#createeventbutton, #rsvpbutton {
 	float: left;
 	width: auto; }
  

@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Alternative Syntax &mdash; Jinja Documentation</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <style type="text/css">
+    .syntax  { background: #ffffff; }
+.syntax .c { color: #888888 } /* Comment */
+.syntax .err { color: #a61717; background-color: #e3d2d2 } /* Error */
+.syntax .k { color: #008800; font-weight: bold } /* Keyword */
+.syntax .cm { color: #888888 } /* Comment.Multiline */
+.syntax .cp { color: #cc0000; font-weight: bold } /* Comment.Preproc */
+.syntax .c1 { color: #888888 } /* Comment.Single */
+.syntax .cs { color: #cc0000; font-weight: bold; background-color: #fff0f0 } /* Comment.Special */
+.syntax .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
+.syntax .ge { font-style: italic } /* Generic.Emph */
+.syntax .gr { color: #aa0000 } /* Generic.Error */
+.syntax .gh { color: #303030 } /* Generic.Heading */
+.syntax .gi { color: #000000; background-color: #ddffdd } /* Generic.Inserted */
+.syntax .go { color: #888888 } /* Generic.Output */
+.syntax .gp { color: #555555 } /* Generic.Prompt */
+.syntax .gs { font-weight: bold } /* Generic.Strong */
+.syntax .gu { color: #606060 } /* Generic.Subheading */
+.syntax .gt { color: #aa0000 } /* Generic.Traceback */
+.syntax .kc { color: #008800; font-weight: bold } /* Keyword.Constant */
+.syntax .kd { color: #008800; font-weight: bold } /* Keyword.Declaration */
+.syntax .kp { color: #008800 } /* Keyword.Pseudo */
+.syntax .kr { color: #008800; font-weight: bold } /* Keyword.Reserved */
+.syntax .kt { color: #888888; font-weight: bold } /* Keyword.Type */
+.syntax .m { color: #0000DD; font-weight: bold } /* Literal.Number */
+.syntax .s { color: #dd2200; background-color: #fff0f0 } /* Literal.String */
+.syntax .na { color: #336699 } /* Name.Attribute */
+.syntax .nb { color: #003388 } /* Name.Builtin */
+.syntax .nc { color: #bb0066; font-weight: bold } /* Name.Class */
+.syntax .no { color: #003366; font-weight: bold } /* Name.Constant */
+.syntax .nd { color: #555555 } /* Name.Decorator */
+.syntax .ne { color: #bb0066; font-weight: bold } /* Name.Exception */
+.syntax .nf { color: #0066bb; font-weight: bold } /* Name.Function */
+.syntax .nl { color: #336699; font-style: italic } /* Name.Label */
+.syntax .nn { color: #bb0066; font-weight: bold } /* Name.Namespace */
+.syntax .py { color: #336699; font-weight: bold } /* Name.Property */
+.syntax .nt { color: #bb0066; font-weight: bold } /* Name.Tag */
+.syntax .nv { color: #336699 } /* Name.Variable */
+.syntax .ow { color: #008800 } /* Operator.Word */
+.syntax .w { color: #bbbbbb } /* Text.Whitespace */
+.syntax .mf { color: #0000DD; font-weight: bold } /* Literal.Number.Float */
+.syntax .mh { color: #0000DD; font-weight: bold } /* Literal.Number.Hex */
+.syntax .mi { color: #0000DD; font-weight: bold } /* Literal.Number.Integer */
+.syntax .mo { color: #0000DD; font-weight: bold } /* Literal.Number.Oct */
+.syntax .sb { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Backtick */
+.syntax .sc { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Char */
+.syntax .sd { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Doc */
+.syntax .s2 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Double */
+.syntax .se { color: #0044dd; background-color: #fff0f0 } /* Literal.String.Escape */
+.syntax .sh { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Heredoc */
+.syntax .si { color: #3333bb; background-color: #fff0f0 } /* Literal.String.Interpol */
+.syntax .sx { color: #22bb22; background-color: #f0fff0 } /* Literal.String.Other */
+.syntax .sr { color: #008800; background-color: #fff0ff } /* Literal.String.Regex */
+.syntax .s1 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Single */
+.syntax .ss { color: #aa6600; background-color: #fff0f0 } /* Literal.String.Symbol */
+.syntax .bp { color: #003388 } /* Name.Builtin.Pseudo */
+.syntax .vc { color: #336699 } /* Name.Variable.Class */
+.syntax .vg { color: #dd7700 } /* Name.Variable.Global */
+.syntax .vi { color: #3333bb } /* Name.Variable.Instance */
+.syntax .il { color: #0000DD; font-weight: bold } /* Literal.Number.Integer.Long */
+  </style>
+</head>
+<body>
+  <div id="content">
+    
+      <h1 class="heading"><span>Jinja</span></h1>
+      <h2 class="subheading">Alternative Syntax</h2>
+    
+    
+    <div id="toc">
+      <h2>Navigation</h2>
+      <ul>
+        <li><a href="index.html">back to index</a></li>
+      </ul>
+      
+        <h2>Contents</h2>
+        <ul class="contents">
+        
+          <li><a href="#configuring-the-environment">Configuring The Environment</a></li>
+        
+          <li><a href="#block-variable-tag-unification">Block / Variable Tag Unification</a></li>
+        
+        </ul>
+      
+    </div>
+    
+    <div id="contentwrapper">
+      <p>Jinja allows some syntax customization for the block delimiters. Depending on
+the Jinja release more or less combinations are possible. The idea of an
+customizable syntax is that you can update existing templates from other
+template engines and programming languages easier and that you can replace
+the django like default delimiters which are not everybody's favorite.</p>
+<div class="section">
+<h2><a id="configuring-the-environment" name="configuring-the-environment">Configuring The Environment</a></h2>
+<p>For syntax configuration there are six arguments in the environment which
+are the first six for convenience. Thus those two snippets do the same:</p>
+<div class="syntax"><pre><span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span>
+     <span class="n">block_start_string</span><span class="o">=</span><span class="s">&#39;{%&#39;</span><span class="p">,</span>
+     <span class="n">block_end_string</span><span class="o">=</span><span class="s">&#39;%}&#39;</span><span class="p">,</span>
+     <span class="n">variable_start_string</span><span class="o">=</span><span class="s">&#39;{{&#39;</span><span class="p">,</span>
+     <span class="n">variable_end_string</span><span class="o">=</span><span class="s">&#39;}}&#39;</span><span class="p">,</span>
+     <span class="n">comment_start_string</span><span class="o">=</span><span class="s">&#39;{#&#39;</span><span class="p">,</span>
+     <span class="n">comment_end_string</span><span class="o">=</span><span class="s">&#39;#}&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="s">&#39;{%&#39;</span><span class="p">,</span> <span class="s">&#39;%}&#39;</span><span class="p">,</span> <span class="s">&#39;{{&#39;</span><span class="p">,</span> <span class="s">&#39;}}&#39;</span><span class="p">,</span> <span class="s">&#39;{#&#39;</span><span class="p">,</span> <span class="s">&#39;#]&#39;</span><span class="p">)</span>
+</pre></div>
+<div class="section">
+<h3><a id="ruby-like-syntax" name="ruby-like-syntax">Ruby Like Syntax</a></h3>
+<p>Here an example configuration for Ruby-like syntax:</p>
+<div class="syntax"><pre><span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="s">&#39;&lt;%&#39;</span><span class="p">,</span> <span class="s">&#39;%&gt;&#39;</span><span class="p">,</span> <span class="s">&#39;&lt;%=&#39;</span><span class="p">,</span> <span class="s">&#39;%&gt;&#39;</span><span class="p">,</span> <span class="s">&#39;&lt;%#&#39;</span><span class="p">,</span> <span class="s">&#39;%&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+<p>An example template then looks like this:</p>
+<div class="syntax"><pre><span class="cp">&lt;%#</span><span class="c"> example eruby like configuration for Jinja </span><span class="cp">%&gt;</span>
+<span class="nt">&lt;ul&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">for</span> <span class="n">item</span> <span class="k">in</span> <span class="n">seq</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;li&gt;</span><span class="cp">&lt;%=</span> <span class="n">item</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span><span class="err">‭</span><span class="k">for</span> <span class="cp">%&gt;</span>
+<span class="nt">&lt;/ul&gt;</span>
+</pre></div>
+</div>
+<div class="section">
+<h3><a id="sgml-comment-syntax" name="sgml-comment-syntax">SGML Comment Syntax</a></h3>
+<p>Here an example configuration that uses SGML comments to hide the
+processing instructions. This can be useful if you work with an WYSIWYG
+designer:</p>
+<div class="syntax"><pre><span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="s">&#39;&lt;!--&#39;</span><span class="p">,</span> <span class="s">&#39;--&gt;&#39;</span><span class="p">,</span> <span class="s">&#39;${&#39;</span><span class="p">,</span> <span class="s">&#39;}&#39;</span><span class="p">,</span> <span class="s">&#39;&lt;!--#&#39;</span><span class="p">,</span> <span class="s">&#39;--&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+<div class="syntax"><pre><span class="c">&lt;!--# example SGML comment configuration for Jinja --&gt;</span>
+<span class="nt">&lt;ul&gt;</span>
+<span class="c">&lt;!-- for item in seq --&gt;</span>
+  <span class="nt">&lt;li&gt;</span>${item}<span class="nt">&lt;/li&gt;</span>
+<span class="c">&lt;!-- endfor --&gt;</span>
+<span class="nt">&lt;/ul&gt;</span>
+</pre></div>
+</div>
+<div class="section">
+<h3><a id="parenthesis-balancing" name="parenthesis-balancing">Parenthesis Balancing</a></h3>
+<p>Starting with Jinja 1.1 it's possible to use the block delimiter as a token
+in the expression. That means that you can use small delimiters like single
+braces or parenthesis. So if you want to have your variables to look like
+<tt class="docutils literal"><span class="pre">${expr}</span></tt> and you still want to use dicts in such expressions you need
+Jinja 1.1 or higher.</p>
+</div>
+</div>
+<div class="section">
+<h2><a id="block-variable-tag-unification" name="block-variable-tag-unification">Block / Variable Tag Unification</a></h2>
+<p>If variable end and start tags are <cite>None</cite> or look the same as block tags and
+you're running Jinja 1.1 or later the parser will switch into the
+<cite>no_comment_block</cite> mode. In that mode it will try to match something as block
+first and continue treating it as variable block if there is no known
+directive for that name. Example:</p>
+<div class="syntax"><pre><span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="s">&#39;{&#39;</span><span class="p">,</span> <span class="s">&#39;}&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;{*&#39;</span><span class="p">,</span> <span class="s">&#39;*}&#39;</span><span class="p">)</span>
+</pre></div>
+<p>This now allows smarty like templates:</p>
+<div class="syntax"><pre><span class="cp">{</span><span class="c">* example smarty-like configuration for Jinja *</span><span class="cp">}</span><span class="x"></span>
+<span class="cp">{</span><span class="nf">if</span> <span class="na">something</span> <span class="o">==</span> <span class="m">42</span><span class="cp">}</span><span class="x"></span>
+<span class="x">    Something is the answer to all questions and stuff like that.</span>
+<span class="cp">{</span><span class="nf">else</span><span class="cp">}</span><span class="x"></span>
+<span class="x">    Something is </span><span class="cp">{</span><span class="nf">something</span><span class="cp">}</span><span class="x">.</span>
+<span class="cp">{</span><span class="nf">endif</span><span class="cp">}</span><span class="x"></span>
+</pre></div>
+<p>This feature however can cause strange looking templates because there is no
+visible difference between blocks and variables.</p>
+</div>
+
+    </div>
+  </div>
+</body>
+<!-- generated on: 2007-11-17 18:18:00.828138
+     file id: altsyntax -->
+</html>
