@@ -206,6 +206,20 @@ textarea{
 .hidenav {
 	background: #2c3e50 url(/images/collapseexpandicon.png) no-repeat center center;
 }
+.roomtab {
+	background-color: #e79d5c;
+	-webkit-border-radius: .8em;
+	-moz-border-radius: .8em;
+	border-radius: .8em;
+	overflow: hidden;
+	height: 1.3em;
+}
+.divider {
+	clear:both; 
+	border-color:#000;
+	border:solid;
+	margin:.2em;
+}
 .include,
 .exclude,
 .require{
@@ -222,3 +236,19 @@ textarea{
 }
 .or, .not, .and{ text-align:center;}
 
+.tag, .off {
+	color: #cfd5d7;
+	background-color: #7f8c8d;
+	-moz-border-radius: .8em;
+	-webkit-border-radius: .8em;
+	border-radius: .8em;
+	float: left;
+	margin: .2em;
+	padding: .2em;
+	width: auto; 
+}
+.on {
+	color: #34495e;
+	background-color: #cfd5d7;
+	font-size: '1.3em';
+}

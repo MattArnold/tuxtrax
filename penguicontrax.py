@@ -44,7 +44,9 @@ def index():
 
 @app.route('/eventform')
 def event_form():
-    return render_template('form.html')
+    tagdb = g.db.execute('SELECT name FROM tags')
+    tags = [row[0] for row in tagdb.fetchall()]
+    return render_template('form.html', tags=tags)
 
 @app.route('/submitevent', methods=['POST'])
 def submitevent():

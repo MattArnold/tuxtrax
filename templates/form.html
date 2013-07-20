@@ -2,7 +2,7 @@
 	<script src="static/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#talk, #players, #furniture, #otherfacility, #setupandrepeat, #othertime, .pp, #pptype, #pluralpptype').hide();
+			$('#resources, #players, #furniture, #otherfacility, #setupandrepeat, #othertime, .pp, #pptype, #pluralpptype').hide();
 		});
         
 		// blurb should have 700 characters max. title should have 80 characters max. person should have 24 characters max.
@@ -29,18 +29,41 @@
 	<div class="header">
 		WHERE
 	</div>
-	<div class="question" id="eventtype" >
-		<select value="" class="typechange" tabindex="1" name=typelist>
-            <option value="default">Type of room layout</option>
-            <option value="talk">An audience sits and watches one or more speakers.</option>
-            <option value="workshop">Hands-on participatory activity.</option>
-            <option value="bof">Open discussion with no presenter or organizer.</option>
-            <option value="game">Tabletop game.</option>
-            <option value="onstage">Concert, skit, movie, or other onstage performance.</option>
-            <option value="roving">Activity located throughout the hotel or elsewhere.</option>
-        </select>
+	<div id="typechange" >
+		<input type=radio name=typelist class=typelist value=noroomtype id=noroomtype style="display:none">
+		<label for="talkbtn">
+			<div class="where question roomtab" id="talk">
+				<input type=radio name=typelist class="typelist" value="talk"  id="talkbtn">An audience sits and watches one or more speakers.
+			</div>
+		</label>
+		<label for="workshopbtn">
+			<div class="where question roomtab" id="workshop">
+				<input type=radio name=typelist class="typelist" value="workshop"  id="workshopbtn">Hands-on participatory activity.
+			</div>
+		</label>
+		<label for="bofbtn">
+			<div class="where question roomtab" id="bof">
+				<input type=radio name=typelist class="typelist" value="bof"  id="bofbtn">Open discussion with no presenter or organizer.
+			</div>
+		</label>
+		<label for="gamebtn">
+			<div class="where question roomtab" id="game">
+				<input type=radio name=typelist class="typelist" value="game"  id="gamebtn">Tabletop game.
+			</div>
+		</label>
+		<label for="onstagebtn">
+			<div class="where question roomtab" id="onstage">
+				<input type=radio name=typelist class="typelist" value="onstage"  id="onstagebtn">Concert, skit, movie, or other onstage performance.
+			</div>
+		</label>
+		<label for="rovingbtn">
+			<div class="where question roomtab" id="roving">
+				<input type=radio name=typelist class="typelist" value="roving"  id="rovingbtn">Activity located throughout the hotel or elsewhere.
+			</div>
+		</label>
 	</div>
-	<div id="talk">
+	<div class="divider"></div>
+	<div id="resources">
 		<div class="question" >
 			<label for="projector"><input name=projector type=checkbox value="projector" id="projector">Projector</label>
 		</div>
@@ -146,6 +169,53 @@
 	<div class="header">
 		WHAT
 	</div>
+	<div id="topics">
+		<div style="float:left">
+			Select all topics that apply:
+		</div>
+		<div id="selectedtags">
+		</div>
+		<div id="unusedtags">
+			{% for tag in tags %}
+			<label for={{ tag }}btn >
+				<input type="checkbox" name={{ tag }}btn id={{ tag }}btn value={{ tag }} >
+				<div class="tag off">{{ tag }}</div>
+			</label>
+			{% endfor %}
+        </div>
+	</div>
+	<div class="divider"></div>
+	<div id="trackselection">
+		<div style="float:left">
+			Choose one staffer to be your contact person:
+		</div>
+		<label for="litbtn">
+			<div class="what question track" id="Lit">
+				<input type=radio name=tracklist class="tracklist" value="Literature"  id="litbtn">literature
+			</div>
+		</label>
+		<label for="techbtn">
+			<div class="what question track" id="Tech">
+				<input type=radio name=tracklist class="tracklist" value="Tech"  id="techbtn">tech
+			</div>
+		</label>
+		<label for="musicbtn">
+			<div class="what question track" id="Music">
+				<input type=radio name=tracklist class="tracklist" value="Music"  id="musicbtn">music
+			</div>
+		</label>
+		<label for="foodbtn">
+			<div class="what question track" id="Food">
+				<input type=radio name=tracklist class="tracklist" value="Food"  id="foodbtn">food
+			</div>
+		</label>
+		<label for="sciencebtn">
+			<div class="what question track" id="Science">
+				<input type=radio name=tracklist class="tracklist" value="Science"  id="sciencebtn">science
+			</div>
+		</label>
+	</div>
+	<div class="divider"></div>
 	<div class="question">
 		The following information will appear to attendees on the website and in the schedule book, so please do not leave comments here for the convention committee:
 	</div>
@@ -180,98 +250,5 @@ Work in progress 5/30/2013.</span><br />
         <input type=submit value=submittag class="buttons" name=createtag id="createtag" />	
 	</div>
 </form>
-<script type="text/javascript">
-
-var pluralized = false;
-
-// Turn on and off appropriate fields for different event types.
-
-$('.typechange').change(function() {
-	if (pluralized == false) {
-		$('#pptype').show();
-	}
-	switch ($(this).val()) {
-		case 'default':
-			$('#talk, #players, #furniture, #otherfacility').hide('slow');
-			break;
-		case 'talk':
-			$('#players, #furniture').hide('slow');
-			$('#pptype').text("Speaker:");
-			$('#pluralpptype').text("Panelists:");
-			$('#talk, #otherfacility, .pp').show('slow');
-			break;
-		case 'workshop':
-			$('#players').hide('slow');
-			$('#pptype').text("Activity leader:");
-			$('#pluralpptype').text("Activity leaders:");
-			$('#talk, #furniture, #otherfacility, .pp').show('slow');
-			break;
-		case 'bof':
-			$('#talk, #players, #furniture, #pptype, #pluralpp').hide('slow');
-			$('#otherfacility').show('slow');
-			break;
-		case 'game':
-			$('#talk, #players, #furniture').hide('slow');
-			$('#pptype').text('Game master:');
-			$('#pluralpptype').text('Game masters:');
-			$('#players, #furniture, #otherfacility').show('slow');
-			break;
-		case 'onstage':
-			$('#players, #furniture').hide('slow');
-			$('#pptype').text('Performer:');
-			$('#pluralpptype').text('Performers:');
-			$('#talk, #otherfacility').show('slow');
-			break;
-		case 'roving':
-			$('#talk, #players, #furniture').hide('slow');
-			$('#pptype').text('Activity leader:');
-			$('#pluralpptype').text("Activity leaders:");
-			$('#otherfacility').show('slow');
-			break;
-	}
-});
-$('.timechange').change(function() {
-	if (parseInt($(this).val()) == 0) {
-		$("#setupandrepeat, #othertime").hide("slow"); 
-	} else if (parseInt($(this).val()) == 5){
-		$("#setupandrepeat").hide("slow"); 
-		$("#othertime").show("slow"); 
-	} else {
-		$("#setupandrepeat, #othertime").show("slow"); 
-	}
-});
-
-// Limit the addition of new program participant fields.
-var people = 0;
-$("#newperson").click(function() {
-	pluralized = true;
-	$('#pptype').hide();	
-	$('#pluralpptype').show();
-	if(people<8){
-		$("#who").append('<input name="person' + people + '" type="text" size="24" onkeyup="countChar(this, 24)" class="pp" />');
-		people = people + 1;
-	}
-});
-
-$('#submitevent').click( function() {
-    // Turn the submitter field into firstname and lastname.
-	names = $("#submitter").split(" ");
-	firstname = names.shift();
-	lastname = names.join();
-	$("firstname").val(firstname);
-    $("lastname").val(lastname);
-    
-    // Combine all the comment fields into one comment.
-    if ($("#facilityrequest").val("other facility requests")) {
-		$("#facilityrequest").val("");
-	}
-    if ($("#timerequest").val("other time requests")) {
-		$("#timerequest").val("");
-	}
-	facilitycomment = $("facilityrequest").val();
-	timecomment = $("timerequest").val();
-	$("#comments").val(facilitycomment + " " + timecomment);
-});
-
-</script>
+<script src="static/submissionform.js"></script>
 </body>
