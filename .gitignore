@@ -1,5 +1,5 @@
 #ignore all pyc files
-*.py
+*.pyc
 #ignore vim swp files
 *swp
 #flask env stuff
