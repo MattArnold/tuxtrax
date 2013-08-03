@@ -1,2 +1,10 @@
 #ignore all pyc files
 *.py
+#ignore vim swp files
+*swp
+#flask env stuff
+bin/
+include/
+lib/
+local/
+

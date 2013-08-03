@@ -50,17 +50,17 @@ def event_form():
 
 @app.route('/submitevent', methods=['POST'])
 def submitevent():
-    g.db.execute('''INSERT INTO submissions (email, title, description, 
+    g.db.execute('''INSERT INTO submissions (email, title, description,
                  duration, setuptime, repetition, comments, firstname,
                  lastname) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                 [request.form['email'], 
-                 request.form['title'], 
-                 request.form['description'], 
-                 request.form['duration'], 
-                 request.form['setuptime'], 
-                 request.form['repetition'], 
-                 request.form['comments'], 
-                 request.form['firstname'], 
+                 [request.form['email'],
+                 request.form['title'],
+                 request.form['description'],
+                 request.form['duration'],
+                 request.form['setuptime'],
+                 request.form['repetition'],
+                 request.form['comments'],
+                 request.form['firstname'],
                  request.form['lastname']])
     g.db.commit()
     return render_template('index.html')
@@ -72,4 +72,4 @@ def createtag():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
