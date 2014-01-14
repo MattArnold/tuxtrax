@@ -1,10 +1,5 @@
-#ignore all pyc files
 *.pyc
-#ignore vim swp files
-*swp
+*.swp
+*~
 #flask env stuff
-bin/
-include/
-lib/
-local/
-
+venv
