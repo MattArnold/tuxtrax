@@ -1,9 +1,12 @@
+import os
+
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
 from contextlib import closing
 
-DATABASE = 'penguicontrax.db'
+app_directory = os.path.split(os.path.realpath(__file__))[0]
+DATABASE = os.path.join(app_directory, 'penguicontrax.db')
 DEBUG = True
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
