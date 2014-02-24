@@ -8,3 +8,7 @@ include/
 lib/
 local/
 
+#ignore PyDev/Eclipse project files
+.project
+.pydevproject
+
