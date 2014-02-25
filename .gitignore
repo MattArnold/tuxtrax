@@ -8,3 +8,4 @@ lib/
 local/
 venv
 penguicontrax.db
+openid_store

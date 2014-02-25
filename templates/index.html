@@ -57,7 +57,17 @@
             </a>
         </div>
         <div class="unit" style="color:#bdc3c7;">
-            Log in using: <a href=""><img src="static/google-16x16.png" hspace="5px"></a><a href=""><img src="static/yahoo-16x16.png" hspace="5px"></a><a href=""><img src="static/openid-16x16.gif" hspace="5px"></a>
+			{% if user is none %}
+				Log in using: <a href="/login?provider=google"><img src="static/google-16x16.png" hspace="5px"></a><a href="/login?provider=yahoo"><img src="static/yahoo-16x16.png" hspace="5px"></a><a href=""><img src="static/openid-16x16.gif" hspace="5px"></a>
+			{% else %}
+				Logged in as {{ user.firstName }} {{ user.lastName }} &nbsp;
+				{% if user.staff == 1 %}
+					STAFF
+				{% else %}
+					{{ user.points }} RSVP points left
+				{% endif %}
+				<form action="/logout" method=get><input type=submit value="Logout"></form>
+			{% endif %}
         </div>
         <div id="info" >
             Work in progress 6/29/2013 using last year's schedule. Click some tags!

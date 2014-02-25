@@ -42,15 +42,15 @@ An important schema design element is the distinction between actual events and 
 
 *003*: A public-facing webpage lists every entry in the database. At the top of the page is the headline “Penguicon Events Suggested So Far!” Next to that is “Suggest An Event” with a link to the form. For now, just manually put the database on the page. -DONE
  
-*004*: When the form is filled out, add the new entry immediately and automatically to the public-facing page. 
+*004*: When the form is filled out, add the new entry immediately and automatically to the public-facing page. -DONE
 
-*005*: Create a database of users that uses OpenID. 
+*005*: Create a database of users that uses OpenID. -DONE
 
-*006*: Add OpenID login buttons to the top of the page through Google and Facebook.
+*006*: Add OpenID login buttons to the top of the page through Google and Facebook. -DONE, need to add Facebook
 
-*007*: Add a third OpenID provider that is not evil.
+*007*: Add a third OpenID provider that is not evil. -DONE, Yahoo?
 
-*008*: in the database of users, make a field for "User Type". Each user is either "staff" or "attendee". Manually confirm which specific OpenIDs are staff and add that status.
+*008*: in the database of users, make a field for "User Type". Each user is either "staff" or "attendee". Manually confirm which specific OpenIDs are staff and add that status. - DONE
 
 *009*: Add a "followed up" button on each entry that the concom can see. When they follow up, they should go to this page and click that button.
 

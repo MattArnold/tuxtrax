@@ -10,7 +10,8 @@ CREATE TABLE submissions (
   repetition TINYINT not null,
   comments VARCHAR not null,
   firstname VARCHAR not null,
-  lastname VARCHAR not null
+  lastname VARCHAR not null,
+  followupstate INTEGER DEFAULT 0
 );
 DROP TABLE if EXISTS tags;
 CREATE TABLE tags (
@@ -48,8 +49,9 @@ CREATE TABLE user (
   firstname VARCHAR,
   lastname VARCHAR not null,
   email VARCHAR not null,
-  openid VARCHAR
-  concom INTEGER DEFAULT 0
+  openid VARCHAR,
+  staff INTEGER DEFAULT 0,
+  points INTEGER DEFAULT 5
 );
 DROP TABLE if EXISTS track;
 CREATE TABLE track (
