@@ -7,3 +7,4 @@ include/
 lib/
 local/
 venv
+penguicontrax.db

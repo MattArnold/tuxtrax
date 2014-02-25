@@ -2,13 +2,16 @@ from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
 from contextlib import closing
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.openid import OpenID
 import os
 
 app = Flask(__name__)
 os.environ['DATABASE_URL'] = 'sqlite:///penguicontrax.db'
+os.environ['OID_STORE'] = 'openid_store'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app);
 app.config.from_object(__name__)
+oid = OpenID(app, os.environ['OID_STORE'], safe_roots=[])
 
 class Submissions(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
