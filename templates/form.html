@@ -25,6 +25,9 @@
 <body>
 <div class="header">Penguin T.R.A.X. (Tentative Requested Activity Xperiment)</div>
 <form action="/submitevent" method=post >
+{% if event is not none %}
+<input type=hidden name=eventid value={{event.id}} />
+{% endif %}
 <div class="section where" >
 	<div class="header">
 		WHERE
@@ -118,31 +121,31 @@
 	</div>
 	<div class="question" >
 			<select value="" class="timechange" tabindex="2" name=duration>
-				<option value="0">duration</option>
-				<option value="1">50 mins</option>
-				<option value="2">1 hr 50 mins</option>
-				<option value="3">2 hrs 50 mins</option>
-				<option value="4">more</option>
-				<option value="5">all weekend</option>
+				<option value="0" {% if event is not none and event.duration == 0 %}selected="selected"{% endif %}>duration</option>
+				<option value="1" {% if event is not none and event.duration == 1 %}selected="selected"{% endif %}>50 mins</option>
+				<option value="2" {% if event is not none and event.duration == 2 %}selected="selected"{% endif %}>1 hr 50 mins</option>
+				<option value="3" {% if event is not none and event.duration == 3 %}selected="selected"{% endif %}>2 hrs 50 mins</option>
+				<option value="4" {% if event is not none and event.duration == 4 %}selected="selected"{% endif %}>more</option>
+				<option value="5" {% if event is not none and event.duration == 5 %}selected="selected"{% endif %}>all weekend</option>
 			</select><br />
 	</div>
 	<div id="setupandrepeat">
 		<div class="question" >
 			Setup time: 
 				<select value="" tabindex="2" name=setuptime >
-					<option value="0">No</option>
-					<option value="1">1 hour</option>
-					<option value="2">2 hours</option>
-					<option value="3">more</option>
+					<option value="0" {% if event is not none and event.setupTime == 0 %}selected="selected"{% endif %}>No</option>
+					<option value="1" {% if event is not none and event.setupTime == 1 %}selected="selected"{% endif %}>1 hour</option>
+					<option value="2" {% if event is not none and event.setupTime == 2 %}selected="selected"{% endif %}>2 hours</option>
+					<option value="3" {% if event is not none and event.setupTime == 3 %}selected="selected"{% endif %}>more</option>
 				</select><br />
 		</div>
 		<div class="question" >
 			Repeat:
 			<select value="" tabindex="2" name=repetition>
-				<option value="1">No</option>
-				<option value="2">twice</option>
-				<option value="3">thrice</option>
-				<option value="4">more</option>
+				<option value="1" {% if event is not none and event.repetition == 0 %}selected="selected"{% endif %}>No</option>
+				<option value="2" {% if event is not none and event.repetition == 1 %}selected="selected"{% endif %}>twice</option>
+				<option value="3" {% if event is not none and event.repetition == 2 %}selected="selected"{% endif %}>thrice</option>
+				<option value="4" {% if event is not none and event.repetition == 3 %}selected="selected"{% endif %}>more</option>
 			</select><br />
 		</div>
 	</div>
@@ -156,10 +159,10 @@
 	</div>
 	Suggester name (That's you):
 	<input name=submitter id="submitter" type=text size="24" />
-	<input type=hidden name=firstname id="firstname" />
-	<input type=hidden name=lastname id="lastname" />
+	<input type=hidden name=firstname id="firstname" {% if event is not none %}value="{{ event.firstname }}"{% endif %} />
+	<input type=hidden name=lastname id="lastname" {% if event is not none %}value="{{ event.lastname }}"{% endif %} />
 	Suggester email:
-	<input name=email type=text size="24" />
+	<input name=email type=text size="24" value="{% if event is not none %}{{ event.email }}{% endif %}"/>
 	<span id="pptype" ></span>
 	<span id="pluralpptype" ></span>
 	<input name=person0 type=text size="24" onkeyup="countChar(this, 24)" class="pp" />
@@ -221,18 +224,18 @@
 	</div>
 	<div class="question" >
 		Title: <br />
-		<textarea name=title id="title" rows="2" cols="36" onkeyup="countChar(this, 80)" /></textarea>
+		<textarea name=title id="title" rows="2" cols="36" onkeyup="countChar(this, 80)" />{% if event is not none %}{{ event.title }}{% endif %}</textarea>
 	</div>
 	<div class="question" >
 		Descriptive blurb: <br />
-		<textarea name=description id="blurb" rows="8" cols="72" onkeyup="countChar(this, 700)"></textarea>
+		<textarea name=description id="blurb" rows="8" cols="72" onkeyup="countChar(this, 700)">{% if event is not none %}{{ event.description }}{% endif %}</textarea>
 	</div>
 </div>
 <div class="section" >
 	<div class="header">
 		WHY NOT
 	</div>
-	<input type=text style="display: none" name=comments id="comments" />
+	<input type=text style="display: none" name=comments id="comments" {% if event is not none %}value="{{ event.comments }}"{% endif %} />
 	<div class="question">
 	<input type=submit value=submitevent class="buttons" name=submitevent id="submitevent" />	
 	</div>

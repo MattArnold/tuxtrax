@@ -76,7 +76,7 @@
     <div id="report" class="section withmenu" >
 		{% for submission in submissions %}
 		<div class="event">
-			<div class="what unit title">{{ submission.title }}</div>
+			<div class="what unit title"><a href="/eventform?id={{submission.id}}">{{ submission.title }}</a></div>
 			{% if submission.duration != 1 %}
 			<div class="when unit duration">{{ submission.duration }} hrs</div>
             {% endif %}
@@ -86,7 +86,7 @@
 		{% endfor %}
     </div>
     <script type="text/javascript">
-        
+		
         //Handle collapsing and expanding the navigation
         
         $("#hidenav").click(function() {

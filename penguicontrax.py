@@ -75,14 +75,22 @@ def index():
     tags = [tag.name for tag in Tags.query.all()]
     return render_template('index.html', tags=tags, submissions=submissions, user=g.user)
 
-@app.route('/eventform')
+@app.route('/eventform', methods=['GET', 'POST'])
 def event_form():
     tags = [tag.name for tag in Tags.query.all()]
-    return render_template('form.html', tags=tags)
+    if request.method == 'GET':
+        eventid = request.args.get('id',None)
+        if eventid is not None:
+            event = Submissions.query.filter_by(id=eventid).first()
+    return render_template('form.html', tags=tags, event=event)
 
 @app.route('/submitevent', methods=['POST'])
 def submitevent():
-    submission = Submissions()
+    eventid = request.form['eventid']
+    if eventid is not None:
+        submission = Submissions.query.filter_by(id=eventid).first()
+    if submission is None:
+        submission = Submissions()
     submission.email = request.form['email']
     submission.title = request.form['title']
     submission.description = request.form['description']
@@ -94,7 +102,7 @@ def submitevent():
     submission.lastname = request.form['lastname']
     db.session.add(submission)
     db.session.commit()
-    return render_template('index.html')
+    return redirect('/')
 
 @app.route('/createtag', methods=['POST'])
 def createtag():
