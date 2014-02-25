@@ -3,16 +3,36 @@ from flask import Flask, request, session, g, redirect, url_for, \
 from contextlib import closing
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.openid import OpenID
+from flask_oauth import OAuth
+from penguicontrax_constants import penguicontrax_constants
 import os
 
 app = Flask(__name__)
-app.secret_key = 'DEVELOPMENT_SECRET_KEY_CHANGE_ME_PLEASE' 
-os.environ['DATABASE_URL'] = 'sqlite:///penguicontrax.db'
-os.environ['OID_STORE'] = 'openid_store'
+app.secret_key = penguicontrax_constants.SESSION_SECRET_KEY
+os.environ['DATABASE_URL'] = penguicontrax_constants.DATABASE_URL
+os.environ['OID_STORE'] = penguicontrax_constants.OPENID_STORE
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app);
 app.config.from_object(__name__)
 oid = OpenID(app, os.environ['OID_STORE'], safe_roots=[])
+oauth = OAuth()
+twitter = oauth.remote_app('twitter',
+    base_url='https://api.twitter.com/1/',
+    request_token_url='https://api.twitter.com/oauth/request_token',
+    access_token_url='https://api.twitter.com/oauth/access_token',
+    authorize_url='https://api.twitter.com/oauth/authorize',
+    consumer_key=penguicontrax_constants.TWITTER_KEY,
+    consumer_secret=penguicontrax_constants.TWITTER_SECRET_KEY
+)
+facebook = oauth.remote_app('facebook',
+    base_url='https://graph.facebook.com/',
+    request_token_url=None,
+    access_token_url='/oauth/access_token',
+    authorize_url='https://www.facebook.com/dialog/oauth',
+    consumer_key=penguicontrax_constants.FACEBOOK_APP_ID,
+    consumer_secret=penguicontrax_constants.FACEBOOK_SECRET,
+    request_token_params={'scope': 'email'}
+)
 
 class Submissions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -52,6 +72,8 @@ class User(db.Model):
     email = db.Column(db.String(120))
     openid = db.Column(db.String(200))
     points = db.Column(db.Integer())
+    oauth_token = db.Column(db.String(200))
+    oauth_secret = db.Column(db.String(200))
 
     def __repr__(self):
         return '<name: %s %s, email: %s>' % self.firstName, self.lastName, self.email
@@ -71,7 +93,7 @@ class Track(db.Model):
 @app.route('/')
 def index():
     lookup_current_user()
-    submissions = Submissions.query.all()
+    submissions = Submissions.query.all() if g.user is not None and g.user.staff == True else Submissions.query.filter(Submissions.followUpState != 3)
     tags = [tag.name for tag in Tags.query.all()]
     return render_template('index.html', tags=tags, submissions=submissions, user=g.user)
 
@@ -83,6 +105,8 @@ def event_form():
         eventid = request.args.get('id',None)
         if eventid is not None:
             event = Submissions.query.filter_by(id=eventid).first()
+        else:
+            event = None
     return render_template('form.html', tags=tags, event=event, user=g.user)
 
 @app.route('/submitevent', methods=['POST'])
@@ -119,6 +143,9 @@ def lookup_current_user():
     if 'openid' in session:
         openid = session['openid']
         g.user = User.query.filter_by(openid=openid).first()
+    elif 'oauth_token' in session:
+        oa = session['oauth_token']
+        g.user = User.query.filter_by(oauth_token=oa[0], oauth_secret=oa[1]).first()
         
 @app.route('/login', methods=['GET'])
 @oid.loginhandler
@@ -127,15 +154,18 @@ def login():
         return redirect(oid.get_next_url())
     provider = request.args.get('provider', '')
     if provider == 'google':
-        api_url = 'https://www.google.com/accounts/o8/id'
+        return oid.try_login('https://www.google.com/accounts/o8/id', ask_for=['email','fullname'])
     elif provider == 'yahoo':
-        api_url = 'http://me.yahoo.com'
-    else:
-        return redirect(oid.get_next_url())
-    return oid.try_login(api_url, ask_for=['email','fullname'])
+        return oid.try_login('http://me.yahoo.com', ask_for=['email','fullname'])
+    elif provider == 'facebook':
+        return facebook.authorize(callback=url_for('oauth_authorized',next=request.args.get('next') or request.referrer or None))
+    elif provider == 'twitter':
+        return twitter.authorize(callback=url_for('oauth_authorized',next=request.args.get('next') or request.referrer or None))
+    return redirect(oid.get_next_url())
+
 
 @oid.after_login
-def new_user(resp):
+def new_openid_user(resp):
     session['openid'] = resp.identity_url
     lookup_current_user()
     if g.user is None:
@@ -155,6 +185,32 @@ def new_user(resp):
 def logout():
     session.pop('openid', None)
     return redirect(oid.get_next_url())
+
+@twitter.tokengetter
+@facebook.tokengetter
+def get_oauth_token(token=None):
+    lookup_current_user()
+    if g.user is None:
+        return None
+    return (g.user.oauth_token, g.user.oauth_secret)
+
+@app.route('/oauth-authorized')
+@twitter.authorized_handler
+@facebook.authorized_handler
+def oauth_authorized(resp):
+    next_url = request.args.get('next') or url_for('/')
+    if resp is None:
+        flash('You denied the request to sign in.')
+        return redirect(next_url)
+    session['oauth_token'] = (resp['oauth_token'], resp['oauth_token_secret'])
+    lookup_current_user()
+    if g.user is None:
+        user = User()
+        user.oauth_token = resp['oauth_token']
+        user.oauth_secret = resp['oauth_token_secret']
+        user.staff = False
+        user.points = 5
+    return redirect(next_url)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

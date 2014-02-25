@@ -81,6 +81,12 @@ body {
 	margin: 6px;
 	border: .3 em solid #ecf0f1; }
 	
+/* Different backgrounds for event status */
+.suggested  { background-color: #ecf0f1; }
+.followedup  { background-color: #e67e22; }
+.approved  { background-color: #1abc9c; }
+.rejected  { background-color: #e74c3c; }
+	
 .column {
 	width:49%;
 	float:left;

@@ -50,6 +50,8 @@ CREATE TABLE user (
   lastname VARCHAR not null,
   email VARCHAR not null,
   openid VARCHAR,
+  oauth_token VARCHAR,
+  oauth_secret VARCHAR,
   staff INTEGER DEFAULT 0,
   points INTEGER DEFAULT 5
 );

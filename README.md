@@ -54,19 +54,19 @@ An important schema design element is the distinction between actual events and 
 
 *009*: Add a "followed up" button on each entry that the concom can see. When they follow up, they should go to this page and click that button. -DONE (for ease of implementation the different states are just a drop down on the event form)
 
-*010*: When a concom clicks "followed up" on an event, it now shows up as yellow. Put a line at the top of the page saying "If an event is yellow, the programming team has contacted the presenter." 
+*010*: When a concom clicks "followed up" on an event, it now shows up as yellow. Put a line at the top of the page saying "If an event is yellow, the programming team has contacted the presenter."  -DONE
 
-*011*: Add a "confirmed" button on each entry that the concom can see. The "confirmed" button is only there if the "followed up" button was already clicked. 
+*011*: Add a "confirmed" button on each entry that the concom can see. The "confirmed" button is only there if the "followed up" button was already clicked. -DONE
 
-*012*: When a concom clicks "confirmed" on an event, it now shows up as purple. Put a line at the top of the page saying "Purple events are confirmed." 
+*012*: When a concom clicks "confirmed" on an event, it now shows up as purple. Put a line at the top of the page saying "Purple events are confirmed." -DONE
 
-*013*: To reject an event, when the concom clicks "hide" on an event, it is no longer displayed on the page.
+*013*: To reject an event, when the concom clicks "hide" on an event, it is no longer displayed on the page. -DONE
 
-*014*: Hidden events are now displayed on a separate page with a link from the main page. Their color changes to red when hidden. This page starts with "We regret that for various reasons, we can’t use these event suggestions this year. Maybe next year! Also, some of them may be here in error, in which case bear with us while we fix it."
+*014*: Hidden events are now displayed on a separate page with a link from the main page. Their color changes to red when hidden. This page starts with "We regret that for various reasons, we can’t use these event suggestions this year. Maybe next year! Also, some of them may be here in error, in which case bear with us while we fix it." -DONE (Rejected events show on main page, but only for staff)
 
-*015*: Add a "Oops, unhide" button on each entry on the page of rejected events. Only the concom can see the button. It puts the event back on the main page. 
+*015*: Add a "Oops, unhide" button on each entry on the page of rejected events. Only the concom can see the button. It puts the event back on the main page.  -DONE (Change status away from Rejected on event page)
 
-*016*: Give each OpenID user five RSVP "points".
+*016*: Give each OpenID user five RSVP "points". -DONE
 
 *017*: Create an RSVP button on each event, visible to all users. When they click it, the event index number is added to their user entry in the user database, and their points are reduced by 1. A message at the top of the page reads "Choose up to 5 events. Click RSVP to indicate your interest in attending."
 
