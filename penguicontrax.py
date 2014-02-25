@@ -77,12 +77,13 @@ def index():
 
 @app.route('/eventform', methods=['GET', 'POST'])
 def event_form():
+    lookup_current_user()
     tags = [tag.name for tag in Tags.query.all()]
     if request.method == 'GET':
         eventid = request.args.get('id',None)
         if eventid is not None:
             event = Submissions.query.filter_by(id=eventid).first()
-    return render_template('form.html', tags=tags, event=event)
+    return render_template('form.html', tags=tags, event=event, user=g.user)
 
 @app.route('/submitevent', methods=['POST'])
 def submitevent():
@@ -100,6 +101,7 @@ def submitevent():
     submission.comments = request.form['comments']
     submission.firstname = request.form['firstname']
     submission.lastname = request.form['lastname']
+    submission.followUpState = request.form['followupstate'] if request.form['followupstate'] is not None else 0
     db.session.add(submission)
     db.session.commit()
     return redirect('/')

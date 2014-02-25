@@ -52,7 +52,7 @@ An important schema design element is the distinction between actual events and 
 
 *008*: in the database of users, make a field for "User Type". Each user is either "staff" or "attendee". Manually confirm which specific OpenIDs are staff and add that status. - DONE
 
-*009*: Add a "followed up" button on each entry that the concom can see. When they follow up, they should go to this page and click that button.
+*009*: Add a "followed up" button on each entry that the concom can see. When they follow up, they should go to this page and click that button. -DONE (for ease of implementation the different states are just a drop down on the event form)
 
 *010*: When a concom clicks "followed up" on an event, it now shows up as yellow. Put a line at the top of the page saying "If an event is yellow, the programming team has contacted the presenter." 
 

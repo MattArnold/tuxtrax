@@ -239,6 +239,19 @@
 	<div class="question">
 	<input type=submit value=submitevent class="buttons" name=submitevent id="submitevent" />	
 	</div>
+	{% if user is not none and user.staff == 1 %}
+		{% if event is not none %}
+			<div class="question">
+				<span style="color:#7f8c8d;">Submission status (staff only):</span>
+				<select value="" tabindex="2" name=followupstate>
+					<option value="0" {% if event.followUpState == 0 %}selected="selected"{% endif %}>Suggested</option>
+					<option value="1" {% if event.followUpState == 1 %}selected="selected"{% endif %}>Followed up</option>
+					<option value="2" {% if event.followUpState == 2 %}selected="selected"{% endif %}>Accepted</option>
+					<option value="3" {% if event.followUpState == 3 %}selected="selected"{% endif %}>Rejected</option>
+				</select>
+			</div>
+		{% endif %}
+	{% endif %}
 	<div class="question">
 		<span id="charnum" ></span>
 	</div>
