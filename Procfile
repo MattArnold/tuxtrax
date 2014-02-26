@@ -1,1 +1,1 @@
-web: penguicontrax:app
+web: gunicorn penguicontrax:app
