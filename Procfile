@@ -1,1 +1,1 @@
-web: gunicorn penguicontrax:app
+web: gunicorn --debug penguicontrax:app
