@@ -1,1 +1,1 @@
-web: gunicorn penguicontrax:app
+web: python penguicontrax.py
