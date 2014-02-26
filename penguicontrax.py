@@ -8,6 +8,17 @@ from penguicontrax_constants import penguicontrax_constants
 import os, sqlite3, import2013schedule
 
 app = Flask(__name__)
+if not os.path.isfile(penguicontrax_constants.DATABASE_FILE):
+    with app.open_resource('schema.sql', mode='r') as f:
+        with sqlite3.connect(penguicontrax_constants.DATABASE_FILE) as sqlitedb:
+            try:
+                sqlitedb.cursor().executescript(f.read())
+                sqlitedb.commit()
+            except:
+                pass
+            # GET RID OF THIS LATER
+            import2013schedule.import_old()
+            
 app.secret_key = penguicontrax_constants.SESSION_SECRET_KEY
 os.environ['DATABASE_URL'] = penguicontrax_constants.DATABASE_URL
 os.environ['OID_STORE'] = penguicontrax_constants.OPENID_STORE
@@ -213,14 +224,4 @@ def oauth_authorized(resp):
     return redirect(next_url)
 
 if __name__ == '__main__':
-    if not os.path.isfile(penguicontrax_constants.DATABASE_FILE):
-        with app.open_resource('schema.sql', mode='r') as f:
-            with sqlite3.connect(penguicontrax_constants.DATABASE_FILE) as sqlitedb:
-                try:
-                    sqlitedb.cursor().executescript(f.read())
-                    sqlitedb.commit()
-                except:
-                    pass
-                # GET RID OF THIS LATER
-                import2013schedule.import_old()
     app.run(host='0.0.0.0', debug=True)
