@@ -173,16 +173,14 @@
 		<div style="float:left">
 			Select all topics that apply:
 		</div>
-		<div id="selectedtags">
-		</div>
-		<div id="unusedtags">
-			{% for tag in tags %}
-			<label for={{ tag }}btn >
-				<input type="checkbox" name={{ tag }}btn id={{ tag }}btn value={{ tag }} >
-				<div class="tag off">{{ tag }}</div>
-			</label>
+            {% for tag in tags %}
+                <div class="tag">
+                    <input type="checkbox" name="{{ tag }}tagbtn" id="{{ tag }}tagbtn" value="{{ tag }}" >
+                    <label for="{{ tag }}tagbtn" >
+                    {{ tag }} 
+                    </label>
+                </div>
 			{% endfor %}
-        </div>
 	</div>
 	<div class="divider"></div>
 	<div id="trackselection">

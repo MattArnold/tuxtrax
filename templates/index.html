@@ -65,13 +65,13 @@
     </div>
     <div id="report" class="section withmenu" >
 		{% for submission in submissions %}
-		<div class="event">
+		<div class="event"> <!-- To Do: This line is where topic tags need to be added as classes.-->
 			<div class="what unit title">{{ submission.title }}</div>
 			{% if submission.duration != 1 %}
 			<div class="when unit duration">{{ submission.duration }} hrs</div>
             {% endif %}
 			<div class="who unit programparticipant">{{ submission.firstname }} {{ submission.lastname }}</div>
-			<span class="spaninclude">exampletag</span> {{ submission.description }}
+			<span class="spaninclude">exampletag</span> <!-- To Do: This is where topic tags need to be added as spans. -->{{ submission.description }}
 		</div>
 		{% endfor %}
     </div>

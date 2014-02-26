@@ -174,7 +174,7 @@ textarea{
 }
 .buttons a,
 .buttons {
-	display:block;
+	display:inline-block;
 	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
 	border-radius: 10px;
@@ -189,6 +189,7 @@ textarea{
 	font-weight:bold;
 	cursor:pointer;
 	padding:5px 10px 6px 7px;
+	width:;
 }
 #tabs{
 	width:12em;
