@@ -47,11 +47,12 @@ DROP TABLE if EXISTS user;
 CREATE TABLE user (
   id INTEGER primary key autoincrement,
   firstname VARCHAR,
-  lastname VARCHAR not null,
-  email VARCHAR not null,
+  lastname VARCHAR,
+  email VARCHAR,
   openid VARCHAR,
   oauth_token VARCHAR,
   oauth_secret VARCHAR,
+  fbid INTEGER,
   staff INTEGER DEFAULT 0,
   points INTEGER DEFAULT 5
 );
