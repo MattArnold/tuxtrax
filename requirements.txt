@@ -4,7 +4,6 @@ Jinja2==2.7.2
 MarkupSafe==0.18
 SQLAlchemy==0.9.1
 Werkzeug==0.9.4
-distribute==0.6.27
 gunicorn==18.0
 itsdangerous==0.23
 psycopg2==2.5.2
@@ -12,4 +11,3 @@ wsgiref==0.1.2
 Flask-OpenID==1.2.1
 python-openid==2.2.5
 Flask-OAuth==0.12
-argparse==1.2.1
