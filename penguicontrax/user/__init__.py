@@ -4,11 +4,11 @@ from .. import app, db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    firstName = db.Column(db.String(50))
-    lastName = db.Column(db.String(50))
+    firstName = db.Column(db.String())
+    lastName = db.Column(db.String())
     staff = db.Column(db.Boolean())
-    email = db.Column(db.String(120))
-    openid = db.Column(db.String(200))
+    email = db.Column(db.String())
+    openid = db.Column(db.String())
     points = db.Column(db.Integer())
     oauth_token = db.Column(db.String())
     oauth_secret = db.Column(db.String())

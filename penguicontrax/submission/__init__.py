@@ -3,12 +3,12 @@ from .. import app, db
 
 class Submissions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120))
-    title = db.Column(db.String(120))
-    description = db.Column(db.String(120))
-    comments = db.Column(db.String(120))
-    firstname = db.Column(db.String(120))
-    lastname = db.Column(db.String(120))
+    email = db.Column(db.String())
+    title = db.Column(db.String())
+    description = db.Column(db.String())
+    comments = db.Column(db.String())
+    firstname = db.Column(db.String())
+    lastname = db.Column(db.String())
     trackId = db.Column(db.Integer())
     duration = db.Column(db.Boolean()) 
     setupTime = db.Column(db.Boolean()) 
