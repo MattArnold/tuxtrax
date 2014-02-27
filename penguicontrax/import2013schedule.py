@@ -4,6 +4,9 @@ import penguicontrax as penguicontrax
 from submission import Submissions, Tags
 
 def import_old():
+    existing_tags = set()
+    for tag in Tags.query.all():
+        exisiting_tags.add(tag)
     with penguicontrax.app.open_resource('schedule2013.html', mode='r') as f:
         tree = ET.fromstring(f.read())
         events = tree.find('document')
@@ -27,8 +30,9 @@ def import_old():
                 submission.followUpState = 0
                 for tag in tags.split(','):
                     tag = tag.strip()
-                    if Tags.query.filter_by(name=tag).first() is None:
+                    if not tag in existing_tags:
                         penguicontrax.db.session.add(Tags(tag))
-                penguicontrax.db.session.add(submission)
-                penguicontrax.db.session.commit()
+                        existing_tags.add(tag)
+        	penguicontrax.db.session.add(submission)
+        penguicontrax.db.session.commit()
                 
