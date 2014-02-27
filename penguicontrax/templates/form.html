@@ -1,0 +1,268 @@
+<head>
+	<script src="static/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#resources, #players, #furniture, #otherfacility, #setupandrepeat, #othertime, .pp, #pptype, #pluralpptype').hide();
+		});
+        
+		// blurb should have 700 characters max. title should have 80 characters max. person should have 24 characters max.
+		function countChar(thebox, limit) {
+			var len = thebox.value.length;
+			if (len >= limit) {
+				thebox.value = thebox.value.substring(0, limit);
+			} else {
+				remaining = limit - len;
+				$('#charnum').text(remaining + " characters remaining in " + thebox.name);
+			}
+		};
+		
+		var people = 0;
+	</script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+	<link href='static/mystyles.css' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<div class="header">Penguin T.R.A.X. (Tentative Requested Activity Xperiment)</div>
+<form action="/submitevent" method=post >
+{% if event is not none %}
+<input type=hidden name=eventid value={{event.id}} />
+{% endif %}
+<div class="section where" >
+	<div class="header">
+		WHERE
+	</div>
+	<div id="typechange" >
+		<input type=radio name=typelist class=typelist value=noroomtype id=noroomtype style="display:none">
+		<label for="talkbtn">
+			<div class="where question roomtab" id="talk">
+				<input type=radio name=typelist class="typelist" value="talk"  id="talkbtn">An audience sits and watches one or more speakers.
+			</div>
+		</label>
+		<label for="workshopbtn">
+			<div class="where question roomtab" id="workshop">
+				<input type=radio name=typelist class="typelist" value="workshop"  id="workshopbtn">Hands-on participatory activity.
+			</div>
+		</label>
+		<label for="bofbtn">
+			<div class="where question roomtab" id="bof">
+				<input type=radio name=typelist class="typelist" value="bof"  id="bofbtn">Open discussion with no presenter or organizer.
+			</div>
+		</label>
+		<label for="gamebtn">
+			<div class="where question roomtab" id="game">
+				<input type=radio name=typelist class="typelist" value="game"  id="gamebtn">Tabletop game.
+			</div>
+		</label>
+		<label for="onstagebtn">
+			<div class="where question roomtab" id="onstage">
+				<input type=radio name=typelist class="typelist" value="onstage"  id="onstagebtn">Concert, skit, movie, or other onstage performance.
+			</div>
+		</label>
+		<label for="rovingbtn">
+			<div class="where question roomtab" id="roving">
+				<input type=radio name=typelist class="typelist" value="roving"  id="rovingbtn">Activity located throughout the hotel or elsewhere.
+			</div>
+		</label>
+	</div>
+	<div class="divider"></div>
+	<div id="resources">
+		<div class="question" >
+			<label for="projector"><input name=projector type=checkbox value="projector" id="projector">Projector</label>
+		</div>
+		<div class="question" id="" >
+			<label for="microphone"><input name=microphone type=checkbox value="microphone" id="microphone"> Microphone</label>
+		</div>
+		<div class="question" id="" >
+			<label for="soundsystem"><input name=soundsystem type=checkbox value="soundsystem" id="soundsystem"> Sound system</label>
+		</div>
+		<div class="question" id="" >
+			<label for="water"><input name=water type=checkbox value="water" id="water"> Drinking water</label>
+		</div>
+		<div class="question" id="" >
+			<label for="quiet"><input name=quiet type=checkbox value="quiet" id="quiet"> Quiet (no airwalls)</label>
+		</div>
+	</div>
+	<div class="question" id="players">
+		Number of Players:
+		<select value="" tabindex="" name=players>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="5">4</option>
+            <option value="5">5</option>
+            <option value="6">more</option>
+        </select>
+	</div>
+	<div class="question" id="furniture" >
+		Round tables:
+		<select value="" tabindex="" name=roundtables>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="5">more</option>
+        </select>
+		Long tables:
+		<select value="" tabindex="" name=longtables>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="5">more</option>
+        </select>
+	</div>
+	<div class="question" id="otherfacility" >
+		<textarea name=facilityrequest id="facilityrequest" rows="1" cols="50" />other facility requests</textarea> <br />
+	</div>
+</div>
+<div class="section when" >
+	<div class="header">
+		WHEN
+	</div>
+	<div class="question" >
+			<select value="" class="timechange" tabindex="2" name=duration>
+				<option value="0" {% if event is not none and event.duration == 0 %}selected="selected"{% endif %}>duration</option>
+				<option value="1" {% if event is not none and event.duration == 1 %}selected="selected"{% endif %}>50 mins</option>
+				<option value="2" {% if event is not none and event.duration == 2 %}selected="selected"{% endif %}>1 hr 50 mins</option>
+				<option value="3" {% if event is not none and event.duration == 3 %}selected="selected"{% endif %}>2 hrs 50 mins</option>
+				<option value="4" {% if event is not none and event.duration == 4 %}selected="selected"{% endif %}>more</option>
+				<option value="5" {% if event is not none and event.duration == 5 %}selected="selected"{% endif %}>all weekend</option>
+			</select><br />
+	</div>
+	<div id="setupandrepeat">
+		<div class="question" >
+			Setup time: 
+				<select value="" tabindex="2" name=setuptime >
+					<option value="0" {% if event is not none and event.setupTime == 0 %}selected="selected"{% endif %}>No</option>
+					<option value="1" {% if event is not none and event.setupTime == 1 %}selected="selected"{% endif %}>1 hour</option>
+					<option value="2" {% if event is not none and event.setupTime == 2 %}selected="selected"{% endif %}>2 hours</option>
+					<option value="3" {% if event is not none and event.setupTime == 3 %}selected="selected"{% endif %}>more</option>
+				</select><br />
+		</div>
+		<div class="question" >
+			Repeat:
+			<select value="" tabindex="2" name=repetition>
+				<option value="1" {% if event is not none and event.repetition == 0 %}selected="selected"{% endif %}>No</option>
+				<option value="2" {% if event is not none and event.repetition == 1 %}selected="selected"{% endif %}>twice</option>
+				<option value="3" {% if event is not none and event.repetition == 2 %}selected="selected"{% endif %}>thrice</option>
+				<option value="4" {% if event is not none and event.repetition == 3 %}selected="selected"{% endif %}>more</option>
+			</select><br />
+		</div>
+	</div>
+	<div class="question" id="othertime" >
+		<textarea name=timerequest id="timerequest" rows="1" cols="50" />other time requests</textarea> <br />
+	</div>
+</div>
+<div class="section who" id="who" >
+	<div class="header">
+		WHO
+	</div>
+	Suggester name (That's you):
+	<input name=submitter id="submitter" type=text size="24" />
+	<input type=hidden name=firstname id="firstname" {% if event is not none %}value="{{ event.firstname }}"{% endif %} />
+	<input type=hidden name=lastname id="lastname" {% if event is not none %}value="{{ event.lastname }}"{% endif %} />
+	Suggester email:
+	<input name=email type=text size="24" value="{% if event is not none %}{{ event.email }}{% endif %}"/>
+	<span id="pptype" ></span>
+	<span id="pluralpptype" ></span>
+	<input name=person0 type=text size="24" onkeyup="countChar(this, 24)" class="pp" />
+	<div id="newperson"  class="pp" >+ someone else</div>
+</div>
+<div class="section what" >
+	<div class="header">
+		WHAT
+	</div>
+	<div id="topics">
+		<div style="float:left">
+			Select all topics that apply:
+		</div>
+            {% for tag in tags %}
+                <div class="tag">
+                    <input type="checkbox" name="{{ tag }}tagbtn" id="{{ tag }}tagbtn" value="{{ tag }}" >
+                    <label for="{{ tag }}tagbtn" >
+                    {{ tag }} 
+                    </label>
+                </div>
+			{% endfor %}
+	</div>
+	<div class="divider"></div>
+	<div id="trackselection">
+		<div style="float:left">
+			Choose one staffer to be your contact person:
+		</div>
+		<label for="litbtn">
+			<div class="what question track" id="Lit">
+				<input type=radio name=tracklist class="tracklist" value="Literature"  id="litbtn">literature
+			</div>
+		</label>
+		<label for="techbtn">
+			<div class="what question track" id="Tech">
+				<input type=radio name=tracklist class="tracklist" value="Tech"  id="techbtn">tech
+			</div>
+		</label>
+		<label for="musicbtn">
+			<div class="what question track" id="Music">
+				<input type=radio name=tracklist class="tracklist" value="Music"  id="musicbtn">music
+			</div>
+		</label>
+		<label for="foodbtn">
+			<div class="what question track" id="Food">
+				<input type=radio name=tracklist class="tracklist" value="Food"  id="foodbtn">food
+			</div>
+		</label>
+		<label for="sciencebtn">
+			<div class="what question track" id="Science">
+				<input type=radio name=tracklist class="tracklist" value="Science"  id="sciencebtn">science
+			</div>
+		</label>
+	</div>
+	<div class="divider"></div>
+	<div class="question">
+		The following information will appear to attendees on the website and in the schedule book, so please do not leave comments here for the convention committee:
+	</div>
+	<div class="question" >
+		Title: <br />
+		<textarea name=title id="title" rows="2" cols="36" onkeyup="countChar(this, 80)" />{% if event is not none %}{{ event.title }}{% endif %}</textarea>
+	</div>
+	<div class="question" >
+		Descriptive blurb: <br />
+		<textarea name=description id="blurb" rows="8" cols="72" onkeyup="countChar(this, 700)">{% if event is not none %}{{ event.description }}{% endif %}</textarea>
+	</div>
+</div>
+<div class="section" >
+	<div class="header">
+		WHY NOT
+	</div>
+	<input type=text style="display: none" name=comments id="comments" {% if event is not none %}value="{{ event.comments }}"{% endif %} />
+	<div class="question">
+	<input type=submit value=submitevent class="buttons" name=submitevent id="submitevent" />	
+	</div>
+	{% if user is not none and user.staff == 1 %}
+		{% if event is not none %}
+			<div class="question">
+				<span style="color:#7f8c8d;">Submission status (staff only):</span>
+				<select value="" tabindex="2" name=followupstate>
+					<option value="0" {% if event.followUpState == 0 %}selected="selected"{% endif %}>Suggested</option>
+					<option value="1" {% if event.followUpState == 1 %}selected="selected"{% endif %}>Followed up</option>
+					<option value="2" {% if event.followUpState == 2 %}selected="selected"{% endif %}>Accepted</option>
+					<option value="3" {% if event.followUpState == 3 %}selected="selected"{% endif %}>Rejected</option>
+				</select>
+			</div>
+		{% endif %}
+	{% endif %}
+	<div class="question">
+		<span id="charnum" ></span>
+	</div>
+</div>
+<div class="section"><span style="color:#7f8c8d;">
+Work in progress 5/30/2013.</span><br />
+</div>
+</form>
+<form action="/createtag" method=post >
+	<div>
+		New Tag: <input type=text name=tagname id="tagname" />
+        <input type=submit value=submittag class="buttons" name=createtag id="createtag" />	
+	</div>
+</form>
+<script src="static/submissionform.js"></script>
+</body>
