@@ -206,7 +206,7 @@ input,button,select,textarea {
 	border-top: 1px solid #eee;
 	color: #ecf0f1;
 	cursor: pointer;
-	display: block;
+	display: inline-block;
 	font-weight: 700;
 	line-height: 130%;
 	margin: 0 7px 0 0;
