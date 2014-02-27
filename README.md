@@ -35,7 +35,7 @@ $ pip install -r requirements.txt
 Now you can run the app locally with:
 
 ```sh
-$ python penguicontrax.py
+$ python runserver.py
 ```
 
 ## Design Notes
