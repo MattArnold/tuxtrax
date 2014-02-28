@@ -11,3 +11,4 @@ wsgiref==0.1.2
 Flask-OpenID==1.2.1
 python-openid==2.2.5
 Flask-OAuth==0.12
+Flask-Cache==0.12
