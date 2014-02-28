@@ -178,7 +178,7 @@
 		</div>
             {% for tag in tags %}
                 <div class="tag">
-                    <input type="checkbox" name="{{ tag }}tagbtn" id="{{ tag }}tagbtn" value="{{ tag }}" >
+                    <input type="checkbox" name="tagbtn" id="{{ tag }}tagbtn" value="{{ tag }}" {% if tag in event_tags %}checked{% endif %}>
                     <label for="{{ tag }}tagbtn" >
                     {{ tag }} 
                     </label>
