@@ -9,11 +9,11 @@ First, an event submission/feedback website. Later there will be a site to assig
 
 ## Installation
 
-Install Python prerequisites
+Install prerequisites
 
 ```sh
-$ sudo apt-get install python python-dev lib-pq python-pip
-$ pip install virtualenv
+$ sudo apt-get install git python python-dev libpq-dev python-pip
+$ sudo pip install virtualenv
 ```
 
 
