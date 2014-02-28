@@ -22,9 +22,9 @@ def import_old():
                 submission.email = 'none@none.com'
                 submission.title = name
                 submission.description = description
-                submission.duration = True
-                submission.setupTime = False
-                submission.repetition = True
+                submission.duration = 1
+                submission.setupTime = 0
+                submission.repetition = 0
                 submission.firstname = firstPerson[0]
                 submission.lastname = firstPerson[1] if len(firstPerson) > 1 else ''  
                 submission.followUpState = 0
