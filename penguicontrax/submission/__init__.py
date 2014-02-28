@@ -2,7 +2,7 @@ from flask import g, request, session, render_template, redirect
 from .. import app, db
 
 tags = db.Table('tags', 
-                db.Column('submission_id', db.Integer, db.ForeignKey('submission.id', ondelete='CASCADE')), 
+                db.Column('submission_id', db.Integer, db.ForeignKey('submission.id', ondelete='CASCADE', onupdate='CASCADE')), 
                 db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')))
     
 class Tag(db.Model):
