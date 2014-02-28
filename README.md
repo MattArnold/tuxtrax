@@ -38,6 +38,44 @@ Now you can run the app locally with:
 $ python runserver.py
 ```
 
+penguicon-trax is deployed on Heroku, a cloud application platform. Heroku uses PostgreSQL as its database engine. By default, penguicon-trax uses SQLite as its database engine when running locally. For the most part this is all well and good but there are some subtle differences between the two engines. If you're having problems when deployed to Heroku, you can run a local PostgreSQL server and have penguicon-trax connect to it to better simulate the production environment.
+
+First, install PostgreSQL:
+
+```sh
+$ sudo apt-get install postgresql postgresql-contrib
+```
+
+Set the password for the postgres database role
+```sh
+$ sudo -u postgres psql postgres
+postgres=# \password postgres
+Enter new password:
+Enter it again:
+postgres=# \q
+```
+
+Create a database for penguicon-trax
+
+```sh
+$ sudo -u postgres createdb penguicontrax
+```
+
+penguicon-trax relies on the DATABASE_URL environment variable to tell it what database engine to use. Heroku supplies this to the app; if it is empty the app switches to SQLite. We can write a script to provide the app with a DATABASE_URL that will point to our local PostgreSQL database. Create a file named psql_runserver.sh with the following contents:
+
+```sh
+#!/bin/bash
+export DATABASE_URL=postgresql://postgres:<password>@localhost/penguicontrax
+python runserver.py
+```
+
+You will need to replace <password> with the PostgreSQL password you previously set. Now, make the script executable and run it to use penguicon-trax with PostgreSQL!
+
+```sh
+$ chmod +x psql_runserver.sh
+$ ./psql_runserver.sh
+```
+
 ## Design Notes
 
 An important schema design element is the distinction between actual events and merely requests for events. See the milestone "Site Moves Event Requests Through Statuses" for more details.

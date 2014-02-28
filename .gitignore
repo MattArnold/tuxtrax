@@ -9,3 +9,4 @@ local/
 venv
 penguicontrax.db
 openid_store
+psql_runserver.sh
