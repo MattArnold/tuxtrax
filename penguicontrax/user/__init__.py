@@ -1,6 +1,10 @@
 from penguicontrax import constants
-from flask import g, session
+from flask import g, session, Response, render_template, request
 from .. import app, db
+
+rsvps = db.Table('rsvps',
+                db.Column('submission_id', db.Integer, db.ForeignKey('submission.id', ondelete='CASCADE', onupdate='CASCADE')), 
+                db.Column('user_id', db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE')))
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -13,13 +17,17 @@ class User(db.Model):
     oauth_token = db.Column(db.String())
     oauth_secret = db.Column(db.String())
     fbid = db.Column(db.Integer())
+    image_small = db.Column(db.String())
+    image_large = db.Column(db.String())
+    rsvped_to = db.relationship('Submission', secondary=rsvps, backref=db.backref('rsvped_by', passive_deletes=True))
+    special_tag = db.Column(db.String())
     
     def __init__(self):
         self.staff = False
         self.points = 5
 
     def __repr__(self):
-        return 'User: ' + (self.firstName if self.firstName is not None else '') + ' ' + (self.lastName if self.firstName is not None else '')
+        return (self.firstName if self.firstName is not None else '') + ' ' + (self.lastName if self.firstName is not None else '')
 
 @app.before_request
 def lookup_current_user():
@@ -33,3 +41,8 @@ def lookup_current_user():
     elif 'oauth_token' in session:
         oa = session['oauth_token']
         g.user = User.query.filter_by(oauth_token=oa[0]).first()
+        
+@app.route('/user', methods=['GET'])
+def user_profile():
+    view_user = User.query.filter_by(id=request.args['id']).first()
+    return Response('No such user') if view_user is None else render_template('user_profile.html', user=g.user, view_user=view_user)

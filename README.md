@@ -9,11 +9,11 @@ First, an event submission/feedback website. Later there will be a site to assig
 
 ## Installation
 
-Install Python prerequisites
+Install prerequisites
 
 ```sh
-$ sudo apt-get install python python-dev lib-pq python-pip
-$ pip install virtualenv
+$ sudo apt-get install git python python-dev libpq-dev python-pip
+$ sudo pip install virtualenv
 ```
 
 
@@ -36,6 +36,44 @@ Now you can run the app locally with:
 
 ```sh
 $ python runserver.py
+```
+
+penguicon-trax is deployed on Heroku, a cloud application platform. Heroku uses PostgreSQL as its database engine. By default, penguicon-trax uses SQLite as its database engine when running locally. For the most part this is all well and good but there are some subtle differences between the two engines. If you're having problems when deployed to Heroku, you can run a local PostgreSQL server and have penguicon-trax connect to it to better simulate the production environment.
+
+First, install PostgreSQL:
+
+```sh
+$ sudo apt-get install postgresql postgresql-contrib
+```
+
+Set the password for the postgres database role
+```sh
+$ sudo -u postgres psql postgres
+postgres=# \password postgres
+Enter new password:
+Enter it again:
+postgres=# \q
+```
+
+Create a database for penguicon-trax
+
+```sh
+$ sudo -u postgres createdb penguicontrax
+```
+
+penguicon-trax relies on the DATABASE_URL environment variable to tell it what database engine to use. Heroku supplies this to the app; if it is empty the app switches to SQLite. We can write a script to provide the app with a DATABASE_URL that will point to our local PostgreSQL database. Create a file named psql_runserver.sh with the following contents:
+
+```sh
+#!/bin/bash
+export DATABASE_URL=postgresql://postgres:<password>@localhost/penguicontrax
+python runserver.py
+```
+
+You will need to replace <password> with the PostgreSQL password you previously set. Now, make the script executable and run it to use penguicon-trax with PostgreSQL!
+
+```sh
+$ chmod +x psql_runserver.sh
+$ ./psql_runserver.sh
 ```
 
 ## Design Notes
@@ -84,9 +122,9 @@ An important schema design element is the distinction between actual events and 
 
 *016*: Give each OpenID user five RSVP "points". -DONE
 
-*017*: Create an RSVP button on each event, visible to all users. When they click it, the event index number is added to their user entry in the user database, and their points are reduced by 1. A message at the top of the page reads "Choose up to 5 events. Click RSVP to indicate your interest in attending."
+*017*: Create an RSVP button on each event, visible to all users. When they click it, the event index number is added to their user entry in the user database, and their points are reduced by 1. A message at the top of the page reads "Choose up to 5 events. Click RSVP to indicate your interest in attending." -DONE
 
-*018*: Display a number on each event showing how many people are interested in attending. (Yes, events on the rejected page also show this number.)
+*018*: Display a number on each event showing how many people are interested in attending. (Yes, events on the rejected page also show this number.) -DONE, each user RSVPed is actually displayed!
 
 ### *Epic 4: Proofreading*
 
