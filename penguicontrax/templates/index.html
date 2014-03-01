@@ -73,7 +73,7 @@
             Work in progress 6/29/2013 using last year's schedule. Click some tags!
         </div>
     </div>
-    <div id="report" class="sectin withmenu" > <div class="event suggested">Suggested events</div> <div class="event followedup">Pending events</div> <div class="event approved">Approved events</div>{% if user is not none and user.staff == 1 %} <div class="event rejected">Rejected events</div>{% endif %}
+    <div id="report" class="section withmenu" > <div class="event suggested">Suggested events</div> <div class="event followedup">Pending events</div> <div class="event approved">Approved events</div>{% if user is not none and user.staff == 1 %} <div class="event rejected">Rejected events</div>{% endif %}
 		{% for submission in submissions %}
 		<!-- To Do: This line is where topic tags need to be added as classes.-->
 		{% if submission.followUpState == 1 %}
