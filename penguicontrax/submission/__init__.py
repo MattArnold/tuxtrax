@@ -48,12 +48,6 @@ class Track(db.Model):
     def __repr__(self):
         return '<name: %s, staffId: %d>' % self.name, self.staffId
     
-@app.route('/getevent', methods=['GET'])
-def getevent():
-    if 'id' in request.args:
-        return Response(dump_table_json(Submission.query.filter_by(id=int(request.args['id'])), Submission.__table__), mimetype='application/json')
-    return Response(dump_table_json(Submission.query.all(), Submission.__table__), mimetype='application/json')
-    
 @app.route('/eventform', methods=['GET', 'POST'])
 def event_form():
     tags = [tag.name for tag in Tag.query.all()]
