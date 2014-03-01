@@ -1,0 +1,6 @@
+{% macro user_link(user) -%}
+	<a class="userlink" href="/user?id={{ user.id }}">
+		<img src="{{ user.image_small }}" width="20"> 
+		<span>{{ user.firstName }}{% if user.lastName is not none %} {{ user.lastName }}{% endif %}</span>
+	</a>
+{%- endmacro %}

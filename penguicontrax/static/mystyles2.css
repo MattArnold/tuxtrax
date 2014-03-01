@@ -241,3 +241,21 @@ input,button,select,textarea {
 	border: .2em solid #3498db;
 	background:#3498db;
 }
+
+.userlink a,.userlink {
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	background-color: #bdc3c7;
+	border: 1px solid #dedede;
+	border-left: 1px solid #eee;
+	border-radius: 10px;
+	border-top: 1px solid #eee;
+	color: #2c3e50;
+	cursor: pointer;
+	display: inline-block;
+	line-height: 130%;
+	margin: 0 7px 0 0;
+	padding: 3px 5px 3px 4px;
+	text-decoration: none; }
+.userlink img { vertical-align: middle }
+.userlink span { vertical-align: middle }

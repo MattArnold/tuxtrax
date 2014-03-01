@@ -1,5 +1,5 @@
 from penguicontrax import constants
-from flask import g, session
+from flask import g, session, Response, render_template, request
 from .. import app, db
 
 class User(db.Model):
@@ -13,6 +13,8 @@ class User(db.Model):
     oauth_token = db.Column(db.String())
     oauth_secret = db.Column(db.String())
     fbid = db.Column(db.Integer())
+    image_small = db.Column(db.String())
+    image_large = db.Column(db.String())
     
     def __init__(self):
         self.staff = False
@@ -33,3 +35,8 @@ def lookup_current_user():
     elif 'oauth_token' in session:
         oa = session['oauth_token']
         g.user = User.query.filter_by(oauth_token=oa[0]).first()
+        
+@app.route('/user', methods=['GET'])
+def user_profile():
+    user = User.query.filter_by(id=request.args['id']).first()
+    return Response('No such user') if user is None else render_template('user_profile.html', user=user)
