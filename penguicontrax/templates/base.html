@@ -3,8 +3,9 @@
 <title>{% block title %}{% endblock %}</title>
 <head>
 	{% block head %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-	<link href="{{ url_for('static', filename='mystyles2.css') }}" rel='stylesheet' type='text/css'>
+	<link href="{{ url_for('static', filename='ptrax.css') }}" rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
 	{% endblock %}
 </head>
@@ -33,4 +34,6 @@
 	</div>
 	{% block body %}
 	{% endblock %}
+    <script src="static/jquery-1.9.1.min.js"></script>
+    <script src="static/steal/steal.js"></script>
 </body>
