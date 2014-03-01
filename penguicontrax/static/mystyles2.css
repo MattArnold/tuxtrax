@@ -122,7 +122,7 @@ info:after {
 	z-index: 10; }
  
 #penguin {
-	background: url(/images/penguintrax.png) no-repeat center center;
+	background: url(/static/penguintrax.png) no-repeat center center;
 	height: 194px;
 	position: absolute;
 	right: 1em;
@@ -141,7 +141,7 @@ info:after {
 	float: left;
 	width: 2em; }
  
-#hidenav { background: #2c3e50 url(/images/collapseexpandicon.png) no-repeat center center; }
+#hidenav { background: #2c3e50 url(/static/collapseexpandicon.png) no-repeat center center; }
  
 .include { background: #ecf0f1; }
  
