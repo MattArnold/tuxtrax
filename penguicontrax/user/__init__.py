@@ -20,13 +20,14 @@ class User(db.Model):
     image_small = db.Column(db.String())
     image_large = db.Column(db.String())
     rsvped_to = db.relationship('Submission', secondary=rsvps, backref=db.backref('rsvped_by', passive_deletes=True))
+    special_tag = db.Column(db.String())
     
     def __init__(self):
         self.staff = False
         self.points = 5
 
     def __repr__(self):
-        return 'User: ' + (self.firstName if self.firstName is not None else '') + ' ' + (self.lastName if self.firstName is not None else '')
+        return (self.firstName if self.firstName is not None else '') + ' ' + (self.lastName if self.firstName is not None else '')
 
 @app.before_request
 def lookup_current_user():
@@ -43,5 +44,5 @@ def lookup_current_user():
         
 @app.route('/user', methods=['GET'])
 def user_profile():
-    user = User.query.filter_by(id=request.args['id']).first()
-    return Response('No such user') if user is None else render_template('user_profile.html', user=user)
+    view_user = User.query.filter_by(id=request.args['id']).first()
+    return Response('No such user') if view_user is None else render_template('user_profile.html', user=g.user, view_user=view_user)

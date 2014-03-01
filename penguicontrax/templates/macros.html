@@ -1,7 +1,11 @@
+{% macro user_text(user) -%}
+	<span>{{ user }}{% if user.special_tag is not none %} <span class="userspecial">{{ user.special_tag }}</span>{% endif %}</span>
+{%- endmacro %}
+
 {% macro user_link(user) -%}
 	<a class="userlink" href="/user?id={{ user.id }}">
 		<img src="{{ user.image_small }}" width="20"> 
-		<span>{{ user.firstName }}{% if user.lastName is not none %} {{ user.lastName }}{% endif %}</span>
+		{{ user_text(user) }}
 	</a>
 {%- endmacro %}
 

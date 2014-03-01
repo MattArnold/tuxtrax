@@ -66,6 +66,11 @@ body {
 	font-weight: 700;
 	opacity: .5;
 	margin-right: 200px; }
+	
+.header a:link, a:visited{
+	text-decoration: none;
+	color: #ecf0f1;
+}
 
 #report { 
 	background-color: #bdc3c7;
@@ -259,3 +264,20 @@ input,button,select,textarea {
 	text-decoration: none; }
 .userlink img { vertical-align: middle }
 .userlink span { vertical-align: middle }
+
+.userspecial {
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	background-color: #e74c3c;
+	border: 1px solid #dedede;
+	border-left: 1px solid #eee;
+	border-radius: 5px;
+	border-top: 1px solid #eee;
+	color: #ecf0f1;
+	display: inline-block;
+	line-height: 130%;
+	margin: 0 7px 0 0;
+	padding: 1px 1px 1px 1px;
+	text-decoration: none;
+}
+.userspecial span { vertical-align: middle }
