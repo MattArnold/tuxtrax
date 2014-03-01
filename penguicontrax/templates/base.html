@@ -1,0 +1,38 @@
+{% import 'macros.html' as macros %}
+<!doctype html>
+<title>{% block title %}{% endblock %}</title>
+<head>
+	{% block head %}
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+	<link href="{{ url_for('static', filename='mystyles2.css') }}" rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+	{% endblock %}
+</head>
+<body>
+	<div id="masthead" class="withmenu">
+		<div class="header">
+			penguicon-trax
+		</div>
+		<div class="unit" style="color:#bdc3c7; float:right">
+			<form action="/logout" method=get>
+				{% if user is none %}
+					Log in using: 
+					<a href="/login?provider=facebook"><img src="static/facebook-16x16.png" hspace="5px"></a>
+					<a href="/login?provider=twitter"><img src="static/twitter-16x16.png" hspace="5px"></a>
+					<a href="/login?provider=google"><img src="static/google-16x16.png" hspace="5px"></a>
+					<a href="/login?provider=yahoo"><img src="static/yahoo-16x16.png" hspace="5px"></a>
+				{% else %}
+					{{ macros.user_link(user) }}
+					{% if user.staff == 1 %}
+						STAFF
+					{% else %}
+						{{ user.points }} RSVP points left 
+					{% endif %}
+					<input type=submit value="Logout">
+				{% endif %}
+			</form>
+		</div>
+	</div>
+	{% block body %}
+	{% endblock %}
+</body>

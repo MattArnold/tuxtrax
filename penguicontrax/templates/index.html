@@ -1,7 +1,7 @@
-{% import 'macros.html' as macros %}
-<!doctype html>
-<title>TRAX</title>
-<head>
+{% extends "base.html" %}
+{% block title %}TRAX{% endblock %}
+{% block head %}
+	{{ super() }}
     <script src="static/jquery-1.9.1.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -33,11 +33,9 @@
             };*/
           });
     </script>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link href="{{ url_for('static', filename='mystyles2.css') }}" rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
-</head>
-<body>
+{% endblock %}
+{% block body %}
+	{{ super() }}
     <div id="leftmenu" >
         <div id="hidenav">&nbsp;</div>
         <div id="taginfo">&nbsp;</div>
@@ -48,33 +46,16 @@
     </div>
     <div id="spacer" ></div>
     <div id="penguin"></div>
-    <div id="masthead" class="withmenu">
-        <div class="header">
-            Penguin T.R.A.X. (Tentative Requested Activity Xperiment)
-        </div>
-        <div id="createeventbutton"  style="clear:left">
-            <a href="eventform" class="buttons" >
-            Create an event.
-            </a>
-        </div>
-        <div class="unit" style="color:#bdc3c7;">
-			{% if user is none %}
-				Log in using: <a href="/login?provider=facebook"><img src="static/facebook-16x16.png" hspace="5px"></a><a href="/login?provider=twitter"><img src="static/twitter-16x16.png" hspace="5px"></a><a href="/login?provider=google"><img src="static/google-16x16.png" hspace="5px"></a><a href="/login?provider=yahoo"><img src="static/yahoo-16x16.png" hspace="5px"></a>
-			{% else %}
-				{{ macros.user_link(user) }}
-				{% if user.staff == 1 %}
-					STAFF
-				{% else %}
-					{{ user.points }} RSVP points left
-				{% endif %}
-				<form action="/logout" method=get><input type=submit value="Logout"></form>
-			{% endif %}
-        </div>
-        <div id="info" >
-            Work in progress 6/29/2013 using last year's schedule. Click some tags!
-        </div>
-    </div>
-    <div id="report" class="sectin withmenu" > <div class="event suggested">Suggested events</div> <div class="event followedup">Pending events</div> <div class="event approved">Approved events</div>{% if user is not none and user.staff == 1 %} <div class="event rejected">Rejected events</div>{% endif %}
+    <div id="report" class="sectin withmenu" > 
+		<div class="event suggested">Suggested events</div> 
+		<div class="event followedup">Pending events</div> 
+		<div class="event approved">Approved events</div>
+		{% if user is not none and user.staff == 1 %} 
+			<div class="event rejected">Rejected events</div>
+		{% endif %}
+		<div id="createeventbutton" style="float:left;">
+			<a href="eventform" class="buttons" >Create an event.</a>
+		</div>
 		<form action="/rsvp" method=post >
 		{% for submission in submissions %}
 			{{ macros.event_summary(submission, user) }}
@@ -169,4 +150,4 @@
         
         });
     </script>
-</body>
+{% endblock %}
