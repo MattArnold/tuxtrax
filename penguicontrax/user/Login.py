@@ -1,4 +1,4 @@
-from flask import g, redirect, request, session, flash, url_for
+from flask import g, redirect, request, session, flash, url_for, render_template
 from flask_openid import OpenID
 from flask_oauth import OAuth
 from penguicontrax import constants
@@ -60,7 +60,7 @@ def login():
         return facebook.authorize(callback=constants.PUBLIC_URL + 'oauth-authorized-facebook')
     elif provider == 'twitter':
         return twitter.authorize(callback=constants.PUBLIC_URL + 'oauth-authorized-twitter')
-    return redirect(oid.get_next_url())
+    return render_template('login.html', user=g.user)
 
 
 @oid.after_login
