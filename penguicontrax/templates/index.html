@@ -58,7 +58,10 @@
         </div>
         <div class="unit" style="color:#bdc3c7;">
 			{% if user is none %}
-				Log in using: <a href="/login?provider=facebook"><img src="static/facebook-16x16.png" hspace="5px"></a><a href="/login?provider=twitter"><img src="static/twitter-16x16.png" hspace="5px"></a><a href="/login?provider=google"><img src="static/google-16x16.png" hspace="5px"></a><a href="/login?provider=yahoo"><img src="static/yahoo-16x16.png" hspace="5px"></a>
+				Log in using:
+				{% for provider in ['facebook','twitter','google','yahoo'] -%}
+				<a href="/login?provider={{provider}}"><img src="static/{{provider}}-16x16.png" hspace="5px"></a>
+				{%- endfor %}
 			{% else %}
 				Logged in as {{ user.firstName }}{% if user.lastName is not none %} {{ user.lastName }}{% endif %} 
 				{% if user.staff == 1 %}
