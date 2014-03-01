@@ -66,15 +66,26 @@ $('.typelist').change(function() {
 
 // Turn on time fields when a duration is selected.
 
-$('.timechange').change(function() {
-	if (parseInt($(this).val()) == 0) {
-		$("#setupandrepeat, #othertime").hide("slow"); 
-	} else if (parseInt($(this).val()) == 5){
-		$("#setupandrepeat").hide("slow"); 
-		$("#othertime").show("slow"); 
-	} else {
-		$("#setupandrepeat, #othertime").show("slow"); 
-	}
+// $('.timechange').change(function() {
+//	if (parseInt($(this).val()) == 0) {
+//		$("#setupandrepeat, #othertime").hide("slow"); 
+//	} else if (parseInt($(this).val()) == 5){
+//		$("#setupandrepeat").hide("slow"); 
+//		$("#othertime").show("slow"); 
+//	} else {
+//		$("#setupandrepeat, #othertime").show("slow"); 
+//	}
+//});
+
+$('#moresetuplink').click(function(){
+        if ($('#setupandrepeat:visible').length == 0) { 
+        	$('#setupandrepeat').show(); 
+        	$('#othertime').show(); 
+        } else { 
+        	$('#setupandrepeat').hide(); 
+        	$('#othertime').hide(); 
+        }
+	return false;
 });
 
 // Limit the addition of new program participant fields.

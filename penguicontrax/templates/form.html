@@ -116,21 +116,33 @@
 	</div>
 	<div class="section when" >
 		<div class="header">
-			WHEN
+			<!--WHEN-->
+			DURATION
 		</div>
 		<div class="question" >
 				<select value="" class="timechange" tabindex="2" name=duration>
+					<!--
 					<option value="0" {% if event is not none and event.duration == 0 %}selected="selected"{% endif %}>duration</option>
-					<option value="1" {% if event is not none and event.duration == 1 %}selected="selected"{% endif %}>50 mins</option>
-					<option value="2" {% if event is not none and event.duration == 2 %}selected="selected"{% endif %}>1 hr 50 mins</option>
-					<option value="3" {% if event is not none and event.duration == 3 %}selected="selected"{% endif %}>2 hrs 50 mins</option>
+					-->
+					<option value="1" {% if event is not none and event.duration == 1 %}selected="selected"{% endif %}>50 minutes</option>
+					<option value="2" {% if event is not none and event.duration == 2 %}selected="selected"{% endif %}>1 hours and 50 minutes</option>
+					<option value="3" {% if event is not none and event.duration == 3 %}selected="selected"{% endif %}>2 hours and 50 minutes</option>
+					<option value="4" {% if event is not none and event.duration == 3 %}selected="selected"{% endif %}>3 hours and 50 minutes</option>
+					<!--
 					<option value="4" {% if event is not none and event.duration == 4 %}selected="selected"{% endif %}>more</option>
+					-->
 					<option value="5" {% if event is not none and event.duration == 5 %}selected="selected"{% endif %}>all weekend</option>
-				</select><br />
+				</select>
+					&nbsp; &nbsp; &nbsp; &nbsp;
+					Includes up to 10 minutes of setup prior to the event.
+				<br />
+		</div>
+		<div class="question">
+                	<a id="moresetuplink" href="">more ...</a>
 		</div>
 		<div id="setupandrepeat">
 			<div class="question" >
-				Setup time: 
+				Extended setup time: 
 					<select value="" tabindex="2" name=setuptime >
 						<option value="0" {% if event is not none and event.setupTime == 0 %}selected="selected"{% endif %}>No</option>
 						<option value="1" {% if event is not none and event.setupTime == 1 %}selected="selected"{% endif %}>1 hour</option>
