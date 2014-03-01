@@ -3,7 +3,7 @@
 {%- endmacro %}
 
 {% macro user_link(user) -%}
-	<a class="userlink" href="/user?id={{ user.id }}">
+	<a class="userlink" href="/{{ user.account_name }}">
 		<img src="{{ user.image_small }}" width="20"> 
 		{{ user_text(user) }}
 	</a>

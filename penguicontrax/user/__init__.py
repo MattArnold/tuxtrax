@@ -1,5 +1,5 @@
 from penguicontrax import constants
-from flask import g, session, Response, render_template, request
+from flask import g, session, Response, render_template, request, redirect
 from .. import app, db
 
 rsvps = db.Table('rsvps',
@@ -8,8 +8,8 @@ rsvps = db.Table('rsvps',
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    firstName = db.Column(db.String())
-    lastName = db.Column(db.String())
+    name = db.Column(db.String())
+    account_name = db.Column(db.String())
     staff = db.Column(db.Boolean())
     email = db.Column(db.String())
     openid = db.Column(db.String())
@@ -27,7 +27,7 @@ class User(db.Model):
         self.points = 5
 
     def __repr__(self):
-        return (self.firstName if self.firstName is not None else '') + ' ' + (self.lastName if self.firstName is not None else '')
+        return self.name
 
 @app.before_request
 def lookup_current_user():
@@ -42,7 +42,15 @@ def lookup_current_user():
         oa = session['oauth_token']
         g.user = User.query.filter_by(oauth_token=oa[0]).first()
         
-@app.route('/user', methods=['GET'])
-def user_profile():
-    view_user = User.query.filter_by(id=request.args['id']).first()
-    return Response('No such user') if view_user is None else render_template('user_profile.html', user=g.user, view_user=view_user)
+def user_profile(view_user):
+    return redirect('/') if view_user is None else render_template('user_profile.html', user=g.user, view_user=view_user)
+
+@app.route('/userprofile', methods=['GET'])
+def user_profile_by_id():
+    return user_profile(User.query.filter_by(id=request.args['id']).first())
+
+@app.route('/<user>', methods=['GET'])
+def user_profile_by_account_name(user):
+    return user_profile(User.query.filter_by(account_name=user).first())
+    
+    
