@@ -16,9 +16,22 @@ def dump_table_xml(elements, table, parent_node, collection_name, element_name):
             ET.SubElement(element_node, str(key)).text = unicode(value)
     return collection
 
+"""
+    @elements is a result set from sqlalchemy
+    @table is the table name used for the result set
+    returns a list of dicts
+"""
+def dump_table(elements, table):
+    all = [ dict( (col, getattr(element, col)) for col in table.columns.keys()) for element in elements ]
+    return all
+
+"""
+    @elements is a result set from sqlalchemy
+    @table is the table name used for the result set
+    @returns a string of serialized list of dicts
+"""
 def dump_table_json(elements, table):
-    all = [(dict((col, getattr(element, col)) for col in table.columns.keys())) for element in elements]
-    return json.dumps(all)
+    return json.dumps(dump_table(elements,table))
 
 from flask import render_template, g, url_for, redirect, Response
 from submission import Submission, Tag
@@ -26,6 +39,8 @@ from user import Login
 import os, sqlite3, import2013schedule
 from constants import constants
 import datetime
+
+import api
 
 def init():
     app.secret_key = constants.SESSION_SECRET_KEY
