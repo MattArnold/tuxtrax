@@ -12,7 +12,10 @@ module.exports = function(grunt) {
     },
     watch: {
       files: "static/ptrax.less",
-      tasks: ["less"]
+      tasks: ["less"],
+      options : {
+        atBegin : true
+      }
     }
   });
   grunt.loadNpmTasks('grunt-contrib-less');
