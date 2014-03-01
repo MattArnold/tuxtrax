@@ -10,34 +10,31 @@
     {% endblock %}
 </head>
 <body>
-<div id="masthead" class="section withmenu row">
-    <div class="col-md-2">
-    <h1 class="header">
-        <a href="/">penguicon-trax</a>
-    </h1>
-    </div>
-    <div class="col-md-10 text-right">
-        <form action="/logout" method=get>
-            {% if user is none %}
-            Log in using:
-            <a href="/login?provider=facebook"><img src="static/facebook-16x16.png" hspace="5px"></a>
-            <a href="/login?provider=twitter"><img src="static/twitter-16x16.png" hspace="5px"></a>
-            <a href="/login?provider=google"><img src="static/google-16x16.png" hspace="5px"></a>
-            <a href="/login?provider=yahoo"><img src="static/yahoo-16x16.png" hspace="5px"></a>
-            {% else %}
-            {{ macros.user_link(user) }}
-            {% if user.staff == 0 %}
-            {{ user.points }} RSVP points left
-            {% endif %}
-            <input class="btn btn-primary" type=submit value="Logout">
-            {% endif %}
-        </form>
-    </div>
-</div>
-<div class="container-fluid">
-{% block body %}
-{% endblock %}
-</div>
-<script src="static/jquery-1.9.1.min.js"></script>
-<script src="static/steal/steal.js"></script>
+	<div id="masthead" class="section withmenu row">
+    		<div class="col-md-2">
+		<div class="header">
+			<a href="/">penguicon-trax</a>
+		</div>
+		</div>
+    		<div class="col-md-10 text-right">
+			<form action="/logout" method=get>
+				{% if user is none %}
+					Log in using: 
+					<a href="/login?provider=facebook"><img src="static/facebook-16x16.png" hspace="5px"></a>
+					<a href="/login?provider=twitter"><img src="static/twitter-16x16.png" hspace="5px"></a>
+					<a href="/login?provider=google"><img src="static/google-16x16.png" hspace="5px"></a>
+					<a href="/login?provider=yahoo"><img src="static/yahoo-16x16.png" hspace="5px"></a>
+				{% else %}
+					{{ macros.user_link(user) }}
+					{% if user.staff == 0 %}
+						{{ user.points }} RSVP points left 
+					{% endif %}
+					<input class="btn btn-primary" type=submit value="Logout" id="logoutButton">
+				{% endif %}
+			</form>
+		</div>
+	</div>
+	<div class="container-fluid">
+	{% block body %}
+	{% endblock %}
 </body>
