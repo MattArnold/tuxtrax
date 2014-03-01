@@ -4,3 +4,36 @@
 		<span>{{ user.firstName }}{% if user.lastName is not none %} {{ user.lastName }}{% endif %}</span>
 	</a>
 {%- endmacro %}
+
+{% macro event_summary(submission, user) -%}
+	{% if submission.followUpState == 1 %}
+		<div class="event followedup">
+	{% elif submission.followUpState == 2 %}
+		<div class="event approved">
+	{% elif submission.followUpState == 3 %}
+		<div class="event rejected">
+	{% else %}
+		<div class="event suggested">
+	{% endif %}
+			<a name="submission_{{ submission.id }}" />
+			<div class="what unit title"><a href="/eventform?id={{submission.id}}">{{ submission.title }}</a></div>
+			{% if submission.duration != 1 %}
+				<div class="when unit duration">{{ submission.duration }} hrs</div>
+			{% endif %}
+			<div class="who unit programparticipant">{{ submission.firstname }} {{ submission.lastname }}</div>
+			{% for tag in submission.tags %}
+				<span class="spaninclude">{{ tag.name }}</span>
+			{% endfor %}
+			{{ submission.description }}
+			{% if user is not none %}
+				{% if submission in user.rsvped_to %}
+					<input type=submit class="buttons" value="un-RSVP" name=submit_{{ submission.id }} />
+				{% elif user.points > 0 or user.staff == 1 %}
+					<input type=submit class="buttons" value="RSVP" name=submit_{{ submission.id }} />
+				{% endif %}
+			{% endif %}
+			{% for rsvp in submission.rsvped_by %}
+				{{ user_link(rsvp) }} 
+			{% endfor %}
+		</div>
+{%- endmacro %}

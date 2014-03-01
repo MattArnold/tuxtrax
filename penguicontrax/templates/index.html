@@ -77,37 +77,7 @@
     <div id="report" class="sectin withmenu" > <div class="event suggested">Suggested events</div> <div class="event followedup">Pending events</div> <div class="event approved">Approved events</div>{% if user is not none and user.staff == 1 %} <div class="event rejected">Rejected events</div>{% endif %}
 		<form action="/rsvp" method=post >
 		{% for submission in submissions %}
-			<!-- To Do: This line is where topic tags need to be added as classes.-->
-			{% if submission.followUpState == 1 %}
-				<div class="event followedup">
-			{% elif submission.followUpState == 2 %}
-				<div class="event approved">
-			{% elif submission.followUpState == 3 %}
-				<div class="event rejected">
-			{% else %}
-				<div class="event suggested">
-			{% endif %}
-				<a name="submission_{{ submission.id }}" />
-				<div class="what unit title"><a href="/eventform?id={{submission.id}}">{{ submission.title }}</a></div>
-				{% if submission.duration != 1 %}
-					<div class="when unit duration">{{ submission.duration }} hrs</div>
-				{% endif %}
-				<div class="who unit programparticipant">{{ submission.firstname }} {{ submission.lastname }}</div>
-				{% for tag in submission.tags %}
-					<span class="spaninclude">{{ tag.name }}</span>
-				{% endfor %}
-				{{ submission.description }}
-				{% if user is not none %}
-					{% if submission in user.rsvped_to %}
-						<input type=submit class="buttons" value="un-RSVP" name=submit_{{ submission.id }} />
-					{% elif user.points > 0 or user.staff == 1 %}
-						<input type=submit class="buttons" value="RSVP" name=submit_{{ submission.id }} />
-					{% endif %}
-				{% endif %}
-				{% for rsvp in submission.rsvped_by %}
-					{{ macros.user_link(rsvp) }} 
-				{% endfor %}
-			</div>
+			{{ macros.event_summary(submission, user) }}
 		{% endfor %}
 		</form>
     </div>
