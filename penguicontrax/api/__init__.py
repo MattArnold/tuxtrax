@@ -9,3 +9,5 @@ api = Api(app)
 #define routes
 api.add_resource(events.EventAPI,'/api/event/<string:event_id>')
 api.add_resource(events.EventsAPI,'/api/events')
+
+
