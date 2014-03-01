@@ -124,14 +124,14 @@ info:after{
 	position:fixed;
 	top: 50%;
 	left: 50%;
-	background: url(/images/penguintrax.png) no-repeat center center;
+	background: url(/static/penguintrax.png) no-repeat center center;
 	height:194px;
 	width:194px;
 	z-index:-2;
 }
 .penguinhead{
 	position:absolute;
-	background: url(/images/penguintrax.png) no-repeat center center;
+	background: url(/static/penguintrax.png) no-repeat center center;
 	height:194px;
 	width:194px;
 	top:4px;
@@ -205,7 +205,7 @@ textarea{
 	float:left;
 }
 .hidenav {
-	background: #2c3e50 url(/images/collapseexpandicon.png) no-repeat center center;
+	background: #2c3e50 url(/static/collapseexpandicon.png) no-repeat center center;
 }
 .roomtab {
 	background-color: #e79d5c;
@@ -224,7 +224,7 @@ textarea{
 .include,
 .exclude,
 .require{
-	background: #2c3e50 url(/images/collapseexpandicon.png) no-repeat center center;	
+	background: #2c3e50 url(/static/collapseexpandicon.png) no-repeat center center;
 }
 .or{
 	background: #3498db;
