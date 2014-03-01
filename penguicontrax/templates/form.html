@@ -28,9 +28,12 @@
 	<input type=hidden name=eventid value={{event.id}} />
 	{% endif %}
 	<div class="section where" >
+		<table><tr><td>
 		<div class="header">
 			WHERE
 		</div>
+		</td>
+		<td>
 		<div id="typechange" >
 			<input type=radio name=typelist class=typelist value=noroomtype id=noroomtype style="display:none">
 			<label for="talkbtn">
@@ -64,6 +67,7 @@
 				</div>
 			</label>
 		</div>
+		</td></tr></table>
 		<div class="divider"></div>
 		<div id="resources">
 			<div class="question" >
@@ -83,7 +87,7 @@
 			</div>
 		</div>
 		<div class="question" id="players">
-			Number of Players:
+			Number of players:
 			<select value="" tabindex="" name=players>
 				<option value="2">2</option>
 				<option value="3">3</option>
@@ -172,11 +176,13 @@
 		<input name=submitter id="submitter" type=text size="24" />
 		<input type=hidden name=firstname id="firstname" {% if event is not none %}value="{{ event.firstname }}"{% endif %} />
 		<input type=hidden name=lastname id="lastname" {% if event is not none %}value="{{ event.lastname }}"{% endif %} />
+		<p></p>
 		Suggester email:
 		<input name=email type=text size="24" value="{% if event is not none %}{{ event.email }}{% endif %}"/>
 		<span id="pptype" ></span>
 		<span id="pluralpptype" ></span>
 		<input name=person0 type=text size="24" onkeyup="countChar(this, 24)" class="pp" />
+		<p></p>
 		<div id="newperson"  class="pp" >+ someone else</div>
 	</div>
 	<div class="section what" >
