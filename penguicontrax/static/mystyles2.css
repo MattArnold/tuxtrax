@@ -159,9 +159,6 @@ info:after {
 	-moz-border-radius: .8em;
 	-webkit-border-radius: .8em;
 	border-radius: .8em; }
-.tag:hover {
-    background-color: #ff00ff
-}
 
 .spaninclude {
 	background: #3498db;
@@ -203,10 +200,6 @@ input,button,select,textarea {
 	border-radius: 5px;
 	color: #34495e;
 	font-family: "Droid Sans", Tahoma, Arial, Verdana, sans-serif; }
-    
-#logoutButton:hover {
-    background-color: #ff00ff;
-}
  
 .buttons a,.buttons {
 	-moz-border-radius: 10px;
@@ -224,10 +217,6 @@ input,button,select,textarea {
 	margin: 0 7px 0 0;
 	padding: 5px 10px 6px 7px;
 	text-decoration: none; }
-    
-.buttons:hover {
-    background-color: #ff00ff;
-}
 
 .selectlist { width: 220px; }
 
