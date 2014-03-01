@@ -93,3 +93,26 @@ def createtag():
     db.session.add(tag)
     db.session.commit()
     return render_template('index.html')
+
+@app.route('/rsvp', methods=['POST'])
+def rsvp():
+    if g.user is None or (g.user.points <= 0 and g.user.staff != 1):
+        return redirect('/')
+    submission = None
+    value = None
+    for field in request.form:
+        if field.find('submit_') == 0: 
+            submission = Submission.query.filter_by(id=int(field[7:])).first()
+            value = request.form[field]
+            break
+    if submission is None:
+        return redirect('/')
+    if value == 'un-RSVP':
+        g.user.rsvped_to.remove(submission)
+        g.user.points += 1
+    else:
+        g.user.rsvped_to.append(submission)
+        g.user.points -= 1
+    db.session.add(g.user)
+    db.session.commit()
+    return redirect('/#submission_' + str(submission.id))

@@ -2,6 +2,10 @@ from penguicontrax import constants
 from flask import g, session, Response, render_template, request
 from .. import app, db
 
+rsvps = db.Table('rsvps',
+                db.Column('submission_id', db.Integer, db.ForeignKey('submission.id', ondelete='CASCADE', onupdate='CASCADE')), 
+                db.Column('user_id', db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE')))
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     firstName = db.Column(db.String())
@@ -15,6 +19,7 @@ class User(db.Model):
     fbid = db.Column(db.Integer())
     image_small = db.Column(db.String())
     image_large = db.Column(db.String())
+    rsvped_to = db.relationship('Submission', secondary=rsvps, backref=db.backref('rsvped_by', passive_deletes=True))
     
     def __init__(self):
         self.staff = False

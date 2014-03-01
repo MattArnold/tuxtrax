@@ -122,9 +122,9 @@ An important schema design element is the distinction between actual events and 
 
 *016*: Give each OpenID user five RSVP "points". -DONE
 
-*017*: Create an RSVP button on each event, visible to all users. When they click it, the event index number is added to their user entry in the user database, and their points are reduced by 1. A message at the top of the page reads "Choose up to 5 events. Click RSVP to indicate your interest in attending."
+*017*: Create an RSVP button on each event, visible to all users. When they click it, the event index number is added to their user entry in the user database, and their points are reduced by 1. A message at the top of the page reads "Choose up to 5 events. Click RSVP to indicate your interest in attending." -DONE
 
-*018*: Display a number on each event showing how many people are interested in attending. (Yes, events on the rejected page also show this number.)
+*018*: Display a number on each event showing how many people are interested in attending. (Yes, events on the rejected page also show this number.) -DONE, each user RSVPed is actually displayed!
 
 ### *Epic 4: Proofreading*
 
