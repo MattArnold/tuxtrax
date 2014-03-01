@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ user }}{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block body %}
+	<div id="report">
+		<div class="section" > 
+			<div style="float:left;">
+				<img src="{{ view_user.image_large }}" />
+			</div>
+			<div class="event">
+				<span style="font-size: 150%;">{{ macros.user_text(view_user) }}</span>
+				<div>
+					<!-- Put more user info here -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<form action="/rsvp" method=post >
+	{% for submission in view_user.rsvped_to %}
+		{% if view_user == user %}
+			{{ macros.event_summary(submission, user) }}
+		{% else %}
+			{{ macros.event_summary(submission, none) }}
+		{% endif %}
+	{% endfor %}
+	</form>
+{% endblock %}

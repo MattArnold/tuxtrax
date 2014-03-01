@@ -1,7 +1,21 @@
-from flask import g, request, session, render_template, redirect
-from .. import app, db
+from flask import g, request, session, render_template, redirect, Response
+from .. import app, db, dump_table_json
 
-class Submissions(db.Model):
+tags = db.Table('tags', 
+                db.Column('submission_id', db.Integer, db.ForeignKey('submission.id', ondelete='CASCADE', onupdate='CASCADE')), 
+                db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')))
+    
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String())
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<name: %s>' % self.name
+
+class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String())
     title = db.Column(db.String())
@@ -10,26 +24,17 @@ class Submissions(db.Model):
     firstname = db.Column(db.String())
     lastname = db.Column(db.String())
     trackId = db.Column(db.Integer())
-    duration = db.Column(db.Boolean()) 
-    setupTime = db.Column(db.Boolean()) 
-    repetition = db.Column(db.Boolean()) 
+    duration = db.Column(db.Integer()) 
+    setupTime = db.Column(db.Integer()) 
+    repetition = db.Column(db.Integer()) 
     followUpState = db.Column(db.Integer()) # 0 = submitted, 1 = followed up, 2 = accepted, 3 = rejected
+    tags = db.relationship('Tag', secondary=tags, backref=db.backref('submissions', passive_deletes=True))
         
     def __init(self):
         pass
 
     def __repr__(self):
         return '<email: %s, title: %s>' % self.name, self.email
-    
-class Tags(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return '<name: %s>' % self.name
     
 class Track(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -43,41 +48,77 @@ class Track(db.Model):
     def __repr__(self):
         return '<name: %s, staffId: %d>' % self.name, self.staffId
     
+@app.route('/getevent', methods=['GET'])
+def getevent():
+    if 'id' in request.args:
+        return Response(dump_table_json(Submission.query.filter_by(id=int(request.args['id'])), Submission.__table__), mimetype='application/json')
+    return Response(dump_table_json(Submission.query.all(), Submission.__table__), mimetype='application/json')
+    
 @app.route('/eventform', methods=['GET', 'POST'])
 def event_form():
-    tags = [tag.name for tag in Tags.query.all()]
+    tags = [tag.name for tag in Tag.query.all()]
     if request.method == 'GET':
         eventid = request.args.get('id',None)
+        event_tags = []
         if eventid is not None:
-            event = Submissions.query.filter_by(id=eventid).first()
+            event = Submission.query.filter_by(id=eventid).first()
+            event_tags = [tag.name for tag in event.tags]
         else:
             event = None
-    return render_template('form.html', tags=tags, event=event, user=g.user)
+    return render_template('form.html', tags=tags, event=event, user=g.user, event_tags=event_tags)
 
 @app.route('/submitevent', methods=['POST'])
 def submitevent():
-    eventid = request.form['eventid']
+    eventid = request.form['eventid'] if 'eventid' in request.form else None
     if eventid is not None:
-        submission = Submissions.query.filter_by(id=eventid).first()
-    if submission is None:
-        submission = Submissions()
+        submission = Submission.query.filter_by(id=eventid).first()
+    else:
+        submission = Submission()
+        submission.followUpState = 0
     submission.email = request.form['email']
     submission.title = request.form['title']
     submission.description = request.form['description']
     submission.duration = request.form['duration']
-    submission.setupTime = request.form['setuptime'] if request.form['setuptime'] is not None else 1 
+    submission.setupTime = request.form['setuptime'] if 'setuptime' in request.form else 1 
     submission.repetition = request.form['repetition']
     submission.comments = request.form['comments']
     submission.firstname = request.form['firstname']
     submission.lastname = request.form['lastname']
-    submission.followUpState = request.form['followupstate'] if request.form['followupstate'] is not None else 0
+    if 'followupstate' in request.form:
+        submission.followUpState = request.form['followupstate']
+    submission.tags = []
+    for tag in request.form.getlist('tagbtn'):
+        submission.tags.append(Tag.query.filter_by(name=tag).first())
     db.session.add(submission)
     db.session.commit()
     return redirect('/')
 
 @app.route('/createtag', methods=['POST'])
 def createtag():
-    tag = Tags(request.form['tagname'])
+    tag = Tag(request.form['tagname'])
     db.session.add(tag)
     db.session.commit()
     return render_template('index.html')
+
+@app.route('/rsvp', methods=['POST'])
+def rsvp():
+    if g.user is None or (g.user.points <= 0 and g.user.staff != 1):
+        return redirect('/')
+    submission = None
+    value = None
+    for field in request.form:
+        if field.find('submit_') == 0: 
+            submission = Submission.query.filter_by(id=int(field[7:])).first()
+            value = request.form[field]
+            break
+    if submission is None:
+        return redirect('/')
+    if value == 'un-RSVP':
+        g.user.rsvped_to.remove(submission)
+        g.user.points += 1
+    else:
+        g.user.rsvped_to.append(submission)
+        g.user.points -= 1
+    db.session.add(g.user)
+    db.session.commit()
+    return redirect('/#submission_' + str(submission.id))

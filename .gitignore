@@ -6,10 +6,7 @@ bin/
 include/
 lib/
 local/
-<<<<<<< HEAD
 venv/
-=======
-venv
 penguicontrax.db
 openid_store
->>>>>>> 119b95dc17fe85879d3af8a6630aabe65c0a2bc2
+psql_runserver.sh
