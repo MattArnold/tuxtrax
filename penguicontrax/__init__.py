@@ -59,7 +59,7 @@ def init():
 
 @app.route('/')
 def index():
-    submissions = Submission.query.order_by('id').all() if g.user is not None and g.user.staff == True else Submission.query.filter(Submission.followUpState != 3).order_by('id')
+    submissions = Submission.query.order_by('id').all() if g.user is not None and g.user.staff == True else Submission.query.filter(Submission.followUpState != 3, Submission.private != True).order_by('id')
     tags = [tag.name for tag in Tag.query.all()]
     return render_template('index.html', tags=tags, submissions=submissions, user=g.user)
     

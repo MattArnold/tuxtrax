@@ -46,9 +46,10 @@ class Submission(db.Model):
     followUpState = db.Column(db.Integer()) # 0 = submitted, 1 = followed up, 2 = accepted, 3 = rejected
     userPresenters = db.relationship('User', secondary=user_presenting_in, backref=db.backref('presenting_in'), passive_deletes=True)
     personPresenters = db.relationship('Person', secondary=person_presenting_in, backref=db.backref('presenting_in'), passive_deletes=True)
+    private = db.Column(db.Boolean())
 
     def __init__(self):
-        pass
+       self.private = False
 
     def __repr__(self):
         return '<email: %s, title: %s>' % (self.email, self.title)
@@ -137,6 +138,8 @@ def event_form():
         event_tags = []
         if eventid is not None:
             event = Submission.query.filter_by(id=eventid).first()
+            if (not event is None) and (event.private) and (not g.user.staff):
+                return redirect('/')
         else:
             event = None
     return render_template('form.html', tags=tags, resources=resources, tracks=tracks,event=event, user=g.user)
@@ -159,8 +162,10 @@ def submitevent():
     for field,dbfield in fields.items():
        if field in request.form:
            setattr(submission, dbfield, request.form[field])
+    print request.form
     if 'submitter_id' in request.form:
-        submission.submitter = User.query.filter_by(id=int(request.form['submitter_id'])).first()
+        submission.submitter = User.query.filter_by(id=request.form['submitter_id']).first()
+    submission.private = 'private' in request.form
     submission.followUpState = request.form['followupstate'] if 'followupstate' in request.form and request.form['followupstate'] is not None else 0
 
     tags = [t[4:] for t,v in request.form.items() if len(t)>4 and t[:4]=='tag_' and v]
