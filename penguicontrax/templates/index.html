@@ -28,9 +28,9 @@
             </div>
             <div class="col-md-6">
                 <span class="legend">Legend:</span>
-                <span class="bs-callout bs-callout-default accepted legend">Accepted</span>
-                <span class="bs-callout bs-callout-default followedup legend">Followed up</span>
                 <span class="bs-callout bs-callout-default suggested legend">Awaiting followup</span>
+                <span class="bs-callout bs-callout-default followedup legend">Followed up</span>
+                <span class="bs-callout bs-callout-default accepted legend">Accepted</span>
                 {% if user is not none and user.staff == 1 %}
                 <button class="bs-callout bs-callout-default rejected legend">Rejected</button>
                 {% endif %}
