@@ -53,7 +53,7 @@ class Tag(db.Model):
         self.name = name
 
     def __repr__(self):
-        return '<name: %s>' % self.name
+        return self.name
     
 class Track(db.Model):
     __tablename__ = 'tracks'

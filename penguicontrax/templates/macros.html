@@ -4,14 +4,12 @@
 
 {% macro user_link(user) -%}
 	<a class="userlink" href="/{{ user.account_name }}">
-		<img src="{{ user.image_small }}" width="20"> 
-		{{ user_text(user) }}
+		<img src="{{ user.image_small }}" width="20" style="margin-right:5px">{{ user_text(user) }}
 	</a>
 {%- endmacro %}
 
 {% macro event_summary(submission, user) -%}
         <div class="submission suggested row
-         {% for tag in submission.tags %}{{ tag }} {% endfor %}
             bs-callout
 			{% if submission.followUpState == 1 %}
 			bs-callout-warning
@@ -22,7 +20,7 @@
             {% else %}
             bs-callout-default
             {% endif %}
-        ">
+        " data-tags="{% for tag in submission.tags %}{{tag}}{% endfor %}">
 
             <div class="col-md-12">
 
@@ -49,12 +47,10 @@
                         {% for tag in submission.tags %}
                         <span class="label label-default spaninclude">{{ tag.name }}</span>
                         {% endfor %}
-
                         {{ submission.description }}
-
-                        {% for rsvp in submission.rsvped_by %}
+                        <!--{% for rsvp in submission.rsvped_by %}
                         {{ user_link(rsvp) }}
-                        {% endfor %}
+                        {% endfor %}-->
                     </div>
                 </div>
 
