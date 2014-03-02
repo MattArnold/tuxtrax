@@ -1,3 +1,33 @@
 @import (less) "bootstrap/css/bootstrap.css";
-@import (less) "bootstrap/css/bootstrap-theme.css";
-@import (less) "mystyles2.css";
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('bootstrap/fonts/glyphicons-halflings-regular.eot');
+  src: url('bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'), url('bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+//@import (less) "bootstrap/css/bootstrap-theme.css";
+//@import (less) "mystyles2.css";
+
+.bs-callout {
+  margin: 20px 0;
+  padding: 20px;
+  border-left: 3px solid #eee;
+}
+
+.bs-callout-danger {
+  background-color: #fdf7f7;
+  border-color: #d9534f;
+}
+
+.bs-callout-default {
+  background-color: #f7f7f9;
+  border-color: #e1e1e8;
+}
+
+.submissions {
+
+  .rsvp {
+    &.checked {
+      color : #FDD017;
+    }
+  }
+}

@@ -3,7 +3,7 @@ from flask import g, session, Response, render_template, request, redirect
 from .. import app, db
 
 rsvps = db.Table('rsvps',
-                db.Column('submission_id', db.Integer, db.ForeignKey('submission.id', ondelete='CASCADE', onupdate='CASCADE')), 
+                db.Column('submission_id', db.Integer, db.ForeignKey('submissions.id', ondelete='CASCADE', onupdate='CASCADE')),
                 db.Column('user_id', db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE')))
 
 class User(db.Model):
@@ -52,5 +52,3 @@ def user_profile_by_id():
 @app.route('/<user>', methods=['GET'])
 def user_profile_by_account_name(user):
     return user_profile(User.query.filter_by(account_name=user).first())
-    
-    

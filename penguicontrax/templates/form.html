@@ -1,25 +1,7 @@
 {% extends "base.html" %}
 {% block head %}
 	{{ super() }}
-
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#resources, #players, #furniture, #otherfacility, #setupandrepeat, #othertime, .pp, #pptype, #pluralpptype').hide();
-		});
-        
-		// blurb should have 700 characters max. title should have 80 characters max. person should have 24 characters max.
-		function countChar(thebox, limit) {
-			var len = thebox.value.length;
-			if (len >= limit) {
-				thebox.value = thebox.value.substring(0, limit);
-			} else {
-				remaining = limit - len;
-				$('#charnum').text(remaining + " characters remaining in " + thebox.name);
-			}
-		};
-		
-		var people = 0;
-	</script>
+	<script src="static/jquery-1.9.1.min.js"></script>
 {% endblock %}
 {% block body %}
 	{{ super() }}
@@ -29,7 +11,6 @@
 	{% endif %}
 	<div class="row">
 	<div class="section where" >
-		
   		<div class="col-md-4">
 		<div class="header">
 			WHERE
@@ -37,35 +18,35 @@
   		</div> <!-- col-md-4 -->
 		<div class="col-md-4">
 		<div id="typechange" >
-			<input type=radio name=typelist class=typelist value=noroomtype id=noroomtype style="display:none">
+			<input type=radio name=eventtype class=typelist value=noroomtype id=noroomtype style="display:none">
 			<label for="talkbtn">
 				<div class="where question roomtab" id="talk">
-					<input type=radio name=typelist class="typelist" value="talk"  id="talkbtn">An audience sits and watches one or more speakers.
+					<input type=radio name=eventtype class="typelist" value="talk"  id="talkbtn" {{ event.eventType | is_checked('talk') }}>An audience sits and watches one or more speakers.
 				</div>
 			</label>
 			<label for="workshopbtn">
 				<div class="where question roomtab" id="workshop">
-					<input type=radio name=typelist class="typelist" value="workshop"  id="workshopbtn">Hands-on participatory activity.
+					<input type=radio name=eventtype class="typelist" value="workshop"  id="workshopbtn" {{ event.eventType | is_checked('workshop') }}>Hands-on participatory activity.
 				</div>
 			</label>
 			<label for="bofbtn">
 				<div class="where question roomtab" id="bof">
-					<input type=radio name=typelist class="typelist" value="bof"  id="bofbtn">Open discussion with no presenter or organizer.
+					<input type=radio name=eventtype class="typelist" value="bof"  id="bofbtn" {{ event.eventType | is_checked('bof') }}>Open discussion with no presenter or organizer.
 				</div>
 			</label>
 			<label for="gamebtn">
 				<div class="where question roomtab" id="game">
-					<input type=radio name=typelist class="typelist" value="game"  id="gamebtn">Tabletop game.
+					<input type=radio name=eventtype class="typelist" value="game"  id="gamebtn" {{ event.eventType | is_checked('game') }}>Tabletop game.
 				</div>
 			</label>
 			<label for="onstagebtn">
 				<div class="where question roomtab" id="onstage">
-					<input type=radio name=typelist class="typelist" value="onstage"  id="onstagebtn">Concert, skit, movie, or other onstage performance.
+					<input type=radio name=eventtype class="typelist" value="onstage"  id="onstagebtn" {{ event.eventType | is_checked('onstage') }}>Concert, skit, movie, or other onstage performance.
 				</div>
 			</label>
 			<label for="rovingbtn">
 				<div class="where question roomtab" id="roving">
-					<input type=radio name=typelist class="typelist" value="roving"  id="rovingbtn">Activity located throughout the hotel or elsewhere.
+					<input type=radio name=eventtype class="typelist" value="roving"  id="rovingbtn" {{ event.eventType | is_checked('roving') }}>Activity located throughout the hotel or elsewhere.
 				</div>
 			</label>
 		</div>
@@ -73,52 +54,46 @@
 		<div class="col-md-4">
 		<div class="divider"></div>
 		<div id="resources">
-			<div class="question" >
-				<label for="projector"><input name=projector type=checkbox value="projector" id="projector">Projector</label>
+			{% for resource in resources %}
+			<div class="question">
+				<label for="resource_{{ resource.id }}" >
+				<input type="checkbox" name="resource_{{ resource.id }}" id="resource_{{ resource.id }}" value="{{ resource.id }}" {{ event | checked_if_resourced(resource) }}>
+				{{ resource.name }}
+				</label>
 			</div>
-			<div class="question" id="" >
-				<label for="microphone"><input name=microphone type=checkbox value="microphone" id="microphone"> Microphone</label>
-			</div>
-			<div class="question" id="" >
-				<label for="soundsystem"><input name=soundsystem type=checkbox value="soundsystem" id="soundsystem"> Sound system</label>
-			</div>
-			<div class="question" id="" >
-				<label for="water"><input name=water type=checkbox value="water" id="water"> Drinking water</label>
-			</div>
-			<div class="question" id="" >
-				<label for="quiet"><input name=quiet type=checkbox value="quiet" id="quiet"> Quiet (no airwalls)</label>
-			</div>
+			{% endfor %}
+
 		</div>
 		<div class="question" id="players">
-			Number of players:
+			Number of Players:
 			<select value="" tabindex="" name=players>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="5">4</option>
-				<option value="5">5</option>
-				<option value="6">more</option>
+				<option value="2 {{event.players|is_selected(2)}}">2</option>
+				<option value="3" {{event.players|is_selected(3)}}>3</option>
+				<option value="5" {{event.players|is_selected(4)}}>4</option>
+				<option value="5" {{event.players|is_selected(5)}}>5</option>
+				<option value="6" {{event.players|is_selected(6)}}>more</option>
 			</select>
 		</div>
 		<div class="question" id="furniture" >
 			Round tables:
 			<select value="" tabindex="" name=roundtables>
-				<option value="0">0</option>
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="5">more</option>
+				<option value="0" {{event.roundTables|is_selected(0)}}>0</option>
+				<option value="1" {{event.roundTables|is_selected(1)}}>1</option>
+				<option value="2" {{event.roundTables|is_selected(2)}}>2</option>
+				<option value="3" {{event.roundTables|is_selected(3)}}>3</option>
+				<option value="5" {{event.roundTables|is_selected(5)}}>more</option>
 			</select>
 			Long tables:
 			<select value="" tabindex="" name=longtables>
-				<option value="0">0</option>
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="5">more</option>
+				<option value="0" {{event.longTables|is_selected(0)}}>0</option>
+				<option value="1" {{event.longTables|is_selected(1)}}>1</option>
+				<option value="2" {{event.longTables|is_selected(2)}}>2</option>
+				<option value="3" {{event.longTables|is_selected(3)}}>3</option>
+				<option value="5" {{event.longTables|is_selected(5)}}>more</option>
 			</select>
 		</div>
 		<div class="question" id="otherfacility" >
-			<textarea name=facilityrequest id="facilityrequest" rows="1" cols="50" />other facility requests</textarea> <br />
+			<textarea name=facilityrequest id="facilityrequest" rows="1" cols="50" placeholder="other facility requests">{{event.facilityRequest | default('',true)}}</textarea> <br />
 		</div>
 	</div>
   	</div> <!-- col-md-4 -->
@@ -127,28 +102,26 @@
 	<div class="section when" >
 		<div class="col-md-4">
 		<div class="header">
-			<!--WHEN-->
-			DURATION
+			WHEN
 		</div>
   		</div> <!-- col-md-4 -->
 		<div class="col-md-4">
 		<div class="question" >
 				<select value="" class="timechange" tabindex="2" name=duration>
 					<!--
-					<option value="0" {% if event is not none and event.duration == 0 %}selected="selected"{% endif %}>duration</option>
+					<option value="0" {{ event.duration | is_selected(0) }}>duration</option>
 					-->
-					<option value="1" {% if event is not none and event.duration == 1 %}selected="selected"{% endif %}>50 minutes</option>
-					<option value="2" {% if event is not none and event.duration == 2 %}selected="selected"{% endif %}>1 hours and 50 minutes</option>
-					<option value="3" {% if event is not none and event.duration == 3 %}selected="selected"{% endif %}>2 hours and 50 minutes</option>
-					<option value="4" {% if event is not none and event.duration == 3 %}selected="selected"{% endif %}>3 hours and 50 minutes</option>
+					<option value="1" {{ event.duration | is_selected(1) }}>50 mins</option>
+					<option value="2" {{ event.duration | is_selected(2) }}>1 hr 50 mins</option>
+					<option value="3" {{ event.duration | is_selected(3) }}>2 hrs 50 mins</option>
+					<option value="4" {{ event.duration | is_selected(4) }}>3 hrs 50 mins</option>
 					<!--
-					<option value="4" {% if event is not none and event.duration == 4 %}selected="selected"{% endif %}>more</option>
+					<option value="4" {{ event.duration | is_selected(4) }}>more</option>
 					-->
-					<option value="5" {% if event is not none and event.duration == 5 %}selected="selected"{% endif %}>all weekend</option>
+					<option value="5" {{ event.duration | is_selected(5) }}>all weekend</option>
 				</select>
 					<br/>Includes up to 10 minutes of setup prior to the event.
 				<br />
-		</div>
 		<div class="question">
                 	<a id="moresetuplink" href="">more ...</a>
 		</div>
@@ -156,26 +129,26 @@
   		<div class="col-md-4">
 		<div id="setupandrepeat">
 			<div class="question" >
-				Extended setup time: 
-					<select value="" tabindex="2" name=setuptime >
-						<option value="0" {% if event is not none and event.setupTime == 0 %}selected="selected"{% endif %}>No</option>
-						<option value="1" {% if event is not none and event.setupTime == 1 %}selected="selected"{% endif %}>1 hour</option>
-						<option value="2" {% if event is not none and event.setupTime == 2 %}selected="selected"{% endif %}>2 hours</option>
-						<option value="3" {% if event is not none and event.setupTime == 3 %}selected="selected"{% endif %}>more</option>
-					</select><br />
+				Setup time: 
+				<select value="" tabindex="2" name=setuptime >
+					<option value="0" {{ event.setupTime | is_selected(0) }}>No</option>
+					<option value="1" {{ event.setupTime | is_selected(1) }}>1 hour</option>
+					<option value="2" {{ event.setupTime | is_selected(2) }}>2 hours</option>
+					<option value="3" {{ event.setupTime | is_selected(3) }}>more</option>
+				</select><br />
 			</div>
 			<div class="question" >
 				Repeat:
 				<select value="" tabindex="2" name=repetition>
-					<option value="1" {% if event is not none and event.repetition == 0 %}selected="selected"{% endif %}>No</option>
-					<option value="2" {% if event is not none and event.repetition == 1 %}selected="selected"{% endif %}>twice</option>
-					<option value="3" {% if event is not none and event.repetition == 2 %}selected="selected"{% endif %}>thrice</option>
-					<option value="4" {% if event is not none and event.repetition == 3 %}selected="selected"{% endif %}>more</option>
+					<option value="0" {{ event.repetition | is_selected(0) }}>No</option>
+					<option value="1" {{ event.repetition | is_selected(1) }}>twice</option>
+					<option value="2" {{ event.repetition | is_selected(2) }}>thrice</option>
+					<option value="3" {{ event.repetition | is_selected(3) }}>more</option>
 				</select><br />
 			</div>
 		</div>
 		<div class="question" id="othertime" >
-			<textarea name=timerequest id="timerequest" rows="1" cols="50" />other time requests</textarea> <br />
+			<textarea name=timerequest id="timerequest" rows="1" cols="50" placeholder="other time requests">{{event.timeRequest | default('',true)}}</textarea> <br />
 		</div>
   		</div> <!-- col-md-4 -->
 	</div>
@@ -190,18 +163,16 @@
 		<div class="col-md-4">
 		Suggester name (That's you):
 		<input name=submitter id="submitter" type=text size="24" />
-		<input type=hidden name=firstname id="firstname" {% if event is not none %}value="{{ event.firstname }}"{% endif %} />
-		<input type=hidden name=lastname id="lastname" {% if event is not none %}value="{{ event.lastname }}"{% endif %} />
-		<p></p>
+		<input type=hidden name=firstname id="firstname" value="{{ event.firstname|default('',true) }}" />
+		<input type=hidden name=lastname id="lastname" value="{{ event.lastname|default('',true) }}" />
 		Suggester email:
-		<input name=email type=text size="24" value="{% if event is not none %}{{ event.email }}{% endif %}"/>
+		<input name=email type=text size="24" placeholder="email@address.com" value="{{ event.email | default('',true) }}"/>
   		</div> <!-- col-md-4 -->
 		<div class="col-md-4">
-		<div id="newperson"  class="pp" >+ someone else</div>
 		<span id="pptype" ></span>
 		<span id="pluralpptype" ></span>
 		<input name=person0 type=text size="24" onkeyup="countChar(this, 24)" class="pp" />
-		<p></p>
+		<button id="newperson"  class="pp" >+ someone else</button>
   		</div> <!-- col-md-4 -->
 	</div>
 	</div> <!-- class="row" -->
@@ -216,15 +187,15 @@
 		<div id="topics">
 			<!-- <div style="float:left"> -->
 				Select all topics that apply:
-			<!-- </div> -->
-				{% for tag in tags %}
-					<div class="tag">
-						<input type="checkbox" name="tagbtn" id="{{ tag }}tagbtn" value="{{ tag }}" {% if tag in event_tags %}checked{% endif %}>
-						<label for="{{ tag }}tagbtn" >
-						{{ tag }} 
-						</label>
-					</div>
-				{% endfor %}
+			</div>
+			{% for tag in tags %}
+			<div class="tag">
+				<input type="checkbox" name="tag_{{ tag }}" id="{{ tag }}tagbtn" value="{{ tag }}" {{ event | checked_if_tagged(tag) }}>
+				<label for="{{ tag }}tagbtn" >
+				{{ tag }}
+				</label>
+			</div>
+			{% endfor %}
 		</div>
   		</div> <!-- col-md-4 -->
   		<div class="col-md-4">
@@ -233,31 +204,16 @@
 			<div style="float:left">
 				Choose one staffer to be your contact person:
 			</div>
-			<label for="litbtn">
-				<div class="what question track" id="Lit">
-					<input type=radio name=tracklist class="tracklist" value="Literature"  id="litbtn">literature
+
+			{% for track in tracks %}
+			<label for="tbn_{{ track }}">
+				<div class="what question track" id="track_{{ track }}">
+					<input type=radio name=track class="tracklist" value="{{track}}"  id="tbn_{{ track }}" {{ event | checked_if_tracked(track) }}>{{ track }}
 				</div>
 			</label>
-			<label for="techbtn">
-				<div class="what question track" id="Tech">
-					<input type=radio name=tracklist class="tracklist" value="Tech"  id="techbtn">tech
-				</div>
-			</label>
-			<label for="musicbtn">
-				<div class="what question track" id="Music">
-					<input type=radio name=tracklist class="tracklist" value="Music"  id="musicbtn">music
-				</div>
-			</label>
-			<label for="foodbtn">
-				<div class="what question track" id="Food">
-					<input type=radio name=tracklist class="tracklist" value="Food"  id="foodbtn">food
-				</div>
-			</label>
-			<label for="sciencebtn">
-				<div class="what question track" id="Science">
-					<input type=radio name=tracklist class="tracklist" value="Science"  id="sciencebtn">science
-				</div>
-			</label>
+			{% endfor %}
+
+
 		</div>
 		<!-- <div class="divider"></div> -->
   		</div> <!-- col-md-4 -->
@@ -275,13 +231,13 @@
 		</div>
 		<div class="question" >
 			Title: <br />
-			<textarea name=title id="title" rows="2" cols="36" onkeyup="countChar(this, 80)" />{% if event is not none %}{{ event.title }}{% endif %}</textarea>
+			<textarea name=title id="title" rows="2" cols="36" onkeyup="countChar(this, 80)" />{{ event.title | default('',true) }}</textarea>
 		</div>
 		</div> <!-- col-md-4 -->
   		<div class="col-md-4">
 		<div class="question" >
 			Descriptive blurb: <br />
-			<textarea name=description id="blurb" rows="8" cols="72" onkeyup="countChar(this, 700)">{% if event is not none %}{{ event.description }}{% endif %}</textarea>
+			<textarea name=description id="blurb" rows="8" cols="72" onkeyup="countChar(this, 700)">{{ event.description | default('',true) }}</textarea>
 		</div>
 		</div> <!-- col-md-4 -->
 	</div>
@@ -294,24 +250,24 @@
 		</div>
 		<input type=text style="display: none" name=comments id="comments" {% if event is not none %}value="{{ event.comments }}"{% endif %} />
 		<div class="question">
-		<input type=submit value=submitevent class="buttons" name=submitevent id="submitevent" />	
+		<input type=submit value=submitevent class="buttons" name=submitevent id="submitevent" />
 		</div>
 		{% if user is not none and user.staff == 1 %}
 			{% if event is not none %}
 				<div class="question">
 					<span style="color:#7f8c8d;">Submission status (staff only):</span>
 					<select value="" tabindex="2" name=followupstate>
-						<option value="0" {% if event.followUpState == 0 %}selected="selected"{% endif %}>Suggested</option>
-						<option value="1" {% if event.followUpState == 1 %}selected="selected"{% endif %}>Followed up</option>
-						<option value="2" {% if event.followUpState == 2 %}selected="selected"{% endif %}>Accepted</option>
-						<option value="3" {% if event.followUpState == 3 %}selected="selected"{% endif %}>Rejected</option>
+						<option value="0" {{ event | is_selected(0) }}>Suggested</option>
+						<option value="1" {{ event | is_selected(1) }}>Followed up</option>
+						<option value="2" {{ event | is_selected(2) }}>Accepted</option>
+						<option value="3" {{ event | is_selected(3) }}>Rejected</option>
 					</select>
 				</div>
 			{% endif %}
+			<div class="question">
+				<span id="charnum" ></span>
+			</div>
 		{% endif %}
-		<div class="question">
-			<span id="charnum" ></span>
-		</div>
 	</div>
 	</div> <!-- class="row" -->
 	<div class="row">
@@ -324,7 +280,7 @@
 	<form action="/createtag" method=post >
 		<div>
 			New Tag: <input type=text name=tagname id="tagname" />
-			<input type=submit value=submittag class="buttons" name=createtag id="createtag" />	
+			<input type=submit value=submittag class="buttons" name=createtag id="createtag" />
 		</div>
 	</form>
 	</div> <!-- class="row" -->
