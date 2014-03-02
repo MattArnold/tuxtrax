@@ -32,7 +32,7 @@ class User(db.Model):
             self.superuser = True
             self.special_tag = "root"
         else:
-            self.staff = False
+            self.staff = True # TODO: Make people not be staff by default
             self.superuser = False
 
     def __repr__(self):
@@ -92,3 +92,9 @@ def update_user():
         db.session.commit()
         return redirect('/' + view_user.account_name)
     return redirect('/')
+
+@app.route('/users')
+def user_list():
+    if g.user is None or not g.user.superuser:
+        return redirect('/')
+    return render_template('user_list.html', user=g.user, users=User.query.all())
