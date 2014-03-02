@@ -23,27 +23,35 @@
             {% endif %}
         ">
 			<a name="submission_{{ submission.id }}" />
-			<h3><a class="" href="/eventform?id={{submission.id}}">{{ submission.title }}</a>
+
+			<h3 class="row">
+                <a class="" href="/eventform?id={{submission.id}}">{{ submission.title }}</a>
                 {% if submission.duration != 1 %}
                 <span class="badge">{{ submission.duration }} hrs</span>
                 {% endif %}
                 <span class="lead">{{ submission.firstname }} {{ submission.lastname }}</span>
+                {% if user is not none %}
+                {% if submission in user.rsvped_to %}
+                <input type=submit class="btn btn-danger text-right" value="un-RSVP" name=submit_{{ submission.id }} />
+                {% elif user.points > 0 or user.staff == 1 %}
+                <input type=submit class="btn btn-primary text-right" value="RSVP" name=submit_{{ submission.id }} />
+                {% endif %}
+                {% endif %}
             </h3>
 
+            <div class="row">
+                <div class="col-md-12">
+                    {% for tag in submission.tags %}
+                    <span class="label label-default spaninclude">{{ tag.name }}</span>
+                    {% endfor %}
 
-			{% for tag in submission.tags %}
-				<span class="label label-default spaninclude">{{ tag.name }}</span>
-			{% endfor %}
-			{{ submission.description }}
-			{% if user is not none %}
-				{% if submission in user.rsvped_to %}
-					<input type=submit class="btn btn-danger" value="un-RSVP" name=submit_{{ submission.id }} />
-				{% elif user.points > 0 or user.staff == 1 %}
-					<input type=submit class="btn btn-primary" value="RSVP" name=submit_{{ submission.id }} />
-				{% endif %}
-			{% endif %}
-			{% for rsvp in submission.rsvped_by %}
-				{{ user_link(rsvp) }} 
-			{% endfor %}
+                    {{ submission.description }}
+
+                    {% for rsvp in submission.rsvped_by %}
+                    {{ user_link(rsvp) }}
+                    {% endfor %}
+                </div>
+            </div>
+
 		</div>
 {%- endmacro %}
