@@ -14,10 +14,10 @@ from functions import return_null_if_not_logged_in
 
 class SubmissionAPI(Resource):
     @return_null_if_not_logged_in
-    def get(self,submission_id,noun):
+    def get(self,submission_id,noun=None):
         ## Output only one element
         output = dump_table(Submission.query.filter_by(id=int(submission_id)), Submission.__table__).pop()
-        return output
+        return output,200
 
     @return_null_if_not_logged_in
     def post(self,submission_id,noun):
@@ -63,5 +63,8 @@ class SubmissionAPI(Resource):
 class SubmissionsAPI(Resource):
     @return_null_if_not_logged_in
     def get(self):
-        output = dump_table(Submission.query.all(), Submission.__table__)
+        submissions = Submission.query.all()
+        output = dump_table(submissions, Submission.__table__)
+        for index,element in enumerate(output):
+            element['tags'] = [_.name for _ in submissions[index].tags]
         return output
