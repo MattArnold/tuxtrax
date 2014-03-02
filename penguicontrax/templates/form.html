@@ -8,8 +8,7 @@
 	{% if event is not none %}
 	<input type=hidden name=eventid value={{event.id}} />
 	{% endif %}
-	<div class="row jumbotron">
-	<div class="section where" >
+	<div class="row jumbotron section where">
   		<div class="col-md-1">
 		<div class="header">
 			WHERE
@@ -40,20 +39,18 @@
   		</div> <!-- col-md-12 -->
 		<div class="divider"></div>
 		<div class="col-md-12">
-<!--		<div id="resources">-->
+			<div class="question" id="resources">
 			{% for resource in resources %}
-			<div class="question">
 				<label for="resource_{{ resource.id }}" class="checkbox-inline">
 				<input type="checkbox"  data-toggle="checkbox" name="resource_{{ resource.id }}" id="resource_{{ resource.id }}" value="{{ resource.id }}" {{ event | checked_if_resourced(resource) }}>
 				{{ resource.name }}
 				</label>
-<!--			</div>-->
 			{% endfor %}
-
+			</div>
 		</div>
 		<div class="question" id="players">
 			Number of Players:
-			<select value="" tabindex="" name=players>
+			<select value="" tabindex="" name=players class="select-block">
 				<option value="2 {{event.players|is_selected(2)}}">2</option>
 				<option value="3" {{event.players|is_selected(3)}}>3</option>
 				<option value="5" {{event.players|is_selected(4)}}>4</option>
@@ -80,65 +77,55 @@
 			</select>
 		</div>
 		<div class="question" id="otherfacility" >
-			<textarea name=facilityrequest id="facilityrequest" rows="1" cols="50" placeholder="other facility requests" class="form-control">{{event.facilityRequest | default('',true)}}</textarea> <br />
+			<textarea name=facilityrequest id="facilityrequest" rows="1" cols="50" placeholder="Other room and furniture setup requests go here. If you selected 'More', we'll work out the specifics with you later." class="form-control">{{event.facilityRequest | default('',true)}}</textarea> <br />
 		</div>
-	</div>
   	</div> <!-- col-md-4 -->
 	</div> <!-- class="row" -->
-	<div class="row jumbotron">
-	<div class="section when" >
-		<div class="col-md-4">
+	<div class="row jumbotron section when">
+		<div class="col-md-1">
 		<div class="header">
 			WHEN
 		</div>
-  		</div> <!-- col-md-4 -->
-		<div class="col-md-4">
-		<div class="question" >
-				<select value="" class="timechange" tabindex="2" name=duration>
-					<!--
-					<option value="0" {{ event.duration | is_selected(0) }}>duration</option>
-					-->
-					<option value="1" {{ event.duration | is_selected(1) }}>50 mins</option>
-					<option value="2" {{ event.duration | is_selected(2) }}>1 hr 50 mins</option>
-					<option value="3" {{ event.duration | is_selected(3) }}>2 hrs 50 mins</option>
-					<option value="4" {{ event.duration | is_selected(4) }}>3 hrs 50 mins</option>
-					<!--
-					<option value="4" {{ event.duration | is_selected(4) }}>more</option>
-					-->
-					<option value="5" {{ event.duration | is_selected(5) }}>all weekend</option>
-				</select>
-					<br/>Includes up to 10 minutes of setup prior to the event.
-				<br />
-		<div class="question">
-                	<a id="moresetuplink" href="">more ...</a>
-		</div>
-  		</div> <!-- col-md-4 -->
-  		<div class="col-md-4">
-		<div id="setupandrepeat">
-			<div class="question" >
+  		</div> <!-- col-md-1 -->
+		<div class="col-md-1 question">
+            <select value="" class="timechange" tabindex="2" name=duration class="select-block">
+                <option value="0" {{ event.duration | is_selected(0) }}>duration</option>
+                <option value="1" {{ event.duration | is_selected(1) }}>50 mins</option>
+                <option value="2" {{ event.duration | is_selected(2) }}>1 hr 50 mins</option>
+                <option value="3" {{ event.duration | is_selected(3) }}>2 hrs 50 mins</option>
+                <option value="4" {{ event.duration | is_selected(4) }}>3 hrs 50 mins</option>
+                <option value="4" {{ event.duration | is_selected(4) }}>more</option>
+                <option value="5" {{ event.duration | is_selected(5) }}>all weekend</option>
+            </select>
+  		</div> <!-- col-md-10 -->
+  		<div class="col-md-10 question" id="setupandrepeat">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-4">
 				Setup time: 
-				<select value="" tabindex="2" name=setuptime >
+				<select value="" tabindex="2" name=setuptime class="select-block">
 					<option value="0" {{ event.setupTime | is_selected(0) }}>No</option>
 					<option value="1" {{ event.setupTime | is_selected(1) }}>1 hour</option>
 					<option value="2" {{ event.setupTime | is_selected(2) }}>2 hours</option>
 					<option value="3" {{ event.setupTime | is_selected(3) }}>more</option>
-				</select><br />
-			</div>
-			<div class="question" >
+				</select>
+                </div>
+            <div class="col-md-4">
 				Repeat:
-				<select value="" tabindex="2" name=repetition>
+				<select value="" tabindex="2" name=repetition class="select-block">
 					<option value="0" {{ event.repetition | is_selected(0) }}>No</option>
 					<option value="1" {{ event.repetition | is_selected(1) }}>twice</option>
 					<option value="2" {{ event.repetition | is_selected(2) }}>thrice</option>
 					<option value="3" {{ event.repetition | is_selected(3) }}>more</option>
-				</select><br />
-			</div>
+				</select>
+            </div>
 		</div>
 		<div class="question" id="othertime" >
-			<textarea name=timerequest id="timerequest" rows="1" cols="50" placeholder="other time requests">{{event.timeRequest | default('',true)}}</textarea> <br />
+			<textarea name=timerequest id="timerequest" rows="1" cols="50" placeholder="Other time requests go here. If you selected 'More', we'll work out the specifics with you later." class="form-control">{{event.timeRequest | default('',true)}}</textarea> <br />
 		</div>
+        </div>
+        </div>
   		</div> <!-- col-md-4 -->
-	</div>
 	</div> <!-- class="row" -->
 	<div class="row jumbotron">
 	<div class="section who" id="who" >
@@ -213,22 +200,22 @@
 		<div class="section program_book">
   		<div class="col-md-4">
 			<div class="header">
-				PROGRAM BOOK	
+				WHAT	
 			</div>
 		</div> <!-- col-md-4 -->
   		<div class="col-md-4">
 		<div class="question">
-			The following information will appear to attendees on the website and in the schedule book, so please do not leave comments here for the convention committee:
+			<small>The following information will appear to attendees on the website and in the schedule book, so please do not leave comments here for the convention committee:</small>
 		</div>
 		<div class="question" >
 			Title: <br />
-			<textarea name=title id="title" rows="2" cols="36" onkeyup="countChar(this, 80)" />{{ event.title | default('',true) }}</textarea>
+			<textarea name=title id="title" rows="2" cols="36" onkeyup="countChar(this, 80)" class="form-control" />{{ event.title | default('',true) }}</textarea>
 		</div>
 		</div> <!-- col-md-4 -->
   		<div class="col-md-4">
 		<div class="question" >
 			Descriptive blurb: <br />
-			<textarea name=description id="blurb" rows="8" cols="72" onkeyup="countChar(this, 700)">{{ event.description | default('',true) }}</textarea>
+			<textarea name=description id="blurb" rows="8" cols="72" onkeyup="countChar(this, 700)" class="form-control">{{ event.description | default('',true) }}</textarea>
 		</div>
 		</div> <!-- col-md-4 -->
 	</div>
@@ -247,7 +234,7 @@
 			{% if event is not none %}
 				<div class="question">
 					<span style="color:#7f8c8d;">Submission status (staff only):</span>
-					<select value="" tabindex="2" name=followupstate>
+					<select value="" tabindex="2" name=followupstate class="select-block">
 						<option value="0" {{ event | is_selected(0) }}>Suggested</option>
 						<option value="1" {{ event | is_selected(1) }}>Followed up</option>
 						<option value="2" {{ event | is_selected(2) }}>Accepted</option>
