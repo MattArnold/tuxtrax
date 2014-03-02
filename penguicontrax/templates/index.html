@@ -45,11 +45,12 @@
         {% endfor %}
     </div>
     <div id="report" class="section withmenu" > 
-		<div class="event suggested">Suggested events</div> 
-		<div class="event followedup">Pending events</div> 
-		<div class="event approved">Approved events</div>
+		<div id="info">Click some tags!</div>
+		<div class="suggested">Suggested events</div> 
+		<div class="followedup">Pending events</div> 
+		<div class="approved">Approved events</div>
 		{% if user is not none and user.staff == 1 %} 
-			<div class="event rejected">Rejected events</div>
+			<div class="rejected">Rejected events</div>
 		{% endif %}
 		<div id="createeventbutton" style="float:left;">
 			<a href="eventform" class="buttons" >Create an event.</a>
@@ -60,6 +61,7 @@
 		{% endfor %}
 		</form>
     </div>
+	<div id="oops">Oops! There are no events with that tag. Maybe you could <a href="form.html" >create one</a>?</div>
     <script type="text/javascript">
 		
         //Handle collapsing and expanding the navigation

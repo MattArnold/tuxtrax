@@ -1,5 +1,6 @@
 from flask import g, request, session, render_template, redirect, Response
 from .. import app, db, dump_table_json
+import string
 
 tags = db.Table('tags', 
                 db.Column('submission_id', db.Integer, db.ForeignKey('submission.id', ondelete='CASCADE', onupdate='CASCADE')), 
@@ -13,7 +14,13 @@ class Tag(db.Model):
         self.name = name
 
     def __repr__(self):
-        return '<name: %s>' % self.name
+        return self.name
+    
+def normalize_tag_name(tag):
+    tag = tag.lower().strip()
+    tag = tag.translate(string.maketrans("",""), string.punctuation)
+    tag = "-".join(tag.split())
+    return tag
 
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
