@@ -9,10 +9,14 @@
     <div class="col-md-2">
         <div id="hidenav">&nbsp;</div>
         <div id="taginfo">&nbsp;</div>
-        <p class="label label-primary">all</p>
-        {% for tag in tags %}
-        <p class="label label-primary">{{ tag }}</p>
-        {% endfor %}
+        <div class="btn-group">
+            <button class="btn btn-default btn-xs active">all</button>
+        </div>
+        <div class="btn-group">
+            {% for tag in tags %}
+            <button class="btn btn-default btn-xs">{{ tag }}</button>
+            {% endfor %}
+        </div>
     </div>
     <div class="col-md-10">
         <div class="row ">

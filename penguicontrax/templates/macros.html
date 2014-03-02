@@ -10,7 +10,7 @@
 {%- endmacro %}
 
 {% macro event_summary(submission, user) -%}
-        <div class="event suggested row
+        <div class="submission suggested row
             bs-callout
 			{% if submission.followUpState == 1 %}
 			bs-callout-warning
@@ -22,35 +22,41 @@
             bs-callout-default
             {% endif %}
         ">
-			<a name="submission_{{ submission.id }}" />
 
-			<h3 class="row">
-                <a class="" href="/eventform?id={{submission.id}}">{{ submission.title }}</a>
-                {% if submission.duration != 1 %}
-                <span class="badge">{{ submission.duration }} hrs</span>
-                {% endif %}
-                <span class="lead">{{ submission.firstname }} {{ submission.lastname }}</span>
-                {% if user is not none %}
-                {% if submission in user.rsvped_to %}
-                <input type=submit class="btn btn-danger text-right" value="un-RSVP" name=submit_{{ submission.id }} />
-                {% elif user.points > 0 or user.staff == 1 %}
-                <input type=submit class="btn btn-primary text-right" value="RSVP" name=submit_{{ submission.id }} />
-                {% endif %}
-                {% endif %}
-            </h3>
+            <div class="col-md-12">
 
-            <div class="row">
-                <div class="col-md-12">
-                    {% for tag in submission.tags %}
-                    <span class="label label-default spaninclude">{{ tag.name }}</span>
-                    {% endfor %}
+                <h4 class="row submissions">
 
-                    {{ submission.description }}
+                    {% if user is not none %}
+                        {% if submission in user.rsvped_to %}
+                        <span class="glyphicon glyphicon-star rsvp checked"></span>
+                        {% elif user.points > 0 or user.staff == 1 %}
+                        <span class="glyphicon glyphicon-star rsvp"></span>
+                        {% endif %}
+                    {% endif %}
 
-                    {% for rsvp in submission.rsvped_by %}
-                    {{ user_link(rsvp) }}
-                    {% endfor %}
+                    <a href="/eventform?id={{submission.id}}">{{ submission.title }}</a>
+                    {% if submission.duration != 1 %}
+                    <span class="badge">{{ submission.duration }} hrs</span>
+                    {% endif %}
+                    <span class="h5">{{ submission.firstname }} {{ submission.lastname }}</span>
+
+                </h4>
+
+                <div class="row drawer">
+                    <div class="col-md-12">
+                        {% for tag in submission.tags %}
+                        <span class="label label-default spaninclude">{{ tag.name }}</span>
+                        {% endfor %}
+
+                        {{ submission.description }}
+
+                        {% for rsvp in submission.rsvped_by %}
+                        {{ user_link(rsvp) }}
+                        {% endfor %}
+                    </div>
                 </div>
+
             </div>
 
 		</div>
