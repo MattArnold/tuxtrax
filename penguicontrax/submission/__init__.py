@@ -210,11 +210,16 @@ def is_checked(value, needs_to_be):
     return ''
 @app.template_filter()
 def checked_if_resourced(submission, resource):
-    if resource in submission.resources:
+    if submission and resource in submission.resources:
         return Markup('checked')
     return ''
 @app.template_filter()
 def checked_if_tagged(submission, tag):
-    if tag in [tag.name for tag in submission.tags]:
+    if submission and tag in [tag.name for tag in submission.tags]:
         return Markup('checked')
+    return ''
+@app.template_filter()
+def checked_if_tracked(submission, trackname):
+    if submission and submission.track.name == trackname:
+        return markup('checked')
     return ''
