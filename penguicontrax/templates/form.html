@@ -255,6 +255,10 @@
 					</select>
 				</div>
 			{% endif %}
+			<label for="private" class="checkbox-inline">
+					<input type="checkbox" name="private" id="private" {% if event is not none and event.private %}checked{% endif %}/>
+					Private event
+			</label>
 			<div class="question">
 				<span id="charnum" ></span>
 			</div>
