@@ -50,7 +50,9 @@
 				{% endif %}
 			{% endif %}
 			{% for rsvp in submission.rsvped_by %}
-				{{ user_link(rsvp) }} 
+				{% if rsvp.public_rsvps %}
+					{{ user_link(rsvp) }} 
+				{% endif %}
 			{% endfor %}
 		</div>
 {%- endmacro %}

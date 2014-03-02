@@ -238,5 +238,8 @@ def checked_if_tagged(submission, tag):
 @app.template_filter()
 def checked_if_tracked(submission, trackname):
     if submission and submission.track and submission.track.name == trackname:
-        return markup('checked')
+        return Markup('checked')
     return ''
+@app.template_filter()
+def number_total_rsvps(submission):
+    return len(submission.rsvped_by)
