@@ -5,7 +5,7 @@
 {% macro user_link(user) -%}
 	{% if user is not none %}
 		<a class="userlink" href="/{{ user.account_name }}">
-			<img src="{{ user.image_small }}" width="20" style="margin-right:5px"> 
+			<img src="{{ user.image_small }}" width="20" style="margin-right:5px">
 			{{ user_text(user) }}
 		</a>
 	{% else %}
@@ -60,9 +60,11 @@
 
                     {{ submission.description }}
 
-                    {% for rsvp in submission.rsvped_by %}
-                    {{ user_link(rsvp) }}
-                    {% endfor %}
+                {% for rsvp in submission.rsvped_by %}
+                {% if rsvp.public_rsvps %}
+                {{ user_link(rsvp) }}
+                {% endif %}
+                {% endfor %}
 
             </div>
 

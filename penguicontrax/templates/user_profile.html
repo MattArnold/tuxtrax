@@ -10,7 +10,31 @@
 			<div class="event">
 				<span style="font-size: 150%;">{{ macros.user_text(view_user) }}</span>
 				<div>
-					<!-- Put more user info here -->
+					{% if user is not none and (user == view_user or user.staff == 1) %}
+						<form action="/updateuser" method=post >
+							<input type=hidden name=user_id value={{ view_user.id }} />
+							{% if user.superuser %}
+								<div>
+									<label for="staff" >
+										<input type="checkbox" id="staff" name="staff" {% if view_user.staff %}checked{% endif %}/>
+										Staff
+									</label>
+								</div>
+							{% endif %}
+							<div>
+								<label for="public_rsvps" >
+									<input type="checkbox" id="public_rsvps" name="public_rsvps" {% if view_user.public_rsvps %}checked{% endif %}/>
+									Make my RSVPs public
+								</label>
+							</div>
+							{% if user.staff %}
+								<div>
+									Special tag: <input name="special_tag" id="special_tag" value="{{ view_user.special_tag | default('',true) }}" />
+								</div>
+							{% endif %}
+							<input type=submit value="Submit" class="buttons" />
+						</form>
+					{% endif %}
 				</div>
 			</div>
 		</div>

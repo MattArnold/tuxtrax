@@ -21,10 +21,19 @@ class User(db.Model):
     image_large = db.Column(db.String())
     rsvped_to = db.relationship('Submission', secondary=rsvps, backref=db.backref('rsvped_by', passive_deletes=True))
     special_tag = db.Column(db.String())
+    public_rsvps = db.Column(db.Boolean())
+    superuser = db.Column(db.Boolean())
     
     def __init__(self):
-        self.staff = False
         self.points = 5
+        self.public_rsvps = False
+        if User.query.count() == 0:
+            self.staff = True
+            self.superuser = True
+            self.special_tag = "root"
+        else:
+            self.staff = False
+            self.superuser = False
 
     def __repr__(self):
         return self.name
@@ -63,3 +72,23 @@ def user_profile_by_id():
 @app.route('/<user>', methods=['GET'])
 def user_profile_by_account_name(user):
     return user_profile(User.query.filter_by(account_name=user).first())
+
+@app.route('/updateuser', methods=['POST'])
+def update_user():
+    if g.user is None:
+        return redirect('/')
+    view_user = User.query.filter_by(id=int(request.form['user_id'])).first()
+    if view_user is None:
+        return redirect('/')
+    if view_user == g.user or g.user.staff == True or g.user.superuser == True:
+        view_user.public_rsvps = 'public_rsvps' in request.form
+        if g.user.staff == True:
+            view_user.special_tag = request.form['special_tag']
+        if g.user.superuser == True:
+            view_user.staff = 'staff' in request.form
+        if view_user.special_tag.strip() == '':
+            view_user.special_tag = None
+        db.session.add(view_user)
+        db.session.commit()
+        return redirect('/' + view_user.account_name)
+    return redirect('/')
