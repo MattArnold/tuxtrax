@@ -18,9 +18,8 @@
 {%- endmacro %}
 
 {% macro event_summary(submission, user) -%}
-        <div class="submission row
+        <div class="submission row bs-callout-default bs-callout
          {% for tag in submission.tags %}{{ tag }} {% endfor %}
-            bs-callout
 			{% if submission.followUpState == 0 %}
 			suggested
             {% elif submission.followUpState == 1 %}
@@ -46,12 +45,13 @@
                     {% if submission.duration != 1 %}
                     <span class="badge">{{ submission.duration }} hrs</span>
                     {% endif %}
-                    <span class="h5 person">{% for user_presenter in submission.userPresenters %}
-				{{ user_link(user_presenter) }} 
-			{% endfor %}
-			{% for person_presenter in submission.personPresenters %}
-				{{ person_link(person_presenter) }}
-			{% endfor %}
+                    <span class="h5 person">
+                        {% for user_presenter in submission.userPresenters %}
+                            {{ user_link(user_presenter) }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                        {% for person_presenter in submission.personPresenters %}
+                            {{ person_link(person_presenter) }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
                 </span>
 
                     {% for tag in submission.tags %}
