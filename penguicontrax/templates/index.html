@@ -54,6 +54,9 @@
                             <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a
                                     href="form.html">create one</a>?
                             </div>
+                            {% if request.path != "/hidden" %}
+														<div><a href="/hidden">See hidden events</a></div>
+														{% endif %}
                         </div>
                     </div>
                 </div>
