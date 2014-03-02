@@ -18,63 +18,144 @@ $('input[name="typelist"]:not(input[name="typelist"]:checked)').click(function()
 var pluralized = false;
 
 $('.typelist').change(function() {
-
+	//	
+	// To ensure that the elements hidden or shown in each state,
+	// we use flags mark them all hidden, then set those which are 
+	// not hidden, and then use the flags at the end of the function
+	// to set every element.
+	// 
+	furnitureshow = false;
+	otherfacilityshow = false;
+	playersshow = false;
+	ppshow = false;
+	pptypeshow = false;
+	resourcesshow = false;
+		
+	pluralpptypetext = '';
+	pptypetext = '';
+	
+	// overwrite only 
 	if (pluralized == false) {
-		$('#pptype').show();
+		// $('#pptype').show();
+		pptypeshow = true;
 	};
+	
 	switch ($(this).val()) {
 		case 'noroomtype':
-			$('#players, #resources, #otherfacility, .pp').hide('slow');
-			$('#pptype, #pluralpptype').text('');
+			// $('#players, #resources, #otherfacility, .pp').hide('slow');
+			// $('#pptype, #pluralpptype').text('');
 			break;
 		case 'talk':
-			$('#players').hide('slow');
-			$('#pptype').text("Speaker:");
-			$('#pluralpptype').text("Panelists:");
-			$('#resources, #otherfacility, .pp').show('slow');
+			// $('#players').hide('slow');
+			// $('#pptype').text("Speaker:");
+			// $('#pluralpptype').text("Panelists:");
+			// $('#resources, #otherfacility, .pp').show('slow');
+			pptypetext = "Speaker:";
+			pluralpptypetext = "Panelists:";
+			resourcesshow = true;
+			otherfacilityshow = true;
+			ppshow = true;
 			break;
 		case 'workshop':
-			$('#players').hide('slow');
-			$('#pptype').text("Activity leader:");
-			$('#pluralpptype').text("Activity leaders:");
-			$('#resources, #furniture, #otherfacility, .pp').show('slow');
+			// $('#players').hide('slow');
+			// $('#pptype').text("Activity leader:");
+			// $('#pluralpptype').text("Activity leaders:");
+			// $('#resources, #furniture, #otherfacility, .pp').show('slow');
+			pptypetext = 'Activity leader:';
+			pluralpptypetext = 'Activity leaders:"';
+			resourcesshow = true;
+			furnitureshow = true;
+			otherfacilityshow = true;
+			ppshow = true;
 			break;
 		case 'bof':
-			$('#resources, #players, #furniture, #pptype, #pluralpp').hide('slow');
-			$('#otherfacility').show('slow');
+			// $('#resources, #players, #furniture, #pptype, #pluralpp').hide('slow');
+			// $('#otherfacility').show('slow');
+			otherfacilityshow = true;
 			break;
 		case 'game':
-			$('#resources, #players, #furniture').hide('slow');
-			$('#pptype').text('Game master:');
-			$('#pluralpptype').text('Game masters:');
-			$('#players, #furniture, #otherfacility').show('slow');
+			// $('#resources, #players, #furniture').hide('slow');
+			// $('#pptype').text('Game master:');
+			// $('#pluralpptype').text('Game masters:');
+			// $('#players, #furniture, #otherfacility').show('slow');
+			pptypetext = 'Game master:';
+			pluralpptypetext = 'Game masters:';
+			playersshow = true;
+			furnitureshow = true;
+			otherfacilityshow = true;
 			break;
 		case 'onstage':
-			$('#players, #furniture').hide('slow');
+			// $('#players, #furniture').hide('slow');
+			// $('#pluralpptype').text('Performers:');
+			// $('#resources, #otherfacility').show('slow');
 			$('#pptype').text('Performer:');
-			$('#pluralpptype').text('Performers:');
-			$('#resources, #otherfacility').show('slow');
+			pptypetext = 'Performer:';
+			pluralpptypetext = 'Performers:';
+			resourcesshow = true;
+			otherfacilityshow = true;
 			break;
 		case 'roving':
-			$('#resources, #players, #furniture').hide('slow');
-			$('#pptype').text('Activity leader:');
-			$('#pluralpptype').text("Activity leaders:");
-			$('#otherfacility').show('slow');
+			// $('#resources, #players, #furniture').hide('slow');
+			// $('#pptype').text('Activity leader:');
+			// $('#pluralpptype').text("Activity leaders:");
+			// $('#otherfacility').show('slow');
+			pptypetext = 'Activity leader:';
+			pluralpptypetext = 'Activity leaders:';
+			otherfacilityshow  = true;
 			break;
 	}
+	
+	// now we have all of the values. set everything.
+	if ( furnitureshow ) 
+		$('#furniture').show('slow');
+	else 
+		$('#furniture').hide('slow');
+	if ( otherfacilityshow ) 
+		$('#otherfacility').show('slow');
+	else 
+		$('#otherfacility').hide('slow');
+	if ( playersshow )
+		$('#players').show('slow');
+	else 
+		$('#players').hide('slow');
+	if ( ppshow ) 
+		$('#pp').show('slow');
+	else
+		$('#pp').hide('slow');
+	if ( pptypeshow ) 
+		$('#pptype').show('slow');
+	else  
+		$('#pptype').hide('slow');
+	if ( resourcesshow )
+		$('#resources').show('slow'); 
+	else
+		$('#resources').hide('slow'); 
+	$('#pptype').text(pptypetext);
+	$('#pluralpptype').text(pluralpptypetext);
 });
 
 // Turn on time fields when a duration is selected.
 
-$('.timechange').change(function() {
-	if (parseInt($(this).val()) == 0) {
-		$("#setupandrepeat, #othertime").hide("slow"); 
-	} else if (parseInt($(this).val()) == 5){
-		$("#setupandrepeat").hide("slow"); 
-		$("#othertime").show("slow"); 
-	} else {
-		$("#setupandrepeat, #othertime").show("slow"); 
-	}
+// $('.timechange').change(function() {
+//	if (parseInt($(this).val()) == 0) {
+//		$("#setupandrepeat, #othertime").hide("slow"); 
+//	} else if (parseInt($(this).val()) == 5){
+//		$("#setupandrepeat").hide("slow"); 
+//		$("#othertime").show("slow"); 
+//	} else {
+//		$("#setupandrepeat, #othertime").show("slow"); 
+//	}
+//});
+
+$('#moresetuplink').click(function(){
+        if ($('#setupandrepeat:visible').length == 0) { 
+        	$('#setupandrepeat').show(); 
+        	$('#othertime').show(); 
+        } else { 
+        	$('#setupandrepeat').hide(); 
+        	$('#othertime').hide(); 
+        }
+	return false;
 });
 
 // Limit the addition of new program participant fields.
