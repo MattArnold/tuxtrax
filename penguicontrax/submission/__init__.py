@@ -1,6 +1,7 @@
 from flask import g, request, session, render_template, redirect, Response, Markup, url_for
 from sqlalchemy.orm import relationship
 from .. import app, db, dump_table_json
+from penguicontrax.user import User
 import string
 
 # Associates multiple tags to a submission
@@ -24,11 +25,11 @@ person_presenting_in = db.Table('person_presenting_in',
 class Submission(db.Model):
     __tablename__ = 'submissions'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String())
     title = db.Column(db.String())
     description = db.Column(db.String())
     comments = db.Column(db.String())
-    submitter = db.Column(db.Integer, db.ForeignKey('user.id'))
+    submitter_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    submitter = db.relationship('User')
     trackId = db.Column(db.Integer(), db.ForeignKey('tracks.id'))
     track = db.relationship('Track')
     tags = db.relationship('Tag', secondary=SubmissionToTags, backref=db.backref('submissions'), passive_deletes=True)
@@ -45,7 +46,7 @@ class Submission(db.Model):
     followUpState = db.Column(db.Integer()) # 0 = submitted, 1 = followed up, 2 = accepted, 3 = rejected
     userPresenters = db.relationship('User', secondary=user_presenting_in, backref=db.backref('presenting_in'), passive_deletes=True)
     personPresenters = db.relationship('Person', secondary=person_presenting_in, backref=db.backref('presenting_in'), passive_deletes=True)
-        
+
     def __init__(self):
         pass
 
@@ -62,7 +63,7 @@ class Tag(db.Model):
 
     def __repr__(self):
         return '<name: %s>' % self.name
-    
+
 class Track(db.Model):
     __tablename__ = 'tracks'
     id = db.Column(db.Integer, primary_key=True)
@@ -121,7 +122,7 @@ def getevent():
     if 'id' in request.args:
         return Response(dump_table_json(Submission.query.filter_by(id=int(request.args['id'])), Submission.__table__), mimetype='application/json')
     return Response(dump_table_json(Submission.query.all(), Submission.__table__), mimetype='application/json')
-    
+
 @app.route('/eventform', methods=['GET', 'POST'])
 def event_form():
     if g.user is None:
@@ -149,7 +150,7 @@ def submitevent():
     else:
         submission = Submission()
 
-    fields = {'email':'email', 'title':'title', 'description':'description', 'submitter':'submitter',
+    fields = {'email':'email', 'title':'title', 'description':'description',
               'firstname':'firstname', 'lastname':'lastname',
               'duration':'duration', 'setuptime':'setupTime', 'repetition':'repetition', 'timerequest':'timeRequest',
               'eventtype':'eventType','players':'players', 'roundtables':'roundTables', 'longtables':'longTables', 'facilityrequest':'facilityRequest',
@@ -158,6 +159,8 @@ def submitevent():
     for field,dbfield in fields.items():
        if field in request.form:
            setattr(submission, dbfield, request.form[field])
+    if 'submitter_id' in request.form:
+        submission.submitter = User.query.filter_by(id=int(request.form['submitter_id'])).first()
     submission.followUpState = request.form['followupstate'] if 'followupstate' in request.form and request.form['followupstate'] is not None else 0
 
     tags = [t[4:] for t,v in request.form.items() if len(t)>4 and t[:4]=='tag_' and v]
@@ -191,7 +194,7 @@ def rsvp():
         submission = None
         value = None
         for field in request.form:
-            if field.find('submit_') == 0: 
+            if field.find('submit_') == 0:
                 submission = Submission.query.filter_by(id=int(field[7:])).first()
                 value = request.form[field]
                 break
@@ -234,6 +237,6 @@ def checked_if_tagged(submission, tag):
     return ''
 @app.template_filter()
 def checked_if_tracked(submission, trackname):
-    if submission and submission.track.name == trackname:
+    if submission and submission.track and submission.track.name == trackname:
         return markup('checked')
     return ''

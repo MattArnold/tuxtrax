@@ -25,13 +25,13 @@ def import_old():
                 person = section[3][0].text
                 description = section[3][0].tail
                 submission = Submission()
-                submission.email = 'none@none.com'
                 submission.title = name
                 submission.description = description
                 submission.duration = 1
                 submission.setupTime = 0
                 submission.repetition = 0
                 submission.followUpState = 0
+                submission.eventType = 'talk'
                 #Load presenters
                 submission.personPresenters= []
                 for presenter in [presenter.strip() for presenter in person.split(',')]:

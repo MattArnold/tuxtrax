@@ -132,11 +132,22 @@
 		<div class="header">
 			WHO
 		</div>
-		Suggester {{ macros.user_link(event.submitter) }}
-		Suggester email:
-		<input name=email type=text size="24" placeholder="email@address.com" value="{{ event.email | default('',true) }}"/>
+		Suggester 
+		{% if event is none %}
+			<input type=hidden name=submitter_id value={{user.id}} />{{ macros.user_link(user) }}
+		{% else %}
+			<input type=hidden name=submitter_id value={{event.submitter.id}} />{{ macros.user_link(event.submitter) }}
+		{% endif %}
 		<span id="pptype" ></span>
 		<span id="pluralpptype" ></span>
+		{% if event is not none %}
+			{% for user_presenter in event.userPresenters %}
+				{{ macros.user_link(user_presenter) }} 
+			{% endfor %}
+			{% for person_presenter in event.personPresenters %}
+				{{ macros.person_link(person_presenter) }}
+			{% endfor %}
+		{% endif %}
 		<input name=person0 type=text size="24" onkeyup="countChar(this, 24)" class="pp" />
 		<button id="newperson"  class="pp" >+ someone else</button>
 	</div>

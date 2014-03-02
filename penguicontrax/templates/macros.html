@@ -1,18 +1,20 @@
 {% macro user_text(user) -%}
-	<span>
-	{% if user is none %}
-		Unknown
-	{% else %}
-		{{ user }}{% if user.special_tag is not none %} <span class="userspecial">{{ user.special_tag }}</span>{% endif %}
-	{% endif %}
-	</span>
+	<span>{{ user }}{% if user.special_tag is not none %} <span class="userspecial">{{ user.special_tag }}</span>{% endif %}</span>
 {%- endmacro %}
 
 {% macro user_link(user) -%}
-	<a class="userlink" href="/{{ user.account_name }}">
-		<img src="{{ user.image_small }}" width="20"> 
-		{{ user_text(user) }}
-	</a>
+	{% if user is not none %}
+		<a class="userlink" href="/{{ user.account_name }}">
+			<img src="{{ user.image_small }}" width="20"> 
+			{{ user_text(user) }}
+		</a>
+	{% else %}
+		<span class="userlink">Unknown</span>
+	{% endif %}
+{%- endmacro %}
+
+{% macro person_link(person) -%}
+	<span class="userlink">{% if person is not none %}{{ person }}{% else %}Unknown{% endif %}</span>
 {%- endmacro %}
 
 {% macro event_summary(submission, user) -%}
@@ -30,7 +32,12 @@
 			{% if submission.duration != 1 %}
 				<div class="when unit duration">{{ submission.duration }} hrs</div>
 			{% endif %}
-			<div class="who unit programparticipant">{{ submission.firstname }} {{ submission.lastname }}</div>
+			{% for user_presenter in submission.userPresenters %}
+				{{ user_link(user_presenter) }} 
+			{% endfor %}
+			{% for person_presenter in submission.personPresenters %}
+				{{ person_link(person_presenter) }}
+			{% endfor %}
 			{% for tag in submission.tags %}
 				<span class="spaninclude">{{ tag.name }}</span>
 			{% endfor %}
