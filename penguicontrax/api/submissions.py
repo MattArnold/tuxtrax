@@ -21,7 +21,8 @@ class SubmissionAPI(Resource):
         output['tags'] = [_.name for _ in submission[0].tags]
         output['personPresenters'] = [_.name for _ in submission[0].personPresenters]
         user_map = ['name','email','id']
-        output['userPresenters'] = [dict(field,getattr(_,field)) for _ in submission[0].userPresenters]
+        output['userPresenters'] = [dict([(field,getattr(_,field)) for field in user_map]) for _ in submission[0].userPresenters]
+        output['rsvped_by'] = [dict([(field,getattr(_,field)) for field in user_map]) for _ in submission[0].rsvped_by]
         return output,200
 
     @return_null_if_not_logged_in
@@ -74,5 +75,6 @@ class SubmissionsAPI(Resource):
             element['tags'] = [_.name for _ in submissions[index].tags]
             element['personPresenters'] = [_.name for _ in submissions[index].personPresenters]
             user_map = ['name','email','id']
-            element['userPresenters'] = [dict(field,getattr(_,field)) for _ in submissions[index].userPresenters]
+            element['userPresenters'] = [dict([(field,getattr(_,field)) for field in user_map]) for _ in submissions[index].userPresenters]
+            element['rsvped_by'] = [dict([(field,getattr(_,field)) for field in user_map]) for _ in submissions[index].rsvped_by]
         return output
