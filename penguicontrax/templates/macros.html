@@ -30,7 +30,7 @@
 
                     {% if user is not none %}
                         {% if submission in user.rsvped_to %}
-                        <i class="fa fa-star rsvp"></i>
+                        <i class="fa fa-star rsvp" style="color:#e3cf7a"></i>
                         {% elif user.points > 0 or user.staff == 1 %}
                         <i class="fa fa-star-empty rsvp"></i>
                         {% endif %}
