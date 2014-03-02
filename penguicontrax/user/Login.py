@@ -105,7 +105,7 @@ def get_oauth_token_facebook(token=None):
 def update_fb_info(user):
     if user is not None:
         me = facebook.get('/me')
-        user.firstName = me.data['first_name'] + ' ' + me.data['last_name']
+        user.name = me.data['first_name'] + ' ' + me.data['last_name']
         user.email = me.data['email']
         user.fbid = me.data['id']
         user.image_small = 'http://graph.facebook.com/' + user.fbid + '/picture?type=small'
