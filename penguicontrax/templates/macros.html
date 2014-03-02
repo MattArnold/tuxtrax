@@ -38,7 +38,7 @@
                     {% if submission.duration != 1 %}
                     <span class="badge">{{ submission.duration }} hrs</span>
                     {% endif %}
-                    <span class="h5 person">Suggested by: {{ submission.firstname }} {{ submission.lastname }}</span>
+                    <span class="h5 person">Suggested by: {{ submission.firstname }} {{ submission.lastname }}.</span>
 
                     {% for tag in submission.tags %}
                     <span class="label label-default spaninclude">{{ tag.name }}</span>
