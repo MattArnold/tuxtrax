@@ -33,7 +33,7 @@ class Submission(db.Model):
     trackId = db.Column(db.Integer(), db.ForeignKey('tracks.id'))
     track = db.relationship('Track')
     tags = db.relationship('Tag', secondary=SubmissionToTags, backref=db.backref('submissions'), passive_deletes=True)
-    duration = db.Column(db.Boolean())
+    duration = db.Column(db.Integer())
     setupTime = db.Column(db.Integer())
     repetition = db.Column(db.Integer())
     timeRequest = db.Column(db.String())
@@ -62,8 +62,8 @@ class Tag(db.Model):
         self.name = name
 
     def __repr__(self):
-        return '<name: %s>' % self.name
-
+        return self.name
+    
 class Track(db.Model):
     __tablename__ = 'tracks'
     id = db.Column(db.Integer, primary_key=True)
@@ -238,5 +238,8 @@ def checked_if_tagged(submission, tag):
 @app.template_filter()
 def checked_if_tracked(submission, trackname):
     if submission and submission.track and submission.track.name == trackname:
-        return markup('checked')
+        return Markup('checked')
     return ''
+@app.template_filter()
+def number_total_rsvps(submission):
+    return len(submission.rsvped_by)
