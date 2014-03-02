@@ -30,7 +30,7 @@
                     <span class="bs-callout bs-callout-default followedup legend">Followed up</span>
                     <span class="bs-callout bs-callout-default accepted legend">Accepted</span>
                     {% if user is not none and user.staff == 1 %}
-                    <button class="bs-callout bs-callout-default rejected legend">Rejected</button>
+                    <span class="bs-callout bs-callout-default rejected legend">Rejected</span>
                     {% endif %}
                 </div>
                 
@@ -45,6 +45,7 @@
                         {% endfor %}
                     </form>
                     <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a href="form.html">create one</a>?</div>
+                    <div><a href="/hidden">See hidden events</a></div>
                 </div>
             </div>
         </div>
