@@ -37,7 +37,7 @@ class Submission(db.Model):
     longTables = db.Column(db.Integer())
     facilityRequest = db.Column(db.String())
     followUpState = db.Column(db.Integer()) # 0 = submitted, 1 = followed up, 2 = accepted, 3 = rejected
-        
+
     def __init__(self):
         pass
 
@@ -54,7 +54,7 @@ class Tag(db.Model):
 
     def __repr__(self):
         return '<name: %s>' % self.name
-    
+
 class Track(db.Model):
     __tablename__ = 'tracks'
     id = db.Column(db.Integer, primary_key=True)
@@ -113,7 +113,7 @@ def getevent():
     if 'id' in request.args:
         return Response(dump_table_json(Submission.query.filter_by(id=int(request.args['id'])), Submission.__table__), mimetype='application/json')
     return Response(dump_table_json(Submission.query.all(), Submission.__table__), mimetype='application/json')
-    
+
 @app.route('/eventform', methods=['GET', 'POST'])
 def event_form():
     # probably need orders
@@ -181,7 +181,7 @@ def rsvp():
         submission = None
         value = None
         for field in request.form:
-            if field.find('submit_') == 0: 
+            if field.find('submit_') == 0:
                 submission = Submission.query.filter_by(id=int(field[7:])).first()
                 value = request.form[field]
                 break
@@ -224,6 +224,6 @@ def checked_if_tagged(submission, tag):
     return ''
 @app.template_filter()
 def checked_if_tracked(submission, trackname):
-    if submission and submission.track.name == trackname:
+    if submission and submission.track and submission.track.name == trackname:
         return markup('checked')
     return ''
