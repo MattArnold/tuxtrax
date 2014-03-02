@@ -1,36 +1,53 @@
+<!DOCTYPE html>
 {% import 'macros.html' as macros %}
-<!doctype html>
+<html lang="en">
 <title>{% block title %}{% endblock %}</title>
 <head>
-	{% block head %}
-	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-	<link href="{{ url_for('static', filename='mystyles2.css') }}" rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
-	{% endblock %}
+    {% block head %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="{{ url_for('static', filename='ptrax.css') }}" rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static/font-awesome-4.0.3/css/font-awesome.min.css">
+    {% endblock %}
 </head>
 <body>
-	<div id="masthead" class="section withmenu">
-		<div class="header">
-			<a href="/">penguicon-trax</a>
-		</div>
-		<div class="unit" style="color:#bdc3c7; float:right">
-			<form action="/logout" method=get>
-				{% if user is none %}
-					Log in using: 
-					<a href="/login?provider=facebook"><img src="static/facebook-16x16.png" hspace="5px"></a>
-					<a href="/login?provider=twitter"><img src="static/twitter-16x16.png" hspace="5px"></a>
-					<a href="/login?provider=google"><img src="static/google-16x16.png" hspace="5px"></a>
-					<a href="/login?provider=yahoo"><img src="static/yahoo-16x16.png" hspace="5px"></a>
-				{% else %}
-					{{ macros.user_link(user) }}
-					{% if user.staff == 0 %}
-						{{ user.points }} RSVP points left 
-					{% endif %}
-					<input type=submit value="Logout" id="LogoutButton">
-				{% endif %}
-			</form>
-		</div>
-	</div>
-	{% block body %}
-	{% endblock %}
+<div id="masthead" class="section withmenu row">
+    <div class="col-md-5">
+    <h3 class="header">
+        <a href="/">Penguicon-TRAX <span style="font-size:small">(Tentative Requested Activity Xperiment)</span></a>
+    </h3>
+    </div>
+    <div class="col-md-6 text-right">
+        <div class="row">
+            <h5 class="col-md-12">
+                <form action="/logout" method=get>
+                    {% if user is none %}
+                    <p>Log in using:
+                    <a href="/login?provider=facebook"><img src="static/facebook-16x16.png" hspace="5px"></a>
+                    <a href="/login?provider=twitter"><img src="static/twitter-16x16.png" hspace="5px"></a>
+                    <a href="/login?provider=google"><img src="static/google-16x16.png" hspace="5px"></a>
+                    <a href="/login?provider=yahoo"><img src="static/yahoo-16x16.png" hspace="5px"></a>
+                    {% else %}
+                    {{ macros.user_link(user) }}
+                    {% if user.staff == 0 %}
+                    {{ user.points }} RSVP points left
+                    {% endif %}
+                    <input class="btn btn-primary" type=submit value="Logout">
+                    {% endif %}
+                    </p>
+                </form>
+            </h5>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    {% block body %}
+    {% endblock %}
+</div>
+<script src="{{ url_for('static', filename='jquery-1.9.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='lodash.min.js') }}"></script>
+<script src="{{ url_for('static', filename='can.jquery.js') }}"></script>
+{% block page_script %}{% endblock %}
 </body>
+</html>

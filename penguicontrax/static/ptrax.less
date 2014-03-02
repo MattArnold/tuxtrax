@@ -1,0 +1,71 @@
+@followeduplight:#fcf8e3;
+@followedupdark:#d6a753;
+@acceptedlight:#bda0cb;
+@accepteddark:#a020f0;
+@rejectedlight:#f2dede;
+@rejecteddark:#c04a48;
+
+@import (less) "bootstrap/css/bootstrap.css";
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('bootstrap/fonts/glyphicons-halflings-regular.eot');
+  src: url('bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'), url('bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+//@import (less) "bootstrap/css/bootstrap-theme.css";
+//@import (less) "mystyles2.css";
+@import "submissions";
+
+.header {
+  padding-left: .5em;
+}
+
+.person {
+  font-style:italic;
+}
+
+.bs-callout {
+  margin: 20px 0;
+  padding: 20px;
+  border-left: 3px solid #eee;
+}
+
+.bs-callout-danger {
+  background-color: #fdf7f7;
+  border-color: #d9534f;
+}
+
+.bs-callout-default {
+  background-color: #f7f7f9;
+  border-color: #e1e1e8;
+
+  &.legend {
+    font-size: small;
+    padding: .5em;
+    margin: .5em;
+  }
+
+  &.followedup {
+    background-color: @followeduplight;
+    border-color: @followedupdark;
+  }
+
+  &.accepted {
+    background-color: @acceptedlight;
+    border-color: @accepteddark;
+  }
+
+  &.rejected {
+    background-color: @rejectedlight;
+    border-color: @rejecteddark;
+  }
+
+}
+
+.submissions {
+
+  .rsvp {
+    &.checked {
+      color : #FDD017;
+    }
+  }
+}

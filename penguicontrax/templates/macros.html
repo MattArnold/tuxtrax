@@ -5,7 +5,7 @@
 {% macro user_link(user) -%}
 	{% if user is not none %}
 		<a class="userlink" href="/{{ user.account_name }}">
-			<img src="{{ user.image_small }}" width="20"> 
+			<img src="{{ user.image_small }}" width="20" style="margin-right:5px">
 			{{ user_text(user) }}
 		</a>
 	{% else %}
@@ -18,41 +18,55 @@
 {%- endmacro %}
 
 {% macro event_summary(submission, user) -%}
-	{% if submission.followUpState == 1 %}
-		<div class="event followedup {% for tag in submission.tags %}{{ tag }} {% endfor %}">
-	{% elif submission.followUpState == 2 %}
-		<div class="event approved {% for tag in submission.tags %}{{ tag }} {% endfor %}">
-	{% elif submission.followUpState == 3 %}
-		<div class="event rejected {% for tag in submission.tags %}{{ tag }} {% endfor %}">
-	{% else %}
-		<div class="event suggested {% for tag in submission.tags %}{{ tag }} {% endfor %}">
-	{% endif %}
-			<a name="submission_{{ submission.id }}" />
-			<div class="what unit title"><a href="/eventform?id={{submission.id}}">{{ submission.title }}</a></div>
-			{% if submission.duration != 1 %}
-				<div class="when unit duration">{{ submission.duration }} hrs</div>
-			{% endif %}
-			{% for user_presenter in submission.userPresenters %}
+        <div class="submission row
+         {% for tag in submission.tags %}{{ tag }} {% endfor %}
+            bs-callout
+			{% if submission.followUpState == 0 %}
+			suggested
+            {% elif submission.followUpState == 1 %}
+            followedup
+            {% elif submission.followUpState == 2 %}
+            rejected
+            {% elif submission.followUpState == 3 %}
+            confirmed
+            {% endif %}
+        " data-tags="{% for tag in submission.tags %}{{tag}}{% endfor %}">
+
+            <div class="col-md-12 drawer submissions">
+
+                    {% if user is not none %}
+                        {% if submission in user.rsvped_to %}
+                        <i class="fa fa-star rsvp" style="color:#e3cf7a"></i>
+                        {% elif user.points > 0 or user.staff == 1 %}
+                        <i class="fa fa-star-o rsvp"></i>
+                        {% endif %}
+                    {% endif %}
+
+                    <a href="/eventform?id={{submission.id}}">{{ submission.title }}</a>
+                    {% if submission.duration != 1 %}
+                    <span class="badge">{{ submission.duration }} hrs</span>
+                    {% endif %}
+                    <span class="h5 person">{% for user_presenter in submission.userPresenters %}
 				{{ user_link(user_presenter) }} 
 			{% endfor %}
 			{% for person_presenter in submission.personPresenters %}
 				{{ person_link(person_presenter) }}
 			{% endfor %}
-			{% for tag in submission.tags %}
-				<span class="spaninclude">{{ tag.name }}</span>
-			{% endfor %}
-			{{ submission.description }}
-			{% if user is not none %}
-				{% if submission in user.rsvped_to %}
-					<input type=submit class="buttons" value="un-RSVP" name=submit_{{ submission.id }} />
-				{% elif user.points > 0 or user.staff == 1 %}
-					<input type=submit class="buttons" value="RSVP" name=submit_{{ submission.id }} />
-				{% endif %}
-			{% endif %}
-			{% for rsvp in submission.rsvped_by %}
-				{% if rsvp.public_rsvps %}
-					{{ user_link(rsvp) }} 
-				{% endif %}
-			{% endfor %}
+                </span>
+
+                    {% for tag in submission.tags %}
+                    <span class="label label-default spaninclude">{{ tag.name }}</span>
+                    {% endfor %}
+
+                    {{ submission.description }}
+
+                {% for rsvp in submission.rsvped_by %}
+                {% if rsvp.public_rsvps %}
+                {{ user_link(rsvp) }}
+                {% endif %}
+                {% endfor %}
+
+            </div>
+
 		</div>
 {%- endmacro %}
