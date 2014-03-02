@@ -36,16 +36,17 @@ class SimpleTest(unittest.TestCase):
     def test_index(self):
 
         m="test_index"
-        print "Go time."
+        #print "Go time."
         t = penguicontrax.app.test_client(self)
 
         r = t.get('/', content_type='html/text')
 
-        print "Testing baby!"
-        print r
+        #print "Testing baby!"
+        #print r
 
         self.assertEqual(r.status_code, 200, "test_eventform GET failed with %s" % r.status_code)
         self.assertTrue(b'penguicon-trax' in r.data, "%s: Page didn't contain 'penguicon-trax'" % m)
+        self.assertTrue(b'Zombie Tag' in r.data, "%s: Page didn't contain 'Zombie Tag'" % m)
 
     def testZombieEventForm(self):
         """Pull the Zombie Tag event down."""
@@ -90,6 +91,13 @@ class SimpleTest(unittest.TestCase):
         r = t.post('/submitevent', data=args )
         print r
         self.assertEqual(r.status_code, 302, "%s: POST failed with %s" % (m, r.status_code))
+
+        # Check to see if the new event landed on the index page
+        r = t.get('/', content_type='html/text')
+
+        self.assertEqual(r.status_code, 200, "%s: GET failed with %s" % (m, r.status_code))
+        self.assertTrue(b'Hunger Games' in r.data, "%s: Page didn't contain 'Hunger Games' event" % m)
+        
 
 if __name__ == "__main__":
     unittest.main()
