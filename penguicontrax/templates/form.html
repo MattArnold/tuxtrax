@@ -17,22 +17,22 @@
 		<div class="col-md-11">
 		<div id="typechange" class="btn-group" data-toggle="buttons" >
 			<input type="radio" name="eventtype" class="typelist" value="noroomtype" id="noroomtype" style="display:none">
-			<label class="btn btn-primary" for="talkbtn">
+			<label class="radio" for="talkbtn">
 				<input type="radio" data-toggle="radio" name=eventtype class="typelist where questioon roomtab" value="talk"  id="talkbtn" {{ event.eventType | is_checked('talk') }}>An audience sits and watches one or more speakers.
 			</label>
-			<label class="btn btn-primary" for="workshopbtn">
+			<label class="radio" for="workshopbtn">
 				<input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab" value="workshop"  id="workshopbtn" {{ event.eventType | is_checked('workshop') }}>Hands-on participatory activity.
 			</label>
-			<label class="btn btn-primary" for="bofbtn">
+			<label class="radio" for="bofbtn">
 				<input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab" value="bof"  id="bofbtn" {{ event.eventType | is_checked('bof') }}>Open discussion with no presenter or organizer.
 			</label>
-			<label class="btn btn-primary" for="gamebtn">
+			<label class="radio" for="gamebtn">
 				<input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab" value="game"  id="gamebtn" {{ event.eventType | is_checked('game') }}>Tabletop game.
 			</label>
-			<label class="btn btn-primary" for="onstagebtn">
+			<label class="radio" for="onstagebtn">
 				<input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab" value="onstage"  id="onstagebtn" {{ event.eventType | is_checked('onstage') }}>Concert, skit, movie, or other onstage performance.
 			</label>
-			<label class="btn btn-primary" for="rovingbtn">
+			<label class="radio" for="rovingbtn">
 				<input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab" value="roving"  id="rovingbtn" {{ event.eventType | is_checked('roving') }}>Activity located throughout the hotel or elsewhere.
 			</label>
 		</div>
@@ -269,7 +269,4 @@
 {% endblock %}
 {% block page_script %}
 <script src="static/submissionform.js"></script>
-<script src="{{ url_for('static', filename='Flat-UI-master/js/flatui-radio.js') }}"></script>
-<script src="{{ url_for('static', filename='Flat-UI-master/js/flatui-checkbox.js') }}"></script>
-<script src="{{ url_for('static', filename='Flat-UI-master/js/bootstrap-select.js') }}"></script>
 {% endblock %}
