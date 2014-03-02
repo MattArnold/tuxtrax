@@ -43,7 +43,7 @@
 
                     <a href="/eventform?id={{submission.id}}">{{ submission.title }}</a>
                     {% if submission.duration != 1 %}
-                    <span class="badge">{{ submission.duration }} hrs</span>
+                    <span class="label">{{ submission.duration }} hrs</span>
                     {% endif %}
                     <span class="h5 person">
                         {% for user_presenter in submission.userPresenters %}
@@ -55,7 +55,7 @@
                 </span>
 
                     {% for tag in submission.tags %}
-                    <span class="label label-default spaninclude">{{ tag.name }}</span>
+                    <span class="label label-default spaninclude"><i class="fa fa-tag"></i> {{ tag.name }}</span>
                     {% endfor %}
 
                     {{ submission.description }}
