@@ -7,14 +7,17 @@ from sys import exit;
 
 ## Import Local Libs
 from .. import Submission, dump_table
+from functions import return_null_if_not_logged_in
 
-events = {}
 class EventAPI(Resource):
+    @return_null_if_not_logged_in
     def get(self,event_id):
         ## Output only one element
         output = dump_table(Submission.query.filter_by(id=int(event_id)), Submission.__table__).pop()
         return output
+
 class EventsAPI(Resource):
+    @return_null_if_not_logged_in
     def get(self):
         output = dump_table(Submission.query.all(), Submission.__table__)
         return output
