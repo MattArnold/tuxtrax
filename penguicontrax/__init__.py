@@ -73,3 +73,20 @@ def report():
     from submission import tags
     dump_table_xml(db.session.query(tags).all(), tags, root, 'tag-assignments', 'tag-assignment')
     return Response(ET.tostring(root, encoding='utf-8'), mimetype='text/xml')
+
+# TODO: this fake URL is used to run unittests. It should be disabled on a deploy
+@app.route('/fakelogin')
+def fake_login():
+    import os
+    from flask import session
+    if 'PC_FAKE_OID' in os.environ:
+        session['openid']=os.environ['PC_FAKE_OID']
+
+        
+
+
+
+
+
+
+
