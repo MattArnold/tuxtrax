@@ -10,7 +10,9 @@ api = Api(app)
 #define routes
 
 #submissions
-api.add_resource(submissions.SubmissionAPI,'/api/submission/<string:submission_id>')
+##api.add_resource(submissions.SubmissionAPI,'/api/submission/<string:submission_id>/rsvp')
+api.add_resource(submissions.SubmissionAPI,'/api/submission/<string:submission_id>',
+                                        '/api/submission/<string:submission_id>/<string:noun>')
 api.add_resource(submissions.SubmissionsAPI,'/api/submissions')
 
 #users

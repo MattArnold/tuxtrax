@@ -3,34 +3,42 @@
 {%- endmacro %}
 
 {% macro user_link(user) -%}
-	<a class="userlink" href="/{{ user.account_name }}">
-		<img src="{{ user.image_small }}" width="20" style="margin-right:5px">{{ user_text(user) }}
-	</a>
+	{% if user is not none %}
+		<a class="userlink" href="/{{ user.account_name }}">
+			<img src="{{ user.image_small }}" width="20" style="margin-right:5px"> 
+			{{ user_text(user) }}
+		</a>
+	{% else %}
+		<span class="userlink">Unknown</span>
+	{% endif %}
+{%- endmacro %}
+
+{% macro person_link(person) -%}
+	<span class="userlink">{% if person is not none %}{{ person }}{% else %}Unknown{% endif %}</span>
 {%- endmacro %}
 
 {% macro event_summary(submission, user) -%}
-        <div class="submission suggested row
+        <div class="submission row
+         {% for tag in submission.tags %}{{ tag }} {% endfor %}
             bs-callout
-			{% if submission.followUpState == 1 %}
-			bs-callout-warning
+			{% if submission.followUpState == 0 %}
+			suggested
+            {% elif submission.followUpState == 1 %}
+            followedup
             {% elif submission.followUpState == 2 %}
-            bs-callout-success
+            rejected
             {% elif submission.followUpState == 3 %}
-            bs-callout-danger
-            {% else %}
-            bs-callout-default
+            confirmed
             {% endif %}
         " data-tags="{% for tag in submission.tags %}{{tag}}{% endfor %}">
 
-            <div class="col-md-12">
-
-                <h4 class="row submissions">
+            <div class="col-md-12 drawer submissions">
 
                     {% if user is not none %}
                         {% if submission in user.rsvped_to %}
-                        <span class="glyphicon glyphicon-star rsvp"></span>
+                        <i class="fa fa-star rsvp" style="color:#e3cf7a"></i>
                         {% elif user.points > 0 or user.staff == 1 %}
-                        <span class="glyphicon glyphicon-star-empty rsvp"></span>
+                        <i class="fa fa-star-o rsvp"></i>
                         {% endif %}
                     {% endif %}
 
@@ -38,21 +46,23 @@
                     {% if submission.duration != 1 %}
                     <span class="badge">{{ submission.duration }} hrs</span>
                     {% endif %}
-                    <span class="h5">{{ submission.firstname }} {{ submission.lastname }}</span>
+                    <span class="h5 person">{% for user_presenter in submission.userPresenters %}
+				{{ user_link(user_presenter) }} 
+			{% endfor %}
+			{% for person_presenter in submission.personPresenters %}
+				{{ person_link(person_presenter) }}
+			{% endfor %}
+                </span>
 
-                </h4>
+                    {% for tag in submission.tags %}
+                    <span class="label label-default spaninclude">{{ tag.name }}</span>
+                    {% endfor %}
 
-                <div class="row drawer">
-                    <div class="col-md-12">
-                        {% for tag in submission.tags %}
-                        <span class="label label-default spaninclude">{{ tag.name }}</span>
-                        {% endfor %}
-                        {{ submission.description }}
-                        <!--{% for rsvp in submission.rsvped_by %}
-                        {{ user_link(rsvp) }}
-                        {% endfor %}-->
-                    </div>
-                </div>
+                    {{ submission.description }}
+
+                    {% for rsvp in submission.rsvped_by %}
+                    {{ user_link(rsvp) }}
+                    {% endfor %}
 
             </div>
 

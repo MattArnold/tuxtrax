@@ -12,30 +12,32 @@
     </div>
     <div class="col-md-10">
         <div class="row ">
-            <div class="col-md-6">
-                <h5>
-                    <span class="label label-default suggested">Suggested events</span>
-                    <span class="label label-warning followedup">Pending events</span>
-                    <span class="label label-success approved">Approved events</span>
+            <div class="row ">
+                <div class="col-md-4">
+                    <button id="createeventbutton" class="btn btn-primary">Create an event</button>
+                </div>
+                <div class="col-md-8">
+                    <span class="legend">Legend:</span>
+                    <span class="bs-callout bs-callout-default suggested legend">Awaiting followup</span>
+                    <span class="bs-callout bs-callout-default followedup legend">Followed up</span>
+                    <span class="bs-callout bs-callout-default accepted legend">Accepted</span>
                     {% if user is not none and user.staff == 1 %}
-                    <span class="label label-danger rejected">Rejected events</span>
+                    <button class="bs-callout bs-callout-default rejected legend">Rejected</button>
                     {% endif %}
-                </h5>
-            </div>
-            <div class="col-md-6 text-right">
-                <button id="createeventbutton" class="btn btn-primary">Create an event</button>
-            </div>
+                </div>
+                
 
-        </div>
-        <div class="row">
-            <div class="col-md-12 submissions-list">
-                <div id="info"></div>
-                <form action="/rsvp" method=post>
-                    {% for submission in submissions %}
-                    {{ macros.event_summary(submission, user) }}
-                    {% endfor %}
-                </form>
-                <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a href="form.html">create one</a>?</div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 submissions-list">
+                    <div id="info"></div>
+                    <form action="/rsvp" method=post>
+                        {% for submission in submissions %}
+                        {{ macros.event_summary(submission, user) }}
+                        {% endfor %}
+                    </form>
+                    <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a href="form.html">create one</a>?</div>
+                </div>
             </div>
         </div>
     </div>
@@ -279,6 +281,6 @@
             $("#info").text("All view settings cleared.");
         }
 
-    });*/
-</script>
+        });
+    </script>
 {% endblock %}
