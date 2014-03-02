@@ -12,39 +12,50 @@
                 <button id="hidenav" class="btn btn-xs"><i class="fa fa-compress"></i>
                 </button>
             </div>
-            <div data-toggle="tooltip" data-placement="bottom" data-original-title='Filter the schedule by topics. Click some tags if you want to see only events with those topics. If you click a tag again, it will exclude all events with that topic. If you click a tag a third time, your filter will not care about that topic. If you have no topics turned on, it will turn on all the tags.'  class="col-md-6 tip" align="right" ><i class="fa fa-info-circle"></i>
+            <div data-toggle="tooltip" data-placement="bottom"
+                 data-original-title='Filter the schedule by topics. Click some tags if you want to see only events with those topics. If you click a tag again, it will exclude all events with that topic. If you click a tag a third time, your filter will not care about that topic. If you have no topics turned on, it will turn on all the tags.'
+                 class="col-md-6 tip" align="right"><i class="fa fa-info-circle"></i>
             </div>
             <div id="tagfilter"></div>
         </div>
     </div>
     <div class="col-md-10">
-        <div class="row ">
+        <div class="container-fluid">
             <div class="row ">
-                <div class="col-md-4">
-                    <button id="createeventbutton" class="btn btn-primary">Create an event</button>
-                </div>
-                <div class="col-md-8">
-                    <input type="search" />
-                    <span class="legend">Legend:</span>
-                    <span class="bs-callout bs-callout-default suggested legend">Awaiting followup</span>
-                    <span class="bs-callout bs-callout-default followedup legend">Followed up</span>
-                    <span class="bs-callout bs-callout-default accepted legend">Accepted</span>
-                    {% if user is not none and user.staff == 1 %}
-                    <button class="bs-callout bs-callout-default rejected legend">Rejected</button>
-                    {% endif %}
-                </div>
-                
+                <div class="container-fluid">
+                    <div class="row" style="margin-bottom:15px">
+                        <div class="col-md-4">
+                            <button id="createeventbutton" class="btn btn-primary">Create an event</button>
+                        </div>
+                        <div class="col-md-8 text-right legend">
+                            <span>Legend:</span>
+                            <span class="bs-callout suggested">Awaiting followup</span>
+                            <span class="bs-callout followedup">Followed up</span>
+                            <span class="bs-callout accepted">Accepted</span>
+                            {% if user is not none and user.staff == 1 %}
+                            <span class="bs-callout rejected">Rejected</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 submissions-list">
+                            <div class="row">
+                                <div class="col-md-8 info"></div>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="search" placeholder="Search"/>
+                                </div>
+                            </div>
 
-            </div>
-            <div class="row">
-                <div class="col-md-12 submissions-list">
-                    <div id="info"></div>
-                    <form action="/rsvp" method=post>
-                        {% for submission in submissions %}
-                        {{ macros.event_summary(submission, user) }}
-                        {% endfor %}
-                    </form>
-                    <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a href="form.html">create one</a>?</div>
+                            <form action="/rsvp" method=post>
+                                {% for submission in submissions %}
+                                {{ macros.event_summary(submission, user) }}
+                                {% endfor %}
+                            </form>
+                            <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a
+                                    href="form.html">create one</a>?
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,28 +65,16 @@
 {% endblock %}
 {% block page_script %}
 {{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='tagFilter.js') }}"></script>
 <script type="text/javascript">
 
-    var tagList = [],view,data;
     var tags = "{% for tag in tags %}{{tag}},{% endfor%}".split(",");
+    tags = tags.slice(0, tags.length - 1);
 
-    tags = tags.slice(0,tags.length -1);
-
-    can.each(tags,function(tag){
-        tagList.push({
-            name : tag,
-            excluded: false,
-            included : true
-        });
+    new ptrax.TagFilter("#tagfilter", {
+        tags : tags,
+        tplUrl : "{{ url_for('static', filename='tagfilter.mustache') }}"
     });
-
-    data = new can.Map({
-        infoText : "",
-        all : true,
-        tags : tagList
-    });
-
-    view = can.view("{{ url_for('static', filename='tagfilter.mustache') }}",data);
 
     //Handle collapsing and expanding the navigation
 
@@ -91,98 +90,8 @@
         }
     });
 
-    var TagFilter = can.Control.extend({
-
-        init : function(){
-            this.options.viewModel = data;
-            this.element.html(view);
-            this.on();
-        },
-
-        //set the tag button state, updates the data object
-        ".btn click" : function(el){
-            var tag = el.data('tag');
-            var tagList = data.tags;
-            var all = data.attr('all');
-
-            //look up the tag object
-            var t = _.find(tagList,{name : tag});
-
-            //user clicked a tag button
-            if(t){
-                can.batch.start();
-                //if all is true, reset everything to false and just pick this one thing
-                if(all){
-                    data.attr('all',false);
-                    _.forEach(tagList,function(tag){
-                        tag.attr('included',false);
-                        tag.attr('excluded',false);
-                    });
-                }
-
-                if(t.attr('included')){
-                    t.attr('included',false);
-                    t.attr('excluded',true);
-                }else if(t.attr('excluded')){
-                    t.attr('excluded',false);
-                    t.attr('included',false);
-                }else{
-                    t.attr('included',true);
-                }
-
-                can.batch.stop();
-            }else{
-                //all
-                data.attr('all',!all);
-
-                can.batch.start();
-                _.forEach(tagList,function(tagBtn){
-                    //toggle all state
-                    tagBtn.attr('excluded',false);
-                    tagBtn.attr('included',data.attr('all'));
-                });
-                can.batch.stop();
-            }
-
-            var included = _.filter(tagList,"included");
-            var excluded = _.filter(tagList,"excluded");
-
-            //TODO generate the info string
-
-        },
-
-        //handle taglist changes and update html in page
-        //TODO fix excluded
-        "{viewModel.tags} change" : function(tagsList,type,ev,action,newVal){
-            var event = ev.split('.')[1];
-            var idx = ev.split('.')[0];
-            var tag = tagsList.attr(idx);
-
-            var submissions = $('.submission[data-tags="'+tag.name+'"]');
-
-            switch(event){
-                case "included":
-                        if(newVal){
-                            submissions.removeClass('hidden');
-                        }else{
-                            submissions.addClass('hidden');
-                        }
-                break;
-                case "excluded":
-                    if(newVal){
-                        submissions.addClass('hidden');
-                    }else{
-                        submissions.removeClass('hidden');
-                    }
-                break;
-            }
-        }
+    $("#createeventbutton").click(function () {
+        document.location.href = "/eventform"
     });
-
-    new TagFilter("#tagfilter");
-
-    $("#createeventbutton").click(function(){
-       document.location.href="/eventform"
-    });
-    </script>
+</script>
 {% endblock %}

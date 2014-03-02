@@ -11,7 +11,7 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      files: "static/*.less",
+      files: "static/**/*.less",
       tasks: ["less"],
       options : {
         atBegin : true

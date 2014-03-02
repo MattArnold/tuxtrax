@@ -39,6 +39,7 @@ from user import Login
 import os, sqlite3, import2013schedule
 from constants import constants
 import datetime
+from event import Events, Rooms, RoomGroups, Convention
 
 import api
 
@@ -54,8 +55,8 @@ def init():
     # GET RID OF THIS LATER
     if len(Submission.query.all()) == 0:
         import2013schedule.import_old()
-   
-                
+
+
 @app.route('/')
 def index():
     submissions = Submission.query.order_by('id').all() if g.user is not None and g.user.staff == True else Submission.query.filter(Submission.followUpState != 3).order_by('id')
@@ -68,7 +69,7 @@ def hidden():
     tags = [tag.name for tag in Tag.query.all()]
     return render_template('index.html', tags=tags, submissions=submissions, user=g.user)
 
-        
+
 @app.route('/report')
 @cache.cached(timeout=900)
 def report():
@@ -88,7 +89,7 @@ def fake_login():
     if 'PC_FAKE_OID' in os.environ:
         session['openid']=os.environ['PC_FAKE_OID']
 
-        
+
 
 
 
