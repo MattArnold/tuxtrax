@@ -1,138 +1,181 @@
 {% extends "base.html" %}
 {% block title %}TRAX{% endblock %}
 {% block head %}
-	{{ super() }}
+{{ super() }}
 {% endblock %}
 {% block body %}
-	{{ super() }}
+{{ super() }}
 <div class="row">
     <div class="col-md-2">
-        <div class="btn-group">
-        <div id="hidenav" class="btn" style="float:left"><i class="fa fa-filter"></i></div>
-        </div>
-        <div class="btn-group">
-            <button class="btn btn-default btn-lg active">all</button>
-        </div>
-        <div class="btn-group">
-            {% for tag in tags %}
-            <button class="btn btn-default btn-xs">{{ tag }}</button>
-            {% endfor %}
-        </div>
+        <div id="hidenav">&nbsp;</div>
+        <div id="tagfilter"></div>
     </div>
     <div class="col-md-10">
         <div class="row ">
-            <div class="col-md-6">
-                <button id="createeventbutton" class="btn btn-primary">
-			Create an event
-		</button>
+            <div class="row ">
+                <div class="col-md-4">
+                    <button id="createeventbutton" class="btn btn-primary">Create an event</button>
+                </div>
+                <div class="col-md-8">
+                    <span class="legend">Legend:</span>
+                    <span class="bs-callout bs-callout-default suggested legend">Awaiting followup</span>
+                    <span class="bs-callout bs-callout-default followedup legend">Followed up</span>
+                    <span class="bs-callout bs-callout-default accepted legend">Accepted</span>
+                    {% if user is not none and user.staff == 1 %}
+                    <button class="bs-callout bs-callout-default rejected legend">Rejected</button>
+                    {% endif %}
+                </div>
+                
+
             </div>
-            <div class="col-md-6">
-                <span class="legend">Legend:</span>
-                <span class="bs-callout bs-callout-default suggested legend">Awaiting followup</span>
-                <span class="bs-callout bs-callout-default followedup legend">Followed up</span>
-                <span class="bs-callout bs-callout-default accepted legend">Accepted</span>
-                {% if user is not none and user.staff == 1 %}
-                <button class="bs-callout bs-callout-default rejected legend">Rejected</button>
-                {% endif %}
-            </div>
-            <div class="col-md-12">
-                <form action="/rsvp" method=post>
-                    {% for submission in submissions %}
-                    {{ macros.event_summary(submission, user) }}
-                    {% endfor %}
-                </form>
+            <div class="row">
+                <div class="col-md-12 submissions-list">
+                    <div id="info"></div>
+                    <form action="/rsvp" method=post>
+                        {% for submission in submissions %}
+                        {{ macros.event_summary(submission, user) }}
+                        {% endfor %}
+                    </form>
+                    <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a href="form.html">create one</a>?</div>
+                </div>
             </div>
         </div>
     </div>
-	<div id="oops">Oops! There are no events with that tag. Maybe you could <a href="form.html" >create one</a>?</div>
+
 </div>
 {% endblock %}
 {% block page_script %}
-    <script type="text/javascript">
+{{ super() }}
+<script type="text/javascript">
 
-        //Handle collapsing and expanding the navigation
+    var tagList = [],view,data;
+    var tags = "{% for tag in tags %}{{tag}},{% endfor%}".split(",");
 
-        $("#hidenav").click(function() {
-        	if ($("#leftmenu .tag").is(":hidden")) {
-        		//$('#hidenav').prependTo('#leftmenu');
-        		$("#leftmenu .tag").show('slow');
-        		$("#masthead, #report").addClass('withmenu');
-        	} else {
-        		//$('#hidenav').prependTo('body');
-        		$("#leftmenu .tag").hide('slow');
-        		$("#masthead, #report").removeClass('withmenu');
-        	}
+    tags = tags.slice(0,tags.length -1);
+
+    can.each(tags,function(tag){
+        tagList.push({
+            name : tag,
+            excluded: false,
+            included : true
         });
+    });
 
-        // Handle clicking on tags.
-        var included = [];
-        var excluded = [];
+    data = new can.Map({
+        infoText : "",
+        all : true,
+        tags : tagList
+    });
 
-        $('.tag').click(function() {
+    view = can.view("{{ url_for('static', filename='tagfilter.mustache') }}",data);
 
-        	var tagname = $(this).text();
+    //Handle collapsing and expanding the navigation
 
-        // Toggle tags between three states: Off, Include, and Exclude.
-
-        	if ($(this).hasClass('off')) {
-        		if (tagname == "all") {
-        			$('.off').add('.exclude').addClass('include').removeClass('off exclude');
-        			excluded = [];
-        			included = [];
-        			$('.include').each(function (i, thetag) { included.push($(thetag).text()); });
-        		} else {
-        			$(this).removeClass('off').addClass('include');
-        			included.push(tagname);
-        		}
-        	} else if ($(this).hasClass('include')) {
-        		if (tagname == "all") {
-        			$('.event').hide();
-        			$('.include').add('.exclude').addClass('off').removeClass('include exclude');
-        			included = [];
-        			excluded = [];
-        		} else {
-        			$(this).removeClass('include').addClass('exclude');
-        			included.splice(included.indexOf(tagname), 1);
-        			excluded.push(tagname);
-        		}
-        	} else if ($(this).hasClass('exclude')) {
-        		$(this).removeClass('exclude').addClass('off');
-        		excluded.splice(excluded.indexOf(tagname), 1);
-        	}
-
-        // Show or hide the appropriate events:
-
-        if($('.include').length == 0) { $('#report').hide('slow');
-        } else { $('#report').show('slow'); }
-
-        $(included).each(function (i, thetag) {
-        	$('.'+thetag).show('slow');
-        });
-        $(excluded).each(function (i, thetag) {
-        	$('.'+thetag).hide(); });
-
-        // Tell the user what they just did.
-
-        /*$(included).each(function (i, thetag) {
-        	if (included.inArray(thetag)) {
-        	}
+    $("#hidenav").click(function () {
+        if ($("#leftmenu .tag").is(":hidden")) {
+            //$('#hidenav').prependTo('#leftmenu');
+            $("#leftmenu .tag").show('slow');
+            $("#masthead, #report").addClass('withmenu');
+        } else {
+            //$('#hidenav').prependTo('body');
+            $("#leftmenu .tag").hide('slow');
+            $("#masthead, #report").removeClass('withmenu');
         }
-        */
-        if (included.length > 0 && excluded.length == 0) {
-        	$("#info").text("Show "+included.join(", ")+" events ("+$('.event:visible').length+" events total).");
-        	if ($('.event:visible').length == 0) {
-        		$('#oops').show();
-        	} else {
-        		$('#oops').hide();
-        	}
-        } else if (included.length == 0 && excluded.length > 0) {
-        	$("#info").text("Hide "+excluded.join(", ")+" events. No tags selected to view.");
-        } else if (included.length > 0 && excluded.length > 0) {
-        	$("#info").text("Show "+included.join(", ")+" events unless they are also "+excluded.join(", ")+" events ("+$('.event:visible').length+" events total).");
-        } else if (included.length == 0 && excluded.length == 0) {
-        	$("#info").text("All view settings cleared.");
-        }
+    });
 
-        });
+    var TagFilter = can.Control.extend({
+
+        init : function(){
+            this.options.viewModel = data;
+            this.element.html(view);
+            this.on();
+        },
+
+        //set the tag button state, updates the data object
+        ".btn click" : function(el){
+            var tag = el.data('tag');
+            var tagList = data.tags;
+            var all = data.attr('all');
+
+            //look up the tag object
+            var t = _.find(tagList,{name : tag});
+
+            //user clicked a tag button
+            if(t){
+                can.batch.start();
+                //if all is true, reset everything to false and just pick this one thing
+                if(all){
+                    data.attr('all',false);
+                    _.forEach(tagList,function(tag){
+                        tag.attr('included',false);
+                        tag.attr('excluded',false);
+                    });
+                }
+
+                if(t.attr('included')){
+                    t.attr('included',false);
+                    t.attr('excluded',true);
+                }else if(t.attr('excluded')){
+                    t.attr('excluded',false);
+                    t.attr('included',false);
+                }else{
+                    t.attr('included',true);
+                }
+
+                can.batch.stop();
+            }else{
+                //all
+                data.attr('all',!all);
+
+                can.batch.start();
+                _.forEach(tagList,function(tagBtn){
+                    //toggle all state
+                    tagBtn.attr('excluded',false);
+                    tagBtn.attr('included',data.attr('all'));
+                });
+                can.batch.stop();
+            }
+
+            var included = _.filter(tagList,"included");
+            var excluded = _.filter(tagList,"excluded");
+
+            //TODO generate the info string
+
+        },
+
+        //handle taglist changes and update html in page
+        //TODO fix excluded
+        "{viewModel.tags} change" : function(tagsList,type,ev,action,newVal){
+            var event = ev.split('.')[1];
+            var idx = ev.split('.')[0];
+            var tag = tagsList.attr(idx);
+
+            var submissions = $('.submission[data-tags="'+tag.name+'"]');
+
+            switch(event){
+                case "included":
+                        if(newVal){
+                            submissions.removeClass('hidden');
+                        }else{
+                            submissions.addClass('hidden');
+                        }
+                break;
+                case "excluded":
+                    if(newVal){
+                        submissions.addClass('hidden');
+                    }else{
+                        submissions.removeClass('hidden');
+                    }
+                break;
+            }
+        }
+    });
+
+    new TagFilter("#tagfilter");
+
+    $("#createeventbutton").click(function(){
+       document.location.href="/eventform"
+    });
+
     </script>
 {% endblock %}

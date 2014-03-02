@@ -5,7 +5,7 @@
 {% macro user_link(user) -%}
 	{% if user is not none %}
 		<a class="userlink" href="/{{ user.account_name }}">
-			<img src="{{ user.image_small }}" width="20"> 
+			<img src="{{ user.image_small }}" width="20" style="margin-right:5px">
 			{{ user_text(user) }}
 		</a>
 	{% else %}
@@ -29,7 +29,7 @@
             {% elif submission.followUpState == 3 %}
             confirmed
             {% endif %}
-        ">
+        " data-tags="{% for tag in submission.tags %}{{tag}}{% endfor %}">
 
             <div class="col-md-12 drawer submissions">
 
@@ -60,9 +60,11 @@
 
                     {{ submission.description }}
 
-                    {% for rsvp in submission.rsvped_by %}
-                    {{ user_link(rsvp) }}
-                    {% endfor %}
+                {% for rsvp in submission.rsvped_by %}
+                {% if rsvp.public_rsvps %}
+                {{ user_link(rsvp) }}
+                {% endif %}
+                {% endfor %}
 
             </div>
 
