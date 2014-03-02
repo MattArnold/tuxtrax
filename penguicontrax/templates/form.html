@@ -8,58 +8,46 @@
 	{% if event is not none %}
 	<input type=hidden name=eventid value={{event.id}} />
 	{% endif %}
-	<div class="row">
+	<div class="row jumbotron">
 	<div class="section where" >
-  		<div class="col-md-4">
+  		<div class="col-md-1">
 		<div class="header">
 			WHERE
 		</div>
-  		</div> <!-- col-md-4 -->
-		<div class="col-md-4">
-		<div id="typechange" >
-			<input type=radio name=eventtype class=typelist value=noroomtype id=noroomtype style="display:none">
-			<label for="talkbtn">
-				<div class="where question roomtab" id="talk">
-					<input type=radio name=eventtype class="typelist" value="talk"  id="talkbtn" {{ event.eventType | is_checked('talk') }}>An audience sits and watches one or more speakers.
-				</div>
+  		</div> <!-- col-md-11 -->
+		<div class="col-md-11">
+		<div id="typechange" class="btn-group" data-toggle="buttons" >
+			<input type="radio" name="eventtype" class="typelist" value="noroomtype" id="noroomtype" style="display:none">
+			<label class="btn btn-primary" for="talkbtn">
+				<input type="radio" data-toggle="radio" name=eventtype class="typelist where questioon roomtab" value="talk"  id="talkbtn" {{ event.eventType | is_checked('talk') }}>An audience sits and watches one or more speakers.
 			</label>
-			<label for="workshopbtn">
-				<div class="where question roomtab" id="workshop">
-					<input type=radio name=eventtype class="typelist" value="workshop"  id="workshopbtn" {{ event.eventType | is_checked('workshop') }}>Hands-on participatory activity.
-				</div>
+			<label class="btn btn-primary" for="workshopbtn">
+				<input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab" value="workshop"  id="workshopbtn" {{ event.eventType | is_checked('workshop') }}>Hands-on participatory activity.
 			</label>
-			<label for="bofbtn">
-				<div class="where question roomtab" id="bof">
-					<input type=radio name=eventtype class="typelist" value="bof"  id="bofbtn" {{ event.eventType | is_checked('bof') }}>Open discussion with no presenter or organizer.
-				</div>
+			<label class="btn btn-primary" for="bofbtn">
+				<input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab" value="bof"  id="bofbtn" {{ event.eventType | is_checked('bof') }}>Open discussion with no presenter or organizer.
 			</label>
-			<label for="gamebtn">
-				<div class="where question roomtab" id="game">
-					<input type=radio name=eventtype class="typelist" value="game"  id="gamebtn" {{ event.eventType | is_checked('game') }}>Tabletop game.
-				</div>
+			<label class="btn btn-primary" for="gamebtn">
+				<input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab" value="game"  id="gamebtn" {{ event.eventType | is_checked('game') }}>Tabletop game.
 			</label>
-			<label for="onstagebtn">
-				<div class="where question roomtab" id="onstage">
-					<input type=radio name=eventtype class="typelist" value="onstage"  id="onstagebtn" {{ event.eventType | is_checked('onstage') }}>Concert, skit, movie, or other onstage performance.
-				</div>
+			<label class="btn btn-primary" for="onstagebtn">
+				<input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab" value="onstage"  id="onstagebtn" {{ event.eventType | is_checked('onstage') }}>Concert, skit, movie, or other onstage performance.
 			</label>
-			<label for="rovingbtn">
-				<div class="where question roomtab" id="roving">
-					<input type=radio name=eventtype class="typelist" value="roving"  id="rovingbtn" {{ event.eventType | is_checked('roving') }}>Activity located throughout the hotel or elsewhere.
-				</div>
+			<label class="btn btn-primary" for="rovingbtn">
+				<input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab" value="roving"  id="rovingbtn" {{ event.eventType | is_checked('roving') }}>Activity located throughout the hotel or elsewhere.
 			</label>
 		</div>
-  		</div> <!-- col-md-4 -->
-		<div class="col-md-4">
+  		</div> <!-- col-md-12 -->
 		<div class="divider"></div>
-		<div id="resources">
+		<div class="col-md-12">
+<!--		<div id="resources">-->
 			{% for resource in resources %}
 			<div class="question">
-				<label for="resource_{{ resource.id }}" >
-				<input type="checkbox" name="resource_{{ resource.id }}" id="resource_{{ resource.id }}" value="{{ resource.id }}" {{ event | checked_if_resourced(resource) }}>
+				<label for="resource_{{ resource.id }}" class="checkbox-inline">
+				<input type="checkbox"  data-toggle="checkbox" name="resource_{{ resource.id }}" id="resource_{{ resource.id }}" value="{{ resource.id }}" {{ event | checked_if_resourced(resource) }}>
 				{{ resource.name }}
 				</label>
-			</div>
+<!--			</div>-->
 			{% endfor %}
 
 		</div>
@@ -75,7 +63,7 @@
 		</div>
 		<div class="question" id="furniture" >
 			Round tables:
-			<select value="" tabindex="" name=roundtables>
+			<select value="" tabindex="" name=roundtables class="select-block">
 				<option value="0" {{event.roundTables|is_selected(0)}}>0</option>
 				<option value="1" {{event.roundTables|is_selected(1)}}>1</option>
 				<option value="2" {{event.roundTables|is_selected(2)}}>2</option>
@@ -83,7 +71,7 @@
 				<option value="5" {{event.roundTables|is_selected(5)}}>more</option>
 			</select>
 			Long tables:
-			<select value="" tabindex="" name=longtables>
+			<select value="" tabindex="" name=longtables class="select-block">
 				<option value="0" {{event.longTables|is_selected(0)}}>0</option>
 				<option value="1" {{event.longTables|is_selected(1)}}>1</option>
 				<option value="2" {{event.longTables|is_selected(2)}}>2</option>
@@ -92,12 +80,12 @@
 			</select>
 		</div>
 		<div class="question" id="otherfacility" >
-			<textarea name=facilityrequest id="facilityrequest" rows="1" cols="50" placeholder="other facility requests">{{event.facilityRequest | default('',true)}}</textarea> <br />
+			<textarea name=facilityrequest id="facilityrequest" rows="1" cols="50" placeholder="other facility requests" class="form-control">{{event.facilityRequest | default('',true)}}</textarea> <br />
 		</div>
 	</div>
   	</div> <!-- col-md-4 -->
 	</div> <!-- class="row" -->
-	<div class="row">
+	<div class="row jumbotron">
 	<div class="section when" >
 		<div class="col-md-4">
 		<div class="header">
@@ -152,7 +140,7 @@
   		</div> <!-- col-md-4 -->
 	</div>
 	</div> <!-- class="row" -->
-	<div class="row">
+	<div class="row jumbotron">
 	<div class="section who" id="who" >
 		<div class="col-md-4">
 		<div class="header">
@@ -179,7 +167,7 @@
   		</div> <!-- col-md-4 -->
 	</div>
 	</div> <!-- class="row" -->
-	<div class="row">
+	<div class="row jumbotron">
 	<div class="section what">
   		<div class="col-md-4">
 		<div class="header">
@@ -211,7 +199,7 @@
 			{% for track in tracks %}
 			<label for="tbn_{{ track }}">
 				<div class="what question track" id="track_{{ track }}">
-					<input type=radio name=track class="tracklist" value="{{track}}"  id="tbn_{{ track }}" {{ event | checked_if_tracked(track) }}>{{ track }}
+					<input type="radio" name=track class="tracklist" value="{{track}}"  id="tbn_{{ track }}" {{ event | checked_if_tracked(track) }}>{{ track }}
 				</div>
 			</label>
 			{% endfor %}
@@ -221,7 +209,7 @@
 		<!-- <div class="divider"></div> -->
   		</div> <!-- col-md-4 -->
 	</div> <!-- class="row" -->
-	<div class="row">
+	<div class="row jumbotron">
 		<div class="section program_book">
   		<div class="col-md-4">
 			<div class="header">
@@ -246,7 +234,7 @@
 	</div>
 	</div> <!-- class program_book -->
 	</div> <!-- class="row" -->
-	<div class="row">
+	<div class="row jumbotron">
 	<div class="section" >
 		<div class="header">
 			WHY NOT
@@ -273,12 +261,12 @@
 		{% endif %}
 	</div>
 	</div> <!-- class="row" -->
-	<div class="row">
+	<div class="row jumbotron">
 	<div class="section"><span style="color:#7f8c8d;">
 	Work in progress 5/30/2013.</span><br />
 	</div>
 	</div> <!-- class="row" -->
-	<div class="row">
+	<div class="row jumbotron">
 	</form>
 	<form action="/createtag" method=post >
 		<div>
@@ -290,4 +278,7 @@
 {% endblock %}
 {% block page_script %}
 <script src="static/submissionform.js"></script>
+<script src="{{ url_for('static', filename='Flat-UI-master/js/flatui-radio.js') }}"></script>
+<script src="{{ url_for('static', filename='Flat-UI-master/js/flatui-checkbox.js') }}"></script>
+<script src="{{ url_for('static', filename='Flat-UI-master/js/bootstrap-select.js') }}"></script>
 {% endblock %}

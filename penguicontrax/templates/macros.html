@@ -45,7 +45,7 @@
                     {% if submission.duration != 1 %}
                     <span class="label">{{ submission.duration }} hrs</span>
                     {% endif %}
-                    <span class="h5 person">
+                    <span class="person">
                         {% for user_presenter in submission.userPresenters %}
                             {{ user_link(user_presenter) }}{% if not loop.last %}, {% endif %}
                         {% endfor %}
