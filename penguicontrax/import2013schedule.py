@@ -1,7 +1,7 @@
 import sqlite3, os
 import xml.etree.ElementTree as ET
 import penguicontrax as penguicontrax
-from submission import Submission, Tag, Track, Resource
+from submission import Submission, Tag, Track, Resource, normalize_tag_name
 
 def import_old():
     existing_tags = {}
@@ -34,7 +34,7 @@ def import_old():
                 submission.followUpState = 0
                 submission.tags = []
                 for tag in tag_list.split(','):
-                    tag = tag.strip()
+                    tag = normalize_tag_name(tag)
                     db_tag = None
                     if not tag in existing_tags:
                         db_tag = Tag(tag)

@@ -1,6 +1,7 @@
 from flask import g, request, session, render_template, redirect, Response, Markup
 from sqlalchemy.orm import relationship
 from .. import app, db, dump_table_json
+import string
 
 # Associates multiple tags to a submission
 SubmissionToTags = db.Table('submission_tags', db.Model.metadata,
@@ -88,6 +89,12 @@ def get_tag(name):
         tag = tags[0]
     return tag
 
+def normalize_tag_name(tag):
+    tag = tag.lower().strip()
+    tag = tag.translate(string.maketrans("",""), string.punctuation)
+    tag = "-".join(tag.split())
+    return tag
+
 def get_track(name):
     tracks = Track.query.filter(Track.name==name)
     if tracks.count() == 1:
@@ -170,26 +177,30 @@ def createtag():
 
 @app.route('/rsvp', methods=['POST'])
 def rsvp():
-    if g.user is None or (g.user.points <= 0 and g.user.staff != 1):
-        return redirect('/')
-    submission = None
-    value = None
-    for field in request.form:
-        if field.find('submit_') == 0: 
-            submission = Submission.query.filter_by(id=int(field[7:])).first()
-            value = request.form[field]
-            break
-    if submission is None:
-        return redirect('/')
-    if value == 'un-RSVP':
-        g.user.rsvped_to.remove(submission)
-        g.user.points += 1
+    if g.user is not None:
+        submission = None
+        value = None
+        for field in request.form:
+            if field.find('submit_') == 0: 
+                submission = Submission.query.filter_by(id=int(field[7:])).first()
+                value = request.form[field]
+                break
+        if submission is None:
+            return redirect('/')
+        if value == 'un-RSVP':
+            g.user.rsvped_to.remove(submission)
+            g.user.points += 1
+        else:
+            if g.user.points <= 0 and g.user.staff != 1:
+                return redirect('/')
+            else:
+                g.user.rsvped_to.append(submission)
+                g.user.points -= 1
+        db.session.add(g.user)
+        db.session.commit()
+        return redirect('/#submission_' + str(submission.id))
     else:
-        g.user.rsvped_to.append(submission)
-        g.user.points -= 1
-    db.session.add(g.user)
-    db.session.commit()
-    return redirect('/#submission_' + str(submission.id))
+	return redirect('/')
 
 @app.template_filter()
 def is_selected(value, needs_to_be):
@@ -203,11 +214,16 @@ def is_checked(value, needs_to_be):
     return ''
 @app.template_filter()
 def checked_if_resourced(submission, resource):
-    if resource in submission.resources:
+    if submission and resource in submission.resources:
         return Markup('checked')
     return ''
 @app.template_filter()
 def checked_if_tagged(submission, tag):
-    if tag in [tag.name for tag in submission.tags]:
+    if submission and tag in [tag.name for tag in submission.tags]:
         return Markup('checked')
+    return ''
+@app.template_filter()
+def checked_if_tracked(submission, trackname):
+    if submission and submission.track.name == trackname:
+        return markup('checked')
     return ''

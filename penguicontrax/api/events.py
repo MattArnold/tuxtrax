@@ -6,7 +6,8 @@ from flask.ext.restful import Resource, Api
 from sys import exit;
 
 ## Import Local Libs
-from .. import Submission, dump_table
+from penguicontrax import dump_table
+from penguicontrax.submission import Submission
 from functions import return_null_if_not_logged_in
 
 class EventAPI(Resource):

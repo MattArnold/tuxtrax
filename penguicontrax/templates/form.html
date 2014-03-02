@@ -169,7 +169,7 @@
 			{% for track in tracks %}
 			<label for="tbn_{{ track }}">
 				<div class="what question track" id="track_{{ track }}">
-					<input type=radio name=track class="tracklist" value="{{track}}"  id="tbn_{{ track }}" {{ event.track.name | is_checked(track) }}>{{ track }}
+					<input type=radio name=track class="tracklist" value="{{track}}"  id="tbn_{{ track }}" {{ event | checked_if_tracked(track) }}>{{ track }}
 				</div>
 			</label>
 			{% endfor %}

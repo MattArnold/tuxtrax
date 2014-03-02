@@ -11,13 +11,13 @@
 
 {% macro event_summary(submission, user) -%}
 	{% if submission.followUpState == 1 %}
-		<div class="event followedup">
+		<div class="event followedup {% for tag in submission.tags %}{{ tag }} {% endfor %}">
 	{% elif submission.followUpState == 2 %}
-		<div class="event approved">
+		<div class="event approved {% for tag in submission.tags %}{{ tag }} {% endfor %}">
 	{% elif submission.followUpState == 3 %}
-		<div class="event rejected">
+		<div class="event rejected {% for tag in submission.tags %}{{ tag }} {% endfor %}">
 	{% else %}
-		<div class="event suggested">
+		<div class="event suggested {% for tag in submission.tags %}{{ tag }} {% endfor %}">
 	{% endif %}
 			<a name="submission_{{ submission.id }}" />
 			<div class="what unit title"><a href="/eventform?id={{submission.id}}">{{ submission.title }}</a></div>
