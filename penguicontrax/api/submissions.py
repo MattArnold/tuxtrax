@@ -15,8 +15,10 @@ from functions import return_null_if_not_logged_in
 class SubmissionAPI(Resource):
     @return_null_if_not_logged_in
     def get(self,submission_id,noun=None):
+        submission = Submission.query.filter_by(id=int(submission_id)).all()
         ## Output only one element
-        output = dump_table(Submission.query.filter_by(id=int(submission_id)), Submission.__table__).pop()
+        output = dump_table(submission, Submission.__table__).pop()
+        output['tags'] = [_.name for _ in submission[0].tags]
         return output,200
 
     @return_null_if_not_logged_in
