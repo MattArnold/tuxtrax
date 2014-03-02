@@ -1,4 +1,4 @@
-from flask import g, request, session, render_template, redirect, Response, Markup
+from flask import g, request, session, render_template, redirect, Response, Markup, url_for
 from sqlalchemy.orm import relationship
 from .. import app, db, dump_table_json
 import string
@@ -13,6 +13,14 @@ SubmissionToResources = db.Table('submission_resources', db.Model.metadata,
     db.Column('resource_id', db.Integer(), db.ForeignKey('resources.id', ondelete='CASCADE', onupdate='CASCADE'))
 )
 
+user_presenting_in = db.Table('user_presenting_in',
+                db.Column('submission_id', db.Integer, db.ForeignKey('submissions.id', ondelete='CASCADE', onupdate='CASCADE')),
+                db.Column('user_id', db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE')))
+
+person_presenting_in = db.Table('person_presenting_in',
+                db.Column('submission_id', db.Integer, db.ForeignKey('submissions.id', ondelete='CASCADE', onupdate='CASCADE')),
+                db.Column('person_id', db.Integer, db.ForeignKey('person.id', ondelete='CASCADE', onupdate='CASCADE')))
+
 class Submission(db.Model):
     __tablename__ = 'submissions'
     id = db.Column(db.Integer, primary_key=True)
@@ -20,9 +28,7 @@ class Submission(db.Model):
     title = db.Column(db.String())
     description = db.Column(db.String())
     comments = db.Column(db.String())
-    submitter = db.Column(db.String())
-    firstname = db.Column(db.String())
-    lastname = db.Column(db.String())
+    submitter = db.Column(db.Integer, db.ForeignKey('user.id'))
     trackId = db.Column(db.Integer(), db.ForeignKey('tracks.id'))
     track = db.relationship('Track')
     tags = db.relationship('Tag', secondary=SubmissionToTags, backref=db.backref('submissions'), passive_deletes=True)
@@ -37,6 +43,8 @@ class Submission(db.Model):
     longTables = db.Column(db.Integer())
     facilityRequest = db.Column(db.String())
     followUpState = db.Column(db.Integer()) # 0 = submitted, 1 = followed up, 2 = accepted, 3 = rejected
+    userPresenters = db.relationship('User', secondary=user_presenting_in, backref=db.backref('presenting_in'), passive_deletes=True)
+    personPresenters = db.relationship('Person', secondary=person_presenting_in, backref=db.backref('presenting_in'), passive_deletes=True)
         
     def __init__(self):
         pass
@@ -116,6 +124,8 @@ def getevent():
     
 @app.route('/eventform', methods=['GET', 'POST'])
 def event_form():
+    if g.user is None:
+        return redirect('/login')
     # probably need orders
     tags = [tag.name for tag in Tag.query.all()]
     tracks = [track.name for track in Track.query.all()]

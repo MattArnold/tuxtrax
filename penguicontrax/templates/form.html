@@ -132,10 +132,7 @@
 		<div class="header">
 			WHO
 		</div>
-		Suggester name (That's you):
-		<input name=submitter id="submitter" type=text size="24" />
-		<input type=hidden name=firstname id="firstname" value="{{ event.firstname|default('',true) }}" />
-		<input type=hidden name=lastname id="lastname" value="{{ event.lastname|default('',true) }}" />
+		Suggester {{ macros.user_link(event.submitter) }}
 		Suggester email:
 		<input name=email type=text size="24" placeholder="email@address.com" value="{{ event.email | default('',true) }}"/>
 		<span id="pptype" ></span>
