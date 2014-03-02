@@ -18,6 +18,7 @@ class SubmissionAPI(Resource):
         ## Output only one element
         output = dump_table(Submission.query.filter_by(id=int(submission_id)), Submission.__table__).pop()
         return output
+
     @return_null_if_not_logged_in
     def post(self,submission_id,noun):
         nouns = {
@@ -37,6 +38,27 @@ class SubmissionAPI(Resource):
             db.session.commit()
             return None,'200'
         return None,'404'
+
+    @return_null_if_not_logged_in
+    def delete(self,submission_id,noun):
+        nouns = {
+            'rsvp':self.__rsvp_delete
+        }
+        if nouns.has_key(noun.lower()):
+            return nouns[noun.lower()](submission_id)
+        return 'Delete Noun not found', 404
+    def __rsvp_delete(self,submission_id):
+        #first check that the id exists x
+        submission = Submission.query.filter_by(id=int(submission_id)) 
+        if g.user != None and submission.count() > 0:
+            # getthe user id
+            id = g.user.id
+            g.user.rsvped_to.remove(submission.first())
+            db.session.delete(g.user)
+            db.session.commit()
+            return None,'200'
+        return None,'404'
+        
 
 class SubmissionsAPI(Resource):
     @return_null_if_not_logged_in
