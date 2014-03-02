@@ -14,10 +14,17 @@ from functions import return_null_if_not_logged_in
 
 class SubmissionAPI(Resource):
     @return_null_if_not_logged_in
-    def get(self,submission_id,noun):
+    def get(self,submission_id,noun=None):
+        submission = Submission.query.filter_by(id=int(submission_id)).all()
         ## Output only one element
-        output = dump_table(Submission.query.filter_by(id=int(submission_id)), Submission.__table__).pop()
-        return output
+        output = dump_table(submission, Submission.__table__).pop()
+        output['tags'] = [_.name for _ in submission[0].tags]
+        output['personPresenters'] = [_.name for _ in submission[0].personPresenters]
+        user_map = ['name','email','id']
+        output['userPresenters'] = [dict([(field,getattr(_,field)) for field in user_map]) for _ in submission[0].userPresenters]
+        output['rsvped_by'] = [dict([(field,getattr(_,field)) for field in user_map]) for _ in submission[0].rsvped_by]
+        return output,200
+
     @return_null_if_not_logged_in
     def post(self,submission_id,noun):
         nouns = {
@@ -38,8 +45,36 @@ class SubmissionAPI(Resource):
             return None,'200'
         return None,'404'
 
+    @return_null_if_not_logged_in
+    def delete(self,submission_id,noun):
+        nouns = {
+            'rsvp':self.__rsvp_delete
+        }
+        if nouns.has_key(noun.lower()):
+            return nouns[noun.lower()](submission_id)
+        return 'Delete Noun not found', 404
+    def __rsvp_delete(self,submission_id):
+        #first check that the id exists x
+        submission = Submission.query.filter_by(id=int(submission_id)) 
+        if g.user != None and submission.count() > 0:
+            # getthe user id
+            id = g.user.id
+            g.user.rsvped_to.remove(submission.first())
+            db.session.delete(g.user)
+            db.session.commit()
+            return None,'200'
+        return None,'404'
+        
+
 class SubmissionsAPI(Resource):
     @return_null_if_not_logged_in
     def get(self):
-        output = dump_table(Submission.query.all(), Submission.__table__)
+        submissions = Submission.query.all()
+        output = dump_table(submissions, Submission.__table__)
+        for index,element in enumerate(output):
+            element['tags'] = [_.name for _ in submissions[index].tags]
+            element['personPresenters'] = [_.name for _ in submissions[index].personPresenters]
+            user_map = ['name','email','id']
+            element['userPresenters'] = [dict([(field,getattr(_,field)) for field in user_map]) for _ in submissions[index].userPresenters]
+            element['rsvped_by'] = [dict([(field,getattr(_,field)) for field in user_map]) for _ in submissions[index].rsvped_by]
         return output
