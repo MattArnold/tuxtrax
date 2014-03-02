@@ -33,7 +33,7 @@ class Submission(db.Model):
     trackId = db.Column(db.Integer(), db.ForeignKey('tracks.id'))
     track = db.relationship('Track')
     tags = db.relationship('Tag', secondary=SubmissionToTags, backref=db.backref('submissions'), passive_deletes=True)
-    duration = db.Column(db.Boolean())
+    duration = db.Column(db.Integer())
     setupTime = db.Column(db.Integer())
     repetition = db.Column(db.Integer())
     timeRequest = db.Column(db.String())
