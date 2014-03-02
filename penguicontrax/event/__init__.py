@@ -123,9 +123,16 @@ def indent(elem, level=0):
 def create_schedule_XML():
     """
     Exports the events in XML format for the schedule book.
+
+    TODO: expand this to match the format of 2013.penguicon.schedule.xml.
     """
     root = ET.Element('events')
-    document = ET.SubElement(root, 'document')
+    root.attrib['xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance'
+    document_elem = ET.SubElement(root, 'document')
+    for event in Events.query.all():
+        event_elem = ET.SubElement(document_elem, 'event')
+        title_elem = ET.SubElement(event_elem, 'title')
+        title_elem.text = event.title
     indent(root)
     return ET.tostring(root, encoding='utf-8')
 
@@ -133,6 +140,12 @@ def create_schedule_XML():
 @app.route('/getschedule', methods=['GET'])
 def get_schedule():
     schedule_text = create_schedule_XML()
-    return Response(schedule_text, mimetype='text/xml',
-                    headers={'Content-Disposition':
-                             'attachment;filename=penguicon.schedule.xml'})
+
+    # Return XML prolog and XML schedule.
+    return Response(
+        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+        schedule_text,
+        mimetype='text/xml',
+        headers={'Content-Disposition':
+                 'attachment;filename=penguicon.schedule.xml'}
+    )
