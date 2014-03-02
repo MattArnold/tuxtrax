@@ -32,7 +32,18 @@ body {
 @import "submissions";
 
 .header {
-  padding-left: .5em;
+  margin-bottom: 15px;
+  .title {
+    padding-left: .5em;
+  }
+}
+
+.ptrax-login {
+  font-size: small;
+  .row {
+    margin-right: 10px;
+    margin-top: 15px;
+  }
 }
 
 .person {
@@ -43,40 +54,41 @@ body {
   margin: 20px 0;
   padding: 20px;
   border-left: 3px solid #eee;
-}
-
-.bs-callout-danger {
-  background-color: #fdf7f7;
-  border-color: #d9534f;
-}
-
-.bs-callout-default {
   background-color: #f7f7f9;
-  border-color: #e1e1e8;
+}
 
-  &.legend {
-    font-size: small;
+.legend {
+  font-size: small;
+
+  .bs-callout {
+    background-color: #f7f7f9;
+    border-color: #e1e1e8;
     padding: .5em;
     margin: .5em;
-  }
+    display: inline-block;
 
-  &.followedup {
-    background-color: @followeduplight;
-    border-color: @followedupdark;
-  }
+    &.followedup {
+      background-color: @followeduplight;
+      border-color: @followedupdark;
+    }
 
-  &.accepted {
-    background-color: @acceptedlight;
-    border-color: @accepteddark;
-  }
+    &.accepted {
+      background-color: @acceptedlight;
+      border-color: @accepteddark;
+    }
 
-  &.rejected {
-    background-color: @rejectedlight;
-    border-color: @rejecteddark;
+    &.rejected {
+      background-color: @rejectedlight;
+      border-color: @rejecteddark;
+    }
   }
-
 }
 
+.submissions-list {
+  .info {
+    font-size: small;
+  }
+}
 .submissions {
 
   .rsvp {

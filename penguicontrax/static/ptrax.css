@@ -5877,43 +5877,43 @@ button.close {
 }
 @font-face {
   font-family: 'Lato';
-  src: url('../fonts/lato/lato-black.eot');
-  src: url('../fonts/lato/lato-black.eot?#iefix') format('embedded-opentype'), url('../fonts/lato/lato-black.woff') format('woff'), url('../fonts/lato/lato-black.ttf') format('truetype'), url('../fonts/lato/lato-black.svg#latoblack') format('svg');
+  src: url('/static/Flat-UI-master/fonts/lato/lato-black.eot');
+  src: url('/static/Flat-UI-master/fonts/lato/lato-black.eot?#iefix') format('embedded-opentype'), url('/static/Flat-UI-master/fonts/lato/lato-black.woff') format('woff'), url('/static/Flat-UI-master/fonts/lato/lato-black.ttf') format('truetype'), url('/static/Flat-UI-master/fonts/lato/lato-black.svg#latoblack') format('svg');
   font-weight: 900;
   font-style: normal;
 }
 @font-face {
   font-family: 'Lato';
-  src: url('../fonts/lato/lato-bold.eot');
-  src: url('../fonts/lato/lato-bold.eot?#iefix') format('embedded-opentype'), url('../fonts/lato/lato-bold.woff') format('woff'), url('../fonts/lato/lato-bold.ttf') format('truetype'), url('../fonts/lato/lato-bold.svg#latobold') format('svg');
+  src: url('/static/Flat-UI-master/fonts/lato/lato-bold.eot');
+  src: url('/static/Flat-UI-master/fonts/lato/lato-bold.eot?#iefix') format('embedded-opentype'), url('/static/Flat-UI-master/fonts/lato/lato-bold.woff') format('woff'), url('/static/Flat-UI-master/fonts/lato/lato-bold.ttf') format('truetype'), url('/static/Flat-UI-master/fonts/lato/lato-bold.svg#latobold') format('svg');
   font-weight: bold;
   font-style: normal;
 }
 @font-face {
   font-family: 'Lato';
-  src: url('../fonts/lato/lato-bolditalic.eot');
-  src: url('../fonts/lato/lato-bolditalic.eot?#iefix') format('embedded-opentype'), url('../fonts/lato/lato-bolditalic.woff') format('woff'), url('../fonts/lato/lato-bolditalic.ttf') format('truetype'), url('../fonts/lato/lato-bolditalic.svg#latobold-italic') format('svg');
+  src: url('/static/Flat-UI-master/fonts/lato/lato-bolditalic.eot');
+  src: url('/static/Flat-UI-master/fonts/lato/lato-bolditalic.eot?#iefix') format('embedded-opentype'), url('/static/Flat-UI-master/fonts/lato/lato-bolditalic.woff') format('woff'), url('/static/Flat-UI-master/fonts/lato/lato-bolditalic.ttf') format('truetype'), url('/static/Flat-UI-master/fonts/lato/lato-bolditalic.svg#latobold-italic') format('svg');
   font-weight: bold;
   font-style: italic;
 }
 @font-face {
   font-family: 'Lato';
-  src: url('../fonts/lato/lato-italic.eot');
-  src: url('../fonts/lato/lato-italic.eot?#iefix') format('embedded-opentype'), url('../fonts/lato/lato-italic.woff') format('woff'), url('../fonts/lato/lato-italic.ttf') format('truetype'), url('../fonts/lato/lato-italic.svg#latoitalic') format('svg');
+  src: url('/static/Flat-UI-master/fonts/lato/lato-italic.eot');
+  src: url('/static/Flat-UI-master/fonts/lato/lato-italic.eot?#iefix') format('embedded-opentype'), url('/static/Flat-UI-master/fonts/lato/lato-italic.woff') format('woff'), url('/static/Flat-UI-master/fonts/lato/lato-italic.ttf') format('truetype'), url('/static/Flat-UI-master/fonts/lato/lato-italic.svg#latoitalic') format('svg');
   font-weight: normal;
   font-style: italic;
 }
 @font-face {
   font-family: 'Lato';
-  src: url('../fonts/lato/lato-light.eot');
-  src: url('../fonts/lato/lato-light.eot?#iefix') format('embedded-opentype'), url('../fonts/lato/lato-light.woff') format('woff'), url('../fonts/lato/lato-light.ttf') format('truetype'), url('../fonts/lato/lato-light.svg#latolight') format('svg');
+  src: url('/static/Flat-UI-master/fonts/lato/lato-light.eot');
+  src: url('/static/Flat-UI-master/fonts/lato/lato-light.eot?#iefix') format('embedded-opentype'), url('/static/Flat-UI-master/fonts/lato/lato-light.woff') format('woff'), url('/static/Flat-UI-master/fonts/lato/lato-light.ttf') format('truetype'), url('/static/Flat-UI-master/fonts/lato/lato-light.svg#latolight') format('svg');
   font-weight: 300;
   font-style: normal;
 }
 @font-face {
   font-family: 'Lato';
-  src: url('../fonts/lato/lato-regular.eot');
-  src: url('../fonts/lato/lato-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/lato/lato-regular.woff') format('woff'), url('../fonts/lato/lato-regular.ttf') format('truetype'), url('../fonts/lato/lato-regular.svg#latoregular') format('svg');
+  src: url('/static/Flat-UI-master/fonts/lato/lato-regular.eot');
+  src: url('/static/Flat-UI-master/fonts/lato/lato-regular.eot?#iefix') format('embedded-opentype'), url('/static/Flat-UI-master/fonts/lato/lato-regular.woff') format('woff'), url('/static/Flat-UI-master/fonts/lato/lato-regular.ttf') format('truetype'), url('/static/Flat-UI-master/fonts/lato/lato-regular.svg#latoregular') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -11961,7 +11961,17 @@ body {
   text-decoration: line-through;
 }
 .header {
+  margin-bottom: 15px;
+}
+.header .title {
   padding-left: .5em;
+}
+.ptrax-login {
+  font-size: small;
+}
+.ptrax-login .row {
+  margin-right: 10px;
+  margin-top: 15px;
 }
 .person {
   font-style: italic;
@@ -11970,32 +11980,36 @@ body {
   margin: 20px 0;
   padding: 20px;
   border-left: 3px solid #eee;
+  background-color: #f7f7f9;
 }
-.bs-callout-danger {
-  background-color: #fdf7f7;
-  border-color: #d9534f;
+.legend {
+  font-size: small;
 }
-.bs-callout-default {
+.legend .bs-callout {
   background-color: #f7f7f9;
   border-color: #e1e1e8;
-}
-.bs-callout-default.legend {
-  font-size: small;
   padding: .5em;
   margin: .5em;
+  display: inline-block;
 }
-.bs-callout-default.followedup {
+.legend .bs-callout.followedup {
   background-color: #fcf8e3;
   border-color: #d6a753;
 }
-.bs-callout-default.accepted {
+.legend .bs-callout.accepted {
   background-color: #bda0cb;
   border-color: #a020f0;
 }
-.bs-callout-default.rejected {
+.legend .bs-callout.rejected {
   background-color: #f2dede;
   border-color: #c04a48;
 }
+.submissions-list .info {
+  font-size: small;
+}
 .submissions .rsvp.checked {
   color: #FDD017;
+}
+.tagsinput {
+  height: auto;
 }

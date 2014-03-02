@@ -10,18 +10,18 @@
     {% endblock %}
 </head>
 <body>
-<div id="masthead" class="section withmenu row">
+<div class="row header">
     <div class="col-md-7">
-    <h3 class="header">
+    <h3 class="title">
         <a href="/">Penguicon-TRAX <span style="font-size:small">(Tentative Requested Activity Xperiment)</span></a>
     </h3>
     </div>
-    <div class="col-md-4 text-right">
+    <div class="col-md-5 text-right ptrax-login">
         <div class="row">
-            <h6 class="col-md-12">
+            <div class="col-md-12" style="margin: 10px 0 0 0">
                 <form action="/logout" method=get>
                     {% if user is none %}
-                    <p>Log in using:
+                    <span>Log in using:
                     <a href="/login?provider=facebook"><img src="static/facebook-16x16.png" hspace="5px"></a>
                     <a href="/login?provider=twitter"><img src="static/twitter-16x16.png" hspace="5px"></a>
                     <a href="/login?provider=google"><img src="static/google-16x16.png" hspace="5px"></a>
@@ -31,11 +31,11 @@
                     {% if user.staff == 0 %}
                     {{ user.points }} RSVP points left
                     {% endif %}
-                    <input class="btn btn-primary" type=submit value="Logout">
+                    <input class="btn btn-primary btn-xs" type=submit value="Logout">
                     {% endif %}
-                    </p>
+                    </span>
                 </form>
-            </h6>
+            </div>
         </div>
     </div>
 </div>

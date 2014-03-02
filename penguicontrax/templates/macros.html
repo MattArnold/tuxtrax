@@ -18,18 +18,8 @@
 {%- endmacro %}
 
 {% macro event_summary(submission, user) -%}
-        <div class="submission row bs-callout-default bs-callout
-         {% for tag in submission.tags %}{{ tag }} {% endfor %}
-			{% if submission.followUpState == 0 %}
-			suggested
-            {% elif submission.followUpState == 1 %}
-            followedup
-            {% elif submission.followUpState == 2 %}
-            rejected
-            {% elif submission.followUpState == 3 %}
-            confirmed
-            {% endif %}
-        " data-tags="{% for tag in submission.tags %}{{tag}}{% endfor %}">
+        <div class="submission row bs-callout-default bs-callout {% if submission.followUpState == 0 %}suggested {% elif submission.followUpState == 1 %} followedup {% elif submission.followUpState == 2 %} rejected {% elif submission.followUpState == 3 %} confirmed {% endif %}"
+             data-tags="{% for tag in submission.tags %}{{tag}} {% endfor %}">
 
             <div class="col-md-12 drawer submissions">
 
@@ -45,14 +35,14 @@
                     {% if submission.duration != 1 %}
                     <span class="label">{{ submission.duration }} hrs</span>
                     {% endif %}
-                    <span class="h5 person">
+                    <span class="person">
                         {% for user_presenter in submission.userPresenters %}
                             {{ user_link(user_presenter) }}{% if not loop.last %}, {% endif %}
                         {% endfor %}
                         {% for person_presenter in submission.personPresenters %}
                             {{ person_link(person_presenter) }}{% if not loop.last %}, {% endif %}
                         {% endfor %}
-                </span>
+                     </span>
 
                     {% for tag in submission.tags %}
                     <span class="label label-default spaninclude"><i class="fa fa-tag"></i> {{ tag.name }}</span>
