@@ -91,7 +91,6 @@
 
         //set the tag button state, updates the data object
         ".btn click" : function(el){
-            var self = this;
             var tag = el.data('tag');
             var tagList = data.tags;
             var all = data.attr('all');
@@ -138,15 +137,39 @@
             var included = _.filter(tagList,"included");
             var excluded = _.filter(tagList,"excluded");
 
-            //TODO upate the text
+            //TODO generate the info string
 
+        },
+
+        //handle taglist changes and update html in page
+        //TODO fix excluded
+        "{viewModel.tags} change" : function(tagsList,type,ev,action,newVal){
+            var event = ev.split('.')[1];
+            var idx = ev.split('.')[0];
+            var tag = tagsList.attr(idx);
+
+            var submissions = $('.submission[data-tags="'+tag.name+'"]');
+
+            switch(event){
+                case "included":
+                        if(newVal){
+                            submissions.removeClass('hidden');
+                        }else{
+                            submissions.addClass('hidden');
+                        }
+                break;
+                case "excluded":
+                    if(newVal){
+                        submissions.addClass('hidden');
+                    }else{
+                        submissions.removeClass('hidden');
+                    }
+                break;
+            }
         }
-
     });
 
     new TagFilter("#tagfilter");
-
-    //TODO add the event list widget
 
     $("#createeventbutton").click(function(){
        document.location.href="/eventform"
