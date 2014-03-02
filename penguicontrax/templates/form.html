@@ -8,10 +8,14 @@
 	{% if event is not none %}
 	<input type=hidden name=eventid value={{event.id}} />
 	{% endif %}
+	<div class="row">
 	<div class="section where" >
+  		<div class="col-md-4">
 		<div class="header">
 			WHERE
 		</div>
+  		</div> <!-- col-md-4 -->
+		<div class="col-md-4">
 		<div id="typechange" >
 			<input type=radio name=eventtype class=typelist value=noroomtype id=noroomtype style="display:none">
 			<label for="talkbtn">
@@ -45,6 +49,8 @@
 				</div>
 			</label>
 		</div>
+  		</div> <!-- col-md-4 -->
+		<div class="col-md-4">
 		<div class="divider"></div>
 		<div id="resources">
 			{% for resource in resources %}
@@ -89,20 +95,37 @@
 			<textarea name=facilityrequest id="facilityrequest" rows="1" cols="50" placeholder="other facility requests">{{event.facilityRequest | default('',true)}}</textarea> <br />
 		</div>
 	</div>
+  	</div> <!-- col-md-4 -->
+	</div> <!-- class="row" -->
+	<div class="row">
 	<div class="section when" >
+		<div class="col-md-4">
 		<div class="header">
 			WHEN
 		</div>
+  		</div> <!-- col-md-4 -->
+		<div class="col-md-4">
 		<div class="question" >
 				<select value="" class="timechange" tabindex="2" name=duration>
+					<!--
 					<option value="0" {{ event.duration | is_selected(0) }}>duration</option>
+					-->
 					<option value="1" {{ event.duration | is_selected(1) }}>50 mins</option>
 					<option value="2" {{ event.duration | is_selected(2) }}>1 hr 50 mins</option>
 					<option value="3" {{ event.duration | is_selected(3) }}>2 hrs 50 mins</option>
+					<option value="4" {{ event.duration | is_selected(4) }}>3 hrs 50 mins</option>
+					<!--
 					<option value="4" {{ event.duration | is_selected(4) }}>more</option>
+					-->
 					<option value="5" {{ event.duration | is_selected(5) }}>all weekend</option>
-				</select><br />
+				</select>
+					<br/>Includes up to 10 minutes of setup prior to the event.
+				<br />
+		<div class="question">
+                	<a id="moresetuplink" href="">more ...</a>
 		</div>
+  		</div> <!-- col-md-4 -->
+  		<div class="col-md-4">
 		<div id="setupandrepeat">
 			<div class="question" >
 				Setup time: 
@@ -126,28 +149,42 @@
 		<div class="question" id="othertime" >
 			<textarea name=timerequest id="timerequest" rows="1" cols="50" placeholder="other time requests">{{event.timeRequest | default('',true)}}</textarea> <br />
 		</div>
+  		</div> <!-- col-md-4 -->
 	</div>
+	</div> <!-- class="row" -->
+	<div class="row">
 	<div class="section who" id="who" >
+		<div class="col-md-4">
 		<div class="header">
 			WHO
 		</div>
+  		</div> <!-- col-md-4 -->
+		<div class="col-md-4">
 		Suggester name (That's you):
 		<input name=submitter id="submitter" type=text size="24" />
 		<input type=hidden name=firstname id="firstname" value="{{ event.firstname|default('',true) }}" />
 		<input type=hidden name=lastname id="lastname" value="{{ event.lastname|default('',true) }}" />
 		Suggester email:
 		<input name=email type=text size="24" placeholder="email@address.com" value="{{ event.email | default('',true) }}"/>
+  		</div> <!-- col-md-4 -->
+		<div class="col-md-4">
 		<span id="pptype" ></span>
 		<span id="pluralpptype" ></span>
 		<input name=person0 type=text size="24" onkeyup="countChar(this, 24)" class="pp" />
 		<button id="newperson"  class="pp" >+ someone else</button>
+  		</div> <!-- col-md-4 -->
 	</div>
-	<div class="section what" >
+	</div> <!-- class="row" -->
+	<div class="row">
+	<div class="section what">
+  		<div class="col-md-4">
 		<div class="header">
 			WHAT
 		</div>
+  		</div> <!-- col-md-4 -->
+  		<div class="col-md-4">
 		<div id="topics">
-			<div style="float:left">
+			<!-- <div style="float:left"> -->
 				Select all topics that apply:
 			</div>
 			{% for tag in tags %}
@@ -159,7 +196,9 @@
 			</div>
 			{% endfor %}
 		</div>
-		<div class="divider"></div>
+  		</div> <!-- col-md-4 -->
+  		<div class="col-md-4">
+		<!-- <div class="divider"></div> -->
 		<div id="trackselection">
 			<div style="float:left">
 				Choose one staffer to be your contact person:
@@ -175,7 +214,17 @@
 
 
 		</div>
-		<div class="divider"></div>
+		<!-- <div class="divider"></div> -->
+  		</div> <!-- col-md-4 -->
+	</div> <!-- class="row" -->
+	<div class="row">
+		<div class="section program_book">
+  		<div class="col-md-4">
+			<div class="header">
+				PROGRAM BOOK	
+			</div>
+		</div> <!-- col-md-4 -->
+  		<div class="col-md-4">
 		<div class="question">
 			The following information will appear to attendees on the website and in the schedule book, so please do not leave comments here for the convention committee:
 		</div>
@@ -183,11 +232,17 @@
 			Title: <br />
 			<textarea name=title id="title" rows="2" cols="36" onkeyup="countChar(this, 80)" />{{ event.title | default('',true) }}</textarea>
 		</div>
+		</div> <!-- col-md-4 -->
+  		<div class="col-md-4">
 		<div class="question" >
 			Descriptive blurb: <br />
 			<textarea name=description id="blurb" rows="8" cols="72" onkeyup="countChar(this, 700)">{{ event.description | default('',true) }}</textarea>
 		</div>
+		</div> <!-- col-md-4 -->
 	</div>
+	</div> <!-- class program_book -->
+	</div> <!-- class="row" -->
+	<div class="row">
 	<div class="section" >
 		<div class="header">
 			WHY NOT
@@ -213,9 +268,13 @@
 			</div>
 		{% endif %}
 	</div>
+	</div> <!-- class="row" -->
+	<div class="row">
 	<div class="section"><span style="color:#7f8c8d;">
 	Work in progress 5/30/2013.</span><br />
 	</div>
+	</div> <!-- class="row" -->
+	<div class="row">
 	</form>
 	<form action="/createtag" method=post >
 		<div>
@@ -223,7 +282,8 @@
 			<input type=submit value=submittag class="buttons" name=createtag id="createtag" />
 		</div>
 	</form>
-
+	</div> <!-- class="row" -->
+{% endblock %}
 {% endblock %}
 {% block page_script %}
 <script src="static/submissionform.js"></script>
