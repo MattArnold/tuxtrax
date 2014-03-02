@@ -25,18 +25,20 @@
                     <button class="bs-callout bs-callout-default rejected legend">Rejected</button>
                     {% endif %}
                 </div>
-                
+
 
             </div>
             <div class="row">
                 <div class="col-md-12 submissions-list">
-                    <div id="info"></div>
+                    <p class="info"></p>
                     <form action="/rsvp" method=post>
                         {% for submission in submissions %}
                         {{ macros.event_summary(submission, user) }}
                         {% endfor %}
                     </form>
-                    <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a href="form.html">create one</a>?</div>
+                    <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a
+                            href="form.html">create one</a>?
+                    </div>
                 </div>
             </div>
         </div>
@@ -48,26 +50,26 @@
 {{ super() }}
 <script type="text/javascript">
 
-    var tagList = [],view,data;
+    var tagList = [], view, data;
     var tags = "{% for tag in tags %}{{tag}},{% endfor%}".split(",");
 
-    tags = tags.slice(0,tags.length -1);
+    tags = tags.slice(0, tags.length - 1);
 
-    can.each(tags,function(tag){
+    can.each(tags, function (tag) {
         tagList.push({
-            name : tag,
+            name: tag,
             excluded: false,
-            included : true
+            included: true
         });
     });
 
     data = new can.Map({
-        infoText : "",
-        all : true,
-        tags : tagList
+        infoText: "",
+        all: true,
+        tags: tagList
     });
 
-    view = can.view("{{ url_for('static', filename='tagfilter.mustache') }}",data);
+    view = can.view("{{ url_for('static', filename='tagfilter.mustache') }}", data);
 
     //Handle collapsing and expanding the navigation
 
@@ -85,97 +87,166 @@
 
     var TagFilter = can.Control.extend({
 
-        init : function(){
+        init: function () {
             this.options.viewModel = data;
             this.element.html(view);
             this.on();
+            this.setInfoText();
         },
 
         //set the tag button state, updates the data object
-        ".btn click" : function(el){
+        ".btn click": function (el) {
             var tag = el.data('tag');
             var tagList = data.tags;
             var all = data.attr('all');
 
             //look up the tag object
-            var t = _.find(tagList,{name : tag});
+            var t = _.find(tagList, {name: tag});
 
             //user clicked a tag button
-            if(t){
-                can.batch.start();
+            if (t) {
+
                 //if all is true, reset everything to false and just pick this one thing
-                if(all){
-                    data.attr('all',false);
-                    _.forEach(tagList,function(tag){
-                        tag.attr('included',false);
-                        tag.attr('excluded',false);
-                    });
+                if (all) {
+                    data.attr('all', false);
                 }
 
-                if(t.attr('included')){
-                    t.attr('included',false);
-                    t.attr('excluded',true);
-                }else if(t.attr('excluded')){
-                    t.attr('excluded',false);
-                    t.attr('included',false);
-                }else{
-                    t.attr('included',true);
+                can.batch.start();
+                //exclude if included
+                if (t.attr('included')) {
+                    console.debug(t.name, 'included, set to excluded')
+                    t.attr('included', false);
+                    t.attr('excluded', true);
+                    //if there is nothing included, include everything that isn't explicitly excluded
+                    if (!_.any(tagList, "included")) {
+                        _.forEach(tagList, function (tag) {
+                            if (!tag.attr('excluded') && !(tag.attr('name') === t.attr('name'))) {
+                                tag.attr('included', true);
+                            }
+                        });
+                    }
+                } else if (t.attr('excluded')) {
+                    console.debug(t.name, 'excluded, set to ignore')
+                    t.attr('excluded', false);
+                    t.attr('included', false);
+                } else {
+                    console.debug(t.name, 'neither included or excluded, set to included')
+                    //include if not excluded or included already
+                    t.attr('included', true);
+                }
+
+                //if nothing is now included or excluded, reselect all
+                if (!_.any(tagList, "included") && !_.any(tagList, "excluded")) {
+                    data.attr('all', true);
+                }
+
+                //if everything is now included, reselect all
+                if (_.all(tagList, "included")) {
+                    data.attr('all', true);
                 }
 
                 can.batch.stop();
-            }else{
-                //all
-                data.attr('all',!all);
 
+            } else {
+                //all
+                data.attr('all', !all);
+            }
+
+            if (!data.attr('all')) {
+                var included = _.pluck(_.filter(tagList, "included"), "name");
+                var excluded = _.pluck(_.filter(tagList, "excluded"), "name");
+                this.setInfoText(included,excluded);
+            }
+        },
+
+        "{viewModel} change": function (data, type, attr, action, newVal) {
+            var tagList = data.tags;
+            if (attr === "all") {
+                this.setInfoText();
                 can.batch.start();
-                _.forEach(tagList,function(tagBtn){
+                _.forEach(tagList, function (tagBtn) {
                     //toggle all state
-                    tagBtn.attr('excluded',false);
-                    tagBtn.attr('included',data.attr('all'));
+                    tagBtn.attr('excluded', false);
+                    tagBtn.attr('included', newVal);
                 });
                 can.batch.stop();
             }
-
-            var included = _.filter(tagList,"included");
-            var excluded = _.filter(tagList,"excluded");
-
-            //TODO generate the info string
-
         },
 
         //handle taglist changes and update html in page
         //TODO fix excluded
-        "{viewModel.tags} change" : function(tagsList,type,ev,action,newVal){
-            var event = ev.split('.')[1];
-            var idx = ev.split('.')[0];
+        "{viewModel} all change": function (tagsList, type, attr, action, newVal) {
+            var event = attr.split('.')[1];
+            var idx = attr.split('.')[0];
             var tag = tagsList.attr(idx);
 
-            var submissions = $('.submission[data-tags="'+tag.name+'"]');
+            console.debug(attr, tag.name);
 
-            switch(event){
-                case "included":
-                        if(newVal){
-                            submissions.removeClass('hidden');
-                        }else{
-                            submissions.addClass('hidden');
-                        }
-                break;
-                case "excluded":
-                    if(newVal){
-                        submissions.addClass('hidden');
+            /*var submissions = $('.submission[data-tags="'+tag.name+'"]');
+
+             switch(event){
+             case "included":
+             if(newVal){
+             submissions.removeClass('hidden');
+             }else{
+             submissions.addClass('hidden');
+             }
+             break;
+             case "excluded":
+             if(newVal){
+             submissions.addClass('hidden');
+             }else{
+             submissions.removeClass('hidden');
+             }
+             break;
+             }*/
+        },
+
+        setInfoText: function (included, excluded) {
+            var $info = $('.submissions-list .info');
+            var copy = "All submissions shown. Filter by tags using the widget on the left.";
+            var includePrefix = " Showing ";
+            var includeSuffix = ".";
+            var excludePrefix = " Excluding ";
+            var excludeSuffix = ".";
+
+            function getTagString(arr){
+                var str = arr.join(',');
+                str = str.replace(/,/,", ");
+
+                if(arr.length > 1){
+                    if(arr.length == 2){
+                        str = str.replace(/,/," and");
                     }else{
-                        submissions.removeClass('hidden');
+                        str = str.replace(/,(?=[^,]*$)/,' and ');
                     }
-                break;
+                }
+
+                return str;
+
             }
+
+            if(!_.isEmpty(included) || !_.isEmpty(excluded)){
+                copy = "";
+                if(!_.isEmpty(included)){
+
+                    copy += includePrefix + getTagString(included) + includeSuffix;
+                }
+
+                if(!_.isEmpty(excluded)){
+                    copy += excludePrefix + getTagString(excluded) + excludeSuffix;
+                }
+            }
+
+            $info.text(copy);
         }
     });
 
     new TagFilter("#tagfilter");
 
-    $("#createeventbutton").click(function(){
-       document.location.href="/eventform"
+    $("#createeventbutton").click(function () {
+        document.location.href = "/eventform"
     });
 
-    </script>
+</script>
 {% endblock %}

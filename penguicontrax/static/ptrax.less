@@ -5,15 +5,30 @@
 @rejectedlight:#f2dede;
 @rejecteddark:#c04a48;
 
+@font-face {
+  font-family: 'Droid Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Droid Sans'), local('DroidSans'), url(DroidSans.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Droid Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Droid Sans Bold'), local('DroidSans-Bold'), url(DroidSansBold.woff) format('woff');
+}
+
 @import (less) "bootstrap/css/bootstrap.css";
 @import (less) "Flat-UI-master/less/flat-ui.less";
-@font-face {
-  font-family: 'Glyphicons Halflings';
-  src: url('bootstrap/fonts/glyphicons-halflings-regular.eot');
-  src: url('bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'), url('bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+@import (less) "font-awesome-4.0.3/less/font-awesome.less";
+
+//global overrides
+body {
+  font-family: "Droid Sans";
 }
-//@import (less) "bootstrap/css/bootstrap-theme.css";
-//@import (less) "mystyles2.css";
+
+//individual less files for components
 @import "submissions";
 
 .header {
