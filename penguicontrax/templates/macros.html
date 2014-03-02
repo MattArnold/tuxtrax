@@ -11,6 +11,7 @@
 
 {% macro event_summary(submission, user) -%}
         <div class="submission suggested row
+         {% for tag in submission.tags %}{{ tag }} {% endfor %}
             bs-callout
 			{% if submission.followUpState == 1 %}
 			bs-callout-warning

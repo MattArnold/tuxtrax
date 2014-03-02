@@ -4,7 +4,7 @@ from flask.ext.cache import Cache
 import xml.etree.ElementTree as ET
 import json
 app = Flask(__name__)
-db =  SQLAlchemy(app);      
+db =  SQLAlchemy(app)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 def dump_table_xml(elements, table, parent_node, collection_name, element_name):
