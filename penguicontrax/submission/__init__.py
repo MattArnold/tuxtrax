@@ -224,6 +224,6 @@ def checked_if_tagged(submission, tag):
     return ''
 @app.template_filter()
 def checked_if_tracked(submission, trackname):
-    if submission and submission.track.name == trackname:
+    if submission and submission.track and submission.track.name == trackname:
         return markup('checked')
     return ''
