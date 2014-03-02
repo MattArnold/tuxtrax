@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block head %}
 	{{ super() }}
-	<script src="static/jquery-1.9.1.min.js"></script>
 {% endblock %}
 {% block body %}
 	{{ super() }}
@@ -224,5 +223,8 @@
 			<input type=submit value=submittag class="buttons" name=createtag id="createtag" />
 		</div>
 	</form>
-	<script src="static/submissionform.js"></script>
+
+{% endblock %}
+{% block page_script %}
+<script src="static/submissionform.js"></script>
 {% endblock %}

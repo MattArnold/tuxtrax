@@ -44,6 +44,8 @@
     </div>
 	<div id="oops">Oops! There are no events with that tag. Maybe you could <a href="form.html" >create one</a>?</div>
 </div>
+{% endblock %}
+{% block page_script %}
     <script type="text/javascript">
 
         //Handle collapsing and expanding the navigation
@@ -61,9 +63,8 @@
         });
 
         // Handle clicking on tags.
-
-        var included = new Array();
-        var excluded = new Array();
+        var included = [];
+        var excluded = [];
 
         $('.tag').click(function() {
 

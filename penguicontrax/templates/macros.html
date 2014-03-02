@@ -30,9 +30,9 @@
 
                     {% if user is not none %}
                         {% if submission in user.rsvped_to %}
-                        <span class="glyphicon glyphicon-star rsvp checked"></span>
-                        {% elif user.points > 0 or user.staff == 1 %}
                         <span class="glyphicon glyphicon-star rsvp"></span>
+                        {% elif user.points > 0 or user.staff == 1 %}
+                        <span class="glyphicon glyphicon-star-empty rsvp"></span>
                         {% endif %}
                     {% endif %}
 
