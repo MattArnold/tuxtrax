@@ -7,7 +7,6 @@
     "grunt": "~0.4.2",
     "grunt-contrib-less": "~0.10.0",
     "grunt-contrib-watch": "~0.5.3",
-    "bower": "~1.2.8",
     "steal": "git://github.com/bitovi/steal.git#less-node"
   },
   "scripts": {

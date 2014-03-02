@@ -1,0 +1,9 @@
+<div class="btn-group">
+    <button class="btn btn-default btn-xs {{#all}}active{{/all}}">all</button>
+</div>
+<div class="btn-group">
+    {{#tags}}
+        <button class="btn btn-default btn-xs {{#included}}active{{/included}} {{#excluded}}excluded{{/excluded}}"
+                data-tag="{{name}}">{{name}}</button>
+    {{/tags}}
+</div>

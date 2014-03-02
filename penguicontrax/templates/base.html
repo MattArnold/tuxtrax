@@ -44,8 +44,9 @@
     {% block body %}
     {% endblock %}
 </div>
-<script src="static/jquery-1.9.1.min.js"></script>
-<script src="static/can.jquery.js"></script>
+<script src="{{ url_for('static', filename='jquery-1.9.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='lodash.min.js') }}"></script>
+<script src="{{ url_for('static', filename='can.jquery.js') }}"></script>
 {% block page_script %}{% endblock %}
 </body>
 </html>
