@@ -13,3 +13,4 @@ python-openid==2.2.5
 Flask-OAuth==0.12
 Flask-Cache==0.12
 Flask-RESTful==0.2.11
+nose==1.3.0
