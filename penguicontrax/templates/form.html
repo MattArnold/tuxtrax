@@ -102,7 +102,7 @@
             <div class="col-md-2">
             </div>
             <div class="col-md-4">
-				Setup time: 
+				Setup time:
 				<select value="" tabindex="2" name=setuptime class="select-block">
 					<option value="0" {{ event.setupTime | is_selected(0) }}>No</option>
 					<option value="1" {{ event.setupTime | is_selected(1) }}>1 hour</option>
@@ -133,7 +133,7 @@
 		<div class="header">
 			WHO
 		</div>
-		Suggester 
+		Suggester
 		{% if event is none %}
 			<input type=hidden name=submitter_id value={{user.id}} />{{ macros.user_link(user) }}
 		{% else %}
@@ -143,7 +143,7 @@
 		<span id="pluralpptype" ></span>
 		{% if event is not none %}
 			{% for user_presenter in event.userPresenters %}
-				{{ macros.user_link(user_presenter) }} 
+				{{ macros.user_link(user_presenter) }}
 			{% endfor %}
 			{% for person_presenter in event.personPresenters %}
 				{{ macros.person_link(person_presenter) }}
@@ -200,7 +200,7 @@
 		<div class="section program_book">
   		<div class="col-md-4">
 			<div class="header">
-				WHAT	
+				WHAT
 			</div>
 		</div> <!-- col-md-4 -->
   		<div class="col-md-4">
@@ -235,10 +235,10 @@
 				<div class="question">
 					<span style="color:#7f8c8d;">Submission status (staff only):</span>
 					<select value="" tabindex="2" name=followupstate class="select-block">
-						<option value="0" {{ event | is_selected(0) }}>Suggested</option>
-						<option value="1" {{ event | is_selected(1) }}>Followed up</option>
-						<option value="2" {{ event | is_selected(2) }}>Accepted</option>
-						<option value="3" {{ event | is_selected(3) }}>Rejected</option>
+						<option value="0" {{ event.followUpState | is_selected(0) }}>Suggested</option>
+						<option value="1" {{ event.followUpState | is_selected(1) }}>Followed up</option>
+						<option value="2" {{ event.followUpState | is_selected(2) }}>Accepted</option>
+						<option value="3" {{ event.followUpState | is_selected(3) }}>Rejected</option>
 					</select>
 				</div>
 			{% endif %}
