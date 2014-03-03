@@ -38,7 +38,7 @@ from submission import Submission, Tag
 from user import Login
 import os, sqlite3, import2013schedule
 from constants import constants
-import datetime
+import datetime, audit
 from event import Events, Rooms, RoomGroups, Convention
 
 import api

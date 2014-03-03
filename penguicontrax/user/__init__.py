@@ -23,6 +23,7 @@ class User(db.Model):
     special_tag = db.Column(db.String())
     public_rsvps = db.Column(db.Boolean())
     superuser = db.Column(db.Boolean())
+    creation_ip = db.Column(db.String())
     
     def __init__(self):
         self.points = 5
@@ -48,6 +49,15 @@ class Person(db.Model):
     
     def __repr__(self):
         return self.name
+    
+class UserLoginIP(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ip = db.Column(db.String())
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    logged_in_as = db.relationship('User', backref=db.backref('logged_in_from_ip', passive_deletes=True))
+    
+    def __repr__(self):
+        return self.ip
 
 @app.before_request
 def lookup_current_user():
@@ -73,11 +83,15 @@ def user_profile_by_id():
 def user_profile_by_account_name(user):
     return user_profile(User.query.filter_by(account_name=user).first())
 
+from penguicontrax import audit
+from copy import copy
+
 @app.route('/updateuser', methods=['POST'])
 def update_user():
     if g.user is None:
         return redirect('/')
     view_user = User.query.filter_by(id=int(request.form['user_id'])).first()
+    old_view_user = copy(view_user)
     if view_user is None:
         return redirect('/')
     if view_user == g.user or g.user.staff == True or g.user.superuser == True:
@@ -90,6 +104,7 @@ def update_user():
             view_user.special_tag = None
         db.session.add(view_user)
         db.session.commit()
+        audit.audit_change(User.__table__, g.user, old_view_user, view_user)
         return redirect('/' + view_user.account_name)
     return redirect('/')
 

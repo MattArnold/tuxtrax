@@ -1,5 +1,5 @@
 {% macro user_text(user) -%}
-	<span>{{ user }}{% if user.special_tag is not none %} <span class="userspecial">{{ user.special_tag }}</span>{% endif %}</span>
+	<span>{{ user.name }}{% if user.special_tag is not none %} <span class="userspecial">{{ user.special_tag }}</span>{% endif %}</span>
 {%- endmacro %}
 
 {% macro user_link(user) -%}

@@ -35,6 +35,10 @@
 							<input type=submit value="Submit" class="buttons" />
 						</form>
 					{% endif %}
+					{% if user is not none and user.superuser %}
+						Creation IP: {{ user.creation_ip }}
+						Login IPs: {% for ip in user.logged_in_from_ip %}{{ ip }} {% endfor %}
+					{% endif %}
 				</div>
 			</div>
 		</div>
