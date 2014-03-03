@@ -9,13 +9,12 @@ First, an event submission/feedback website. Later there will be a site to assig
 
 ## Installation
 
-Install prerequisites
+### Basic prerequisites
 
 ```sh
 $ sudo apt-get install git python python-dev libpq-dev python-pip
 $ sudo pip install virtualenv
 ```
-
 
 Clone the repository and create/activate a new virtualenv.
 
@@ -37,6 +36,48 @@ Now you can run the app locally with:
 ```sh
 $ python runserver.py
 ```
+
+### Deply to Heroku
+
+Install the Heroku toolbelt
+
+```sh
+$ wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+```
+
+You will need to add your SSH key to the Heroku website. Copy the contents of ~/.ssh/id_rsa.pub to the SSH Keys section of https://dashboard.heroku.com/account. If you don't have an SSH key, you can generate one with:
+
+```sh
+$ ssh-keygen -t rsa
+```
+
+Log in to Heroku
+
+```sh
+$ heroku login
+```
+
+Add Heroku as a remote to your repo
+
+```sh
+$ heroku git:remote -a gentle-tor-1515
+````
+
+To deploy, pull and push to Heroku
+
+```sh
+$ git pull heroku master
+$ git push heroku master
+```
+
+If you've changed the database schema you will need to empty the databse and reset the web app.
+
+```sh
+$ heroku pg:reset DATABASE
+$ heroku restart
+```
+
+### Optional: Use PostgreSQL instead of SQLite
 
 penguicon-trax is deployed on Heroku, a cloud application platform. Heroku uses PostgreSQL as its database engine. By default, penguicon-trax uses SQLite as its database engine when running locally. For the most part this is all well and good but there are some subtle differences between the two engines. If you're having problems when deployed to Heroku, you can run a local PostgreSQL server and have penguicon-trax connect to it to better simulate the production environment.
 
