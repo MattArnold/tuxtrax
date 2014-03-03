@@ -54,6 +54,7 @@ class Events(db.Model):
     personPresenters = db.relationship('Person', secondary=person_event, backref=db.backref('at_event'), passive_deletes=True)
     start_dt = db.Column(db.DateTime)
     duration = db.Column(db.Integer)    # The number of intervals.
+    convention_id = db.Column(db.Integer, db.ForeignKey('convention.id'))
 
     def __init__(self, event_name):
         self.event_name = event_name
@@ -67,7 +68,8 @@ class Rooms(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     room_name = db.Column(db.String(50))
     room_groups_id = db.Column(db.Integer, db.ForeignKey('room_groups.id'))
-    rooms_groups = db.relationship('RoomGroups', backref='room')
+    rooms_groups = db.relationship('RoomGroups', backref='rooms')
+    convention_id = db.Column(db.Integer, db.ForeignKey('convention.id'))
 
     def __init__(self, room_name):
         self.room_name = room_name
@@ -96,6 +98,7 @@ class Convention(db.Model):
     start_dt = db.Column(db.DateTime)
     end_dt = db.Column(db.DateTime)
     default_duration = db.Column(db.Integer)
+    url = db.Column(db.String())
 
     def __init__(self, convention_name):
         self.convention_name = convention_name
@@ -120,7 +123,7 @@ def indent(elem, level=0):
             elem.tail = i
 
 
-def create_schedule_XML():
+def create_schedule_XML(convention_id):
     """
     Exports the events in XML format for the schedule book.
 
@@ -129,7 +132,7 @@ def create_schedule_XML():
     root = ET.Element('events')
     root.attrib['xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance'
     document_elem = ET.SubElement(root, 'document')
-    for event in Events.query.all():
+    for event in Events.query.filter_by(convention_id=convention_id).all():
         event_elem = ET.SubElement(document_elem, 'event')
         title_elem = ET.SubElement(event_elem, 'title')
         title_elem.text = event.title
@@ -137,9 +140,13 @@ def create_schedule_XML():
     return ET.tostring(root, encoding='utf-8')
 
 
-@app.route('/getschedule', methods=['GET'])
-def get_schedule():
-    schedule_text = create_schedule_XML()
+@app.route('/convention/<convention_url>/schedulexml', methods=['GET'])
+def get_schedule(convention_url):
+    convention = Convention.query.fitler_by(url=convention_url).first()
+    if convention is None:
+        return redirect('/')
+    
+    schedule_text = create_schedule_XML(convention.id)
 
     # Return XML prolog and XML schedule.
     return Response(
@@ -149,3 +156,10 @@ def get_schedule():
         headers={'Content-Disposition':
                  'attachment;filename=penguicon.schedule.xml'}
     )
+
+@app.route('/conventions', methods=['GET'])
+def convention_list():
+    if g.user is None or not g.user.staff:
+        return redirect('/')
+    return render_template('conventions.html', user=g.user, conventions=Convention.query.all())
+    
