@@ -37,7 +37,9 @@ Now you can run the app locally with:
 $ python runserver.py
 ```
 
-### Deply to Heroku
+### Optional: Deply to Heroku
+
+You will need to be added as a collaborator on the Heroku app to be able to push public changes. 
 
 Install the Heroku toolbelt
 
