@@ -45,7 +45,7 @@
 	</div>
 	<form action="/rsvp" method=post >
 	{% for submission in view_user.rsvped_to %}
-		{% if view_user == user %}
+		{% if view_user == user or (user is not none and user.staff) %}
 			{{ macros.event_summary(submission, user) }}
 		{% else %}
 			{{ macros.event_summary(submission, none) }}
