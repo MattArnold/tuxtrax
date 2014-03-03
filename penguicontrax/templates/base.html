@@ -33,9 +33,11 @@
                     <a href="/login?provider=google"><img src="static/google-16x16.png" hspace="5px"></a>
                     <a href="/login?provider=yahoo"><img src="static/yahoo-16x16.png" hspace="5px"></a>
                     {% else %}
-                    {{ macros.user_link(user) }} <a href="/logs">Logs</a>{% if user.superuser %} <a href="/users">Users</a>{% endif %}
+                    {{ macros.user_link(user) }} 
                     {% if user.staff == 0 %}
                     {{ user.points }} RSVP points left
+					{% else %}
+					<a href="/logs">Logs</a> <a href="/users">Users</a>
                     {% endif %}
                     <input class="btn btn-primary btn-xs" type=submit value="Logout">
                     {% endif %}

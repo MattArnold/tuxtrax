@@ -110,6 +110,6 @@ def update_user():
 
 @app.route('/users')
 def user_list():
-    if g.user is None or not g.user.superuser:
+    if g.user is None or not g.user.staff:
         return redirect('/')
     return render_template('user_list.html', user=g.user, users=User.query.all())
