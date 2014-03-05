@@ -1,0 +1,5 @@
+{% extends "convention_base.html" %}
+{% block title %}{% if convention is not none %}{{ convention.name }} Schedule{% else %}Convention schedule{% endif %}{% endblock %}
+{% block body %}
+	{{ super() }}
+{% endblock %}

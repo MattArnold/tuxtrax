@@ -1,7 +1,7 @@
 from flask import g, request, session, render_template, redirect, Response, Markup
 from .. import app, db
 import xml.etree.ElementTree as ET
-
+import datetime
 
 # Associate multiple rooms to multiple events.
 room_events = db.Table('room_events',
@@ -55,6 +55,7 @@ class Events(db.Model):
     start_dt = db.Column(db.DateTime)
     duration = db.Column(db.Integer)    # The number of intervals.
     convention_id = db.Column(db.Integer, db.ForeignKey('convention.id'))
+    convention = db.relationship('Convention')
 
     def __init__(self, event_name):
         self.event_name = event_name
@@ -70,6 +71,7 @@ class Rooms(db.Model):
     room_groups_id = db.Column(db.Integer, db.ForeignKey('room_groups.id'))
     rooms_groups = db.relationship('RoomGroups', backref='rooms')
     convention_id = db.Column(db.Integer, db.ForeignKey('convention.id'))
+    convention = db.relationship('Convention')
 
     def __init__(self, room_name):
         self.room_name = room_name
@@ -93,18 +95,14 @@ class RoomGroups(db.Model):
 class Convention(db.Model):
     __tablename__ = 'convention'
     id = db.Column(db.Integer, primary_key=True)
-    convention_name = db.Column(db.String(50))
+    name = db.Column(db.String(50))
     description = db.Column(db.Text)
     start_dt = db.Column(db.DateTime)
     end_dt = db.Column(db.DateTime)
-    default_duration = db.Column(db.Integer)
     url = db.Column(db.String())
 
-    def __init__(self, convention_name):
-        self.convention_name = convention_name
-
     def __repr__(self):
-        return 'Convention: %' % self.convention_name
+        return self.name
 
 
 def indent(elem, level=0):
@@ -139,13 +137,7 @@ def create_schedule_XML(convention_id):
     indent(root)
     return ET.tostring(root, encoding='utf-8')
 
-
-@app.route('/convention/<convention_url>/schedulexml', methods=['GET'])
-def get_schedule(convention_url):
-    convention = Convention.query.fitler_by(url=convention_url).first()
-    if convention is None:
-        return redirect('/')
-    
+def get_schedule(convention):
     schedule_text = create_schedule_XML(convention.id)
 
     # Return XML prolog and XML schedule.
@@ -157,6 +149,89 @@ def get_schedule(convention_url):
                  'attachment;filename=penguicon.schedule.xml'}
     )
 
+@app.route('/convention/<convention_url>/schedulexml', methods=['GET'])
+def get_schedule_url(convention_url):
+    convention = Convention.query.fitler_by(url=convention_url).first()
+    if convention is None:
+        return redirect('/')
+    return get_schedule(convention)
+
+@app.route('/conventionschedulexml', methods=['GET'])
+def get_schedule_args():
+    convention = Convention.query.filter_by(id=request.args['id']).first
+    if convention is None:
+        return redirect('/')
+    return get_schedule(convention)
+
+def edit_convention_properties(convention):
+    if (g.user is None) or (not g.user.staff):
+        return redirect('/')
+    if not convention is None:
+        d = dict(convention.__dict__)
+        d['start_date'] = u'{:%Y-%m-%d}'.format(convention.start_dt)
+        d['start_time'] = u'{:%H:%M}'.format(convention.start_dt)
+        d['end_date'] = u'{:%Y-%m-%d}'.format(convention.end_dt)
+        d['end_time'] = u'{:%H:%M:%S}'.format(convention.end_dt)
+        convention = d
+    return render_template('/convention_properties.html', user=g.user, convention=convention)
+
+@app.route('/conventionproperties')
+def convention_properties_args():
+    return edit_convention_properties(Convention.query.filter_by(id=request.args['id']).first() if 'id' in request.args else None) 
+
+@app.route('/convention/<convention_url>/properties', methods=['GET'])
+def convention_properties_url(convention_url):
+    return edit_convention_properties(Convention.query.filter_by(url=convention_url).first())
+
+from penguicontrax import audit
+import copy
+
+@app.route('/conventionupdate', methods=['POST'])
+def convention_update():
+    if g.user is None or not g.user.staff:
+        return redirect('/')
+    if 'id' in request.form:
+        convention = Convention.query.filter_by(id=request.form['id'])
+        old_convention = copy.copy(convention)
+    else:
+        convention = Convention()
+        old_convention = Convention()
+    if convention is None:
+        return redirect('/')
+    convention.name = request.form['name']
+    convention.url = request.form['url']
+    convention.description = request.form['description']
+    start_date = request.form['start_date'].split('-')
+    start_time = request.form['start_time'].split(':')
+    end_date = request.form['end_date'].split('-')
+    end_time = request.form['end_time'].split(':')
+    convention.start_dt = datetime.datetime(year=int(start_date[0]), month=int(start_date[1]), day=int(start_date[2]), hour=int(start_time[0]), minute=int(start_time[1]))
+    convention.end_dt = datetime.datetime(year=int(end_date[0]), month=int(end_date[1]), day=int(end_date[2]), hour=int(end_time[0]), minute=int(end_time[1]))
+    db.session.add(convention)
+    db.session.commit()
+    audit.audit_change(Convention.__table__, g.user, old_convention, convention)
+    return redirect('/convention/%s/' % convention.url)
+
+def convention_schedule(convention):
+    return render_template('convention_schedule.html', user=g.user, convention=convention)
+
+@app.route('/convention/<convention_url>/schedule')
+def convention_schedule_url(convention_url):
+    convention = Convention.query.filter_by(url=convention_url).first()
+    return convention_schedule(convention) if not convention is None else redirect('/')
+
+@app.route('/conventionschedule')
+def convention_schedule_args():
+    convention = Convention.query.filter_by(id=request.args['id']).first() if 'id' in request.args else None
+    return convention_schedule(convention) if not convention is None else redirect('/')
+
+@app.route('/convention/<convention_url>/')
+def convention_index_url(convention_url):
+   return convention_schedule_url(convention_url)
+@app.route('/convention')
+def convention_index_args():
+    return convention_schedule_args()
+    
 @app.route('/conventions', methods=['GET'])
 def convention_list():
     if g.user is None or not g.user.staff:

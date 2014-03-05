@@ -3,11 +3,11 @@
 {% block head %}{{ super() }}{% endblock %}
 {% block body %}
 	<div class="row">
-		<a href="/addconvention"><i class="fa fa-plus"></i>Add a convention</a>
+		<a href="/conventionproperties"><i class="fa fa-plus"></i> Add a convention</a>
 	</div>
-	{% for convention in convents %}
+	{% for convention in conventions %}
 		<div class="row">
 			<a href="/convention/{{convention.url}}/properties">{{ convention.name }}</a>
 		<div>
-	{% endofr %}
+	{% endfor %}
 {% endblock %}
