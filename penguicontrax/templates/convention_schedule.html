@@ -2,4 +2,39 @@
 {% block title %}{% if convention is not none %}{{ convention.name }} Schedule{% else %}Convention schedule{% endif %}{% endblock %}
 {% block body %}
 	{{ super() }}
+	{% macro conevent_summary(event) -%}
+		<div class="submission row bs-callout-default bs-callout suggested">
+			<div class="row">
+				{{ event.title }} 
+				{% for rsvp in event.rsvped_by %}
+					{% if rsvp.public_rsvps %}
+						{{ macros.user_link(rsvp) }}
+					{% endif %}
+                {% endfor %}
+			</div>
+		</div>
+	{%- endmacro %}
+	
+	{% for event in unscheduled_events %}
+		{{ conevent_summary(event) }}
+	{% endfor %}
+	
+	{% for hour in scheduled_events %}
+		<div class="row">
+			<div class="col-md-1">
+				{{ hour.time_tag }}
+			</div>
+		</div>
+		{% for room_name, room_events in hour.rooms.iteritems() %}
+			<div class="row">
+				<div class="col-md-2 text-right">{{ room_name }}</div>
+			{% for event in room_events %}
+				{% if not loop.first %}
+					<div class="row"><div class="col-md-2"> </div>
+				{% endif %}
+				<div class="col-md-10">{{ conevent_summary(event) }}</div>
+				</div>
+			{% endfor %}
+		{% endfor %}
+	{% endfor %}
 {% endblock %}

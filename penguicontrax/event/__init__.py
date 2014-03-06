@@ -57,9 +57,6 @@ class Events(db.Model):
     convention_id = db.Column(db.Integer, db.ForeignKey('convention.id'))
     convention = db.relationship('Convention')
 
-    def __init__(self, event_name):
-        self.event_name = event_name
-
     def __repr__(self):
         return 'Event: %' % self.event_name
 
@@ -71,10 +68,7 @@ class Rooms(db.Model):
     room_groups_id = db.Column(db.Integer, db.ForeignKey('room_groups.id'))
     rooms_groups = db.relationship('RoomGroups', backref='rooms')
     convention_id = db.Column(db.Integer, db.ForeignKey('convention.id'))
-    convention = db.relationship('Convention')
-
-    def __init__(self, room_name):
-        self.room_name = room_name
+    convention = db.relationship('Convention', backref='rooms')
 
     def __repr__(self):
         return 'Room: %' % self.room_name
@@ -103,7 +97,6 @@ class Convention(db.Model):
 
     def __repr__(self):
         return self.name
-
 
 def indent(elem, level=0):
     i = "\n" + level*"  "
@@ -213,7 +206,33 @@ def convention_update():
     return redirect('/convention/%s/' % convention.url)
 
 def convention_schedule(convention):
-    return render_template('convention_schedule.html', user=g.user, convention=convention)
+    if convention is None:
+        return redirect('/')
+    unscheduled_events = Events.query.filter(Events.convention_id == convention.id, ((Events.start_dt == None) | (Events.rooms == None))).all()
+    all_scheduled_events = Events.query.filter(Events.convention_id == convention.id, Events.start_dt != None, Events.rooms != None).all()
+    from operator import attrgetter
+    all_scheduled_events.sort(key = attrgetter('start_dt'))
+    scheduled_events = []
+    cutoff_dt = None
+    dow = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    this_hour = None
+    for event in all_scheduled_events:
+        if cutoff_dt == None:
+            this_hour = {}
+            cutoff_dt = convention.start_dt + datetime.timedelta(hours=1)
+            this_hour['time_tag'] = '%s, %s' % (dow[convention.start_dt.weekday()], ('{:%I %p}'.format(convention.start_dt)).lstrip('0'))
+            this_hour['rooms'] = dict()
+            scheduled_events.append(this_hour)
+        elif event.start_dt >= cutoff_dt:
+            this_hour = {}
+            this_hour['time_tag'] = '%s, %s' % (dow[cutoff_dt.weekday()], ('{:%I %p}'.format(cutoff_dt).lstrip('0'))) if cutoff_dt.hour == 0 else ('{:%I %p}'.format(cutoff_dt).lstrip('0'))
+            this_hour['rooms'] = {}
+            cutoff_dt = cutoff_dt + datetime.timedelta(hours=1)
+            scheduled_events.append(this_hour)
+        if not event.rooms[0].room_name in this_hour['rooms']:
+            this_hour['rooms'][event.rooms[0].room_name] = []
+        this_hour['rooms'][event.rooms[0].room_name].append(event)
+    return render_template('convention_schedule.html', user=g.user, convention=convention, scheduled_events = scheduled_events, unscheduled_events = unscheduled_events)
 
 @app.route('/convention/<convention_url>/schedule')
 def convention_schedule_url(convention_url):
@@ -231,6 +250,25 @@ def convention_index_url(convention_url):
 @app.route('/convention')
 def convention_index_args():
     return convention_schedule_args()
+
+def convention_rooms(convention):
+    if g.user is None or not g.user.staff or convention is None:
+        return redirect('/')
+    return render_template('convention_rooms.html', user=g.user, convention=convention)
+
+@app.route('/convention/<convention_url>/rooms')
+def convention_rooms_url(convention_url):
+    return convention_rooms(Convention.query.filter_by(url=convention_url).first())
+
+def convention_editroom(convention, room):
+    if g.user is None or not g.user.staff or convention is None:
+        return redirect('/')
+    return render_template('convention_editroom.html', user=g.user, convention=convention, room = room)
+
+@app.route('/convention/<convention_url>/editroom')
+def convention_editroom_url(convention_url):
+    return convention_editroom(Convention.query.filter_by(url=convention_url).first(),\
+        Rooms.query.filter_by(id=request.args['id']).first() if 'id' in request.args else None)
     
 @app.route('/conventions', methods=['GET'])
 def convention_list():

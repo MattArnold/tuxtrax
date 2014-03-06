@@ -1,0 +1,22 @@
+{% extends "convention_base.html" %}
+{% block title %}{% if convention is not none %}{{ convention.name }}{% else %}Convention{% endif %} rooms{% endblock %}
+{% block body %}
+	{{ super() }}
+	{% for room in convention.rooms %}
+		{% autoescape false %}{{ loop.cycle('','<div class="row">') }}{% endautoescape %}
+			<div class="col-md-6">
+				<a href="/convention/{{ convention.url }}/editroom?id={{ room.id }}">{{ room.room_name }}</a>
+			</div>
+		{% autoescape false %}{{ loop.cycle('','</div>') }}{% endautoescape %}
+	{% endfor %}
+	{% if convention.rooms | length % 2 == 0 %}
+		<div class="row">
+	{% endif %}
+			<div class="col-md-6">
+				<a href="/convention/{{ convention.url }}/editroom"><i class="fa fa-plus"></i> Add a room</a>
+			</div>
+	{% if convention.rooms | length % 2 == 0 %}
+		<div class="col-md-6" />
+		</div>
+	{% endif %}
+{% endblock %}

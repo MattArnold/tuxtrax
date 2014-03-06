@@ -2,29 +2,63 @@ import sqlite3, os
 import xml.etree.ElementTree as ET
 import penguicontrax as penguicontrax
 from submission import Submission, Tag, Track, Resource, normalize_tag_name
-from user import Person
+from user import Person, User
+from event import Convention, Rooms, Events
+import datetime, random
+from user.Login import generate_account_name, gravatar_image_update
 
-def import_old():
+def import_old(as_convention, random_rsvp_users = 0):
+    
+    if as_convention == True:
+        convention = Convention()
+        convention.name = 'Penguicon 2013'
+        convention.url = '2013'
+        convention.description = 'Penguicon 2013 schedule imported from schedule2013.html'
+        convention.start_dt = datetime.datetime(year=2013, month=4, day=26, hour=16)
+        convention.end_dt = datetime.datetime(year=2013, month=4, day=28, hour=15)
+        penguicontrax.db.session.add(convention)
+        current_day = convention.start_dt.date()
+        current_time = None
+        
     existing_tags = {}
     for tag in Tag.query.all():
-        exisiting_tags[tag.name] = tag
+        existing_tags[tag.name] = tag
+        
     existing_people = {}
     for person in Person.query.all():
         existing_people[person.name] = person
-    for resource in ['Projector', 'Microphone', 'Sound system', 'Drinking water', 'Quiet (no airwalls)']:
-        penguicontrax.db.session.add(Resource(resource))
-    for track in ['literature', 'tech', 'music', 'food', 'science']:
-        penguicontrax.db.session.add(Track(track,None))
+        
+    existing_rooms = {}
+    existing_submissions = []
+        
+    if as_convention == False:
+        for resource in ['Projector', 'Microphone', 'Sound system', 'Drinking water', 'Quiet (no airwalls)']:
+            penguicontrax.db.session.add(Resource(resource))
+        for track in ['literature', 'tech', 'music', 'food', 'science']:
+            penguicontrax.db.session.add(Track(track,None))
+            
     with penguicontrax.app.open_resource('schedule2013.html', mode='r') as f:
         tree = ET.fromstring(f.read())
         events = tree.find('document')
         for section in events:
-            if section.tag == 'div' and section.attrib['class'] == 'section':
+            if as_convention == True and section.tag == 'time':
+                time_text= section.text.split(' ')
+                hour = int(time_text[0])
+                if time_text[1] == 'PM' and hour != 12:
+                    hour += 12
+                elif time_text[1] == 'AM' and hour == 12:
+                    hour = 0
+                new_time = datetime.time(hour = hour)
+                if not current_time is None and new_time.hour < current_time.hour:
+                    current_day = current_day + datetime.timedelta(days=1)
+                current_time = new_time                 
+            elif section.tag == 'div' and section.attrib['class'] == 'section':
                 name = section[0].text
                 tag_list = section[1].text # Tag doesn't seem to be in the DB yet
+                room = section[2].text
                 person = section[3][0].text
                 description = section[3][0].tail
-                submission = Submission()
+                submission = Submission() if as_convention == False else Events()
                 submission.title = name
                 submission.description = description
                 submission.duration = 1
@@ -55,6 +89,44 @@ def import_old():
                     else:
                         db_tag = existing_tags[tag]
                     submission.tags.append(db_tag)
+                #Load rooms
+                if as_convention == True:
+                    submission.convention = convention
+                    db_room = None
+                    if not room in existing_rooms:
+                        db_room = Rooms()
+                        db_room.room_name = room
+                        db_room.convention = convention
+                        penguicontrax.db.session.add(db_room)
+                        existing_rooms[room] = db_room
+                    else:
+                        db_room = existing_rooms[room]
+                    if not current_day is None and not current_time is None:
+                        submission.rooms.append(db_room)
+                        submission.start_dt = datetime.datetime(year=current_day.year, month=current_day.month, day=current_day.day,\
+                            hour = current_time.hour, minute=current_time.minute)
+                        submission.duration = 4 #1 hour
+                existing_submissions.append(submission)
                 penguicontrax.db.session.add(submission)
         penguicontrax.db.session.commit()
 
+    if random_rsvp_users > 0:
+        for user_index in range(random_rsvp_users):
+            user = User()
+            user.name = 'Random User %d' % user_index
+            user.email = '%d@randomtraxuser.com' % user_index
+            user.public_rsvps = True
+            user.staff = False
+            user.special_tag = None
+            user.superuser = False
+            generate_account_name(user)
+            gravatar_image_update(user)
+            for rsvp_index in range(user.points):
+                rand = random.randint(0, len(existing_submissions) - 1)
+                while user in existing_submissions[rand].rsvped_by:
+                    rand = random.randint(0, len(existing_submissions) - 1)
+                existing_submissions[rand].rsvped_by.append(user)
+            user.points = 0
+            penguicontrax.db.session.add(user)
+        penguicontrax.db.session.commit()
+            

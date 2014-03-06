@@ -1,5 +1,5 @@
 {% extends "convention_base.html" %}
-{% block title %}Convention properties{% endblock %}
+{% block title %}{% if convention is not none %}{{ convention.name }}{% else %}Convention{% endif %} properties{% endblock %}
 {% block body %}
 	{{ super() }}
 	<div class="row">
