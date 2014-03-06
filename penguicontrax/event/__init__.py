@@ -88,15 +88,32 @@ class RoomGroups(db.Model):
 
 class Convention(db.Model):
     __tablename__ = 'convention'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(50))
     description = db.Column(db.Text)
     start_dt = db.Column(db.DateTime)
     end_dt = db.Column(db.DateTime)
     url = db.Column(db.String())
+    timeslot_duration = db.Column(db.Interval())
 
     def __repr__(self):
         return self.name
+    
+
+class ScheduleTimeslot(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    convention_id = db.Column(db.Integer(), db.ForeignKey('convention.id'))
+    convention = db.relationship('Convention')
+    name = db.Column(db.String())
+
+'''    
+class EventGrouping(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    schedule_timeslot_id = db.Column(db.Integer(), db.ForeignKey(ScheduleTimeslot.id))
+    schedule_timeslot = db.relationship('ScheduleTimeslot', db.ForeignKey('ScheduleTimeslot.id', ondelete='CASCADE', onupdate='CASCADE'), backref=db.backref('event_group'))
+    event_id = db.Column(db.Integer(), db.ForeignKey(Events.id))
+    event = db.relationship('Events')
+'''
 
 def indent(elem, level=0):
     i = "\n" + level*"  "
@@ -205,10 +222,7 @@ def convention_update():
     audit.audit_change(Convention.__table__, g.user, old_convention, convention)
     return redirect('/convention/%s/' % convention.url)
 
-def convention_schedule(convention):
-    if convention is None:
-        return redirect('/')
-    unscheduled_events = Events.query.filter(Events.convention_id == convention.id, ((Events.start_dt == None) | (Events.rooms == None))).all()
+def generate_schedule(convention):
     all_scheduled_events = Events.query.filter(Events.convention_id == convention.id, Events.start_dt != None, Events.rooms != None).all()
     from operator import attrgetter
     all_scheduled_events.sort(key = attrgetter('start_dt'))
@@ -219,7 +233,7 @@ def convention_schedule(convention):
     for event in all_scheduled_events:
         if cutoff_dt == None:
             this_hour = {}
-            cutoff_dt = convention.start_dt + datetime.timedelta(hours=1)
+            cutoff_dt = convention.start_dt + convention.timeslot_duration
             this_hour['time_tag'] = '%s, %s' % (dow[convention.start_dt.weekday()], ('{:%I %p}'.format(convention.start_dt)).lstrip('0'))
             this_hour['rooms'] = dict()
             scheduled_events.append(this_hour)
@@ -227,11 +241,18 @@ def convention_schedule(convention):
             this_hour = {}
             this_hour['time_tag'] = '%s, %s' % (dow[cutoff_dt.weekday()], ('{:%I %p}'.format(cutoff_dt).lstrip('0'))) if cutoff_dt.hour == 0 else ('{:%I %p}'.format(cutoff_dt).lstrip('0'))
             this_hour['rooms'] = {}
-            cutoff_dt = cutoff_dt + datetime.timedelta(hours=1)
+            cutoff_dt = cutoff_dt + convention.timeslot_duration
             scheduled_events.append(this_hour)
         if not event.rooms[0].room_name in this_hour['rooms']:
             this_hour['rooms'][event.rooms[0].room_name] = []
         this_hour['rooms'][event.rooms[0].room_name].append(event)
+    return scheduled_events
+
+def convention_schedule(convention):
+    if convention is None:
+        return redirect('/')
+    unscheduled_events = Events.query.filter(Events.convention_id == convention.id, ((Events.start_dt == None) | (Events.rooms == None))).all()
+    scheduled_events = generate_schedule(convention)
     return render_template('convention_schedule.html', user=g.user, convention=convention, scheduled_events = scheduled_events, unscheduled_events = unscheduled_events)
 
 @app.route('/convention/<convention_url>/schedule')

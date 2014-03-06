@@ -16,6 +16,7 @@ def import_old(as_convention, random_rsvp_users = 0):
         convention.description = 'Penguicon 2013 schedule imported from schedule2013.html'
         convention.start_dt = datetime.datetime(year=2013, month=4, day=26, hour=16)
         convention.end_dt = datetime.datetime(year=2013, month=4, day=28, hour=15)
+        convention.timeslot_duration = datetime.timedelta(hours=1)
         penguicontrax.db.session.add(convention)
         current_day = convention.start_dt.date()
         current_time = None
