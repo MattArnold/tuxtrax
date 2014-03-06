@@ -6,6 +6,10 @@ rsvps = db.Table('rsvps',
                 db.Column('submission_id', db.Integer, db.ForeignKey('submissions.id', ondelete='CASCADE', onupdate='CASCADE')),
                 db.Column('user_id', db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE')))
 
+event_rsvps = db.Table('event_rsvps',
+                db.Column('event_id', db.Integer, db.ForeignKey('events.id', ondelete='CASCADE', onupdate='CASCADE')),
+                db.Column('user_id', db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE')))
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String())
@@ -20,6 +24,7 @@ class User(db.Model):
     image_small = db.Column(db.String())
     image_large = db.Column(db.String())
     rsvped_to = db.relationship('Submission', secondary=rsvps, backref=db.backref('rsvped_by', passive_deletes=True))
+    event_rsvped_to = db.relationship('Events', secondary=event_rsvps, backref=db.backref('rsvped_by', passive_deletes=True))
     special_tag = db.Column(db.String())
     public_rsvps = db.Column(db.Boolean())
     superuser = db.Column(db.Boolean())

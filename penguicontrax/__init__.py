@@ -54,8 +54,8 @@ def init():
         pass
     # GET RID OF THIS LATER
     if len(Submission.query.all()) == 0:
-        import2013schedule.import_old()
-
+        import2013schedule.import_old(False)
+        import2013schedule.import_old(True, 150)
 
 @app.route('/')
 def index():

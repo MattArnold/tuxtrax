@@ -1,0 +1,59 @@
+{% extends "convention_base.html" %}
+{% block title %}{% if convention is not none %}{{ convention.name }}{% else %}Convention{% endif %} properties{% endblock %}
+{% block body %}
+	{{ super() }}
+	<div class="row">
+		<form action="/conventionupdate" method=post>
+			{% if convention is not none %}
+				<input type=hidden name=id value={{ convention.id }} />
+			{% endif %}
+			<div class="row">
+				<div class="col-md-2">
+					Name
+				</div>
+				<div class="col-md-10">
+					<input name="name" id="name" {% if convention is not none %}value="{{ convention.name }}"{% endif %} />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+					Short URL
+				</div>
+				<div class="col-md-10">
+					<input name="url" id="url" {% if convention is not none %}value="{{ convention.url }}"{% endif %} />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+					Start
+				</div>
+				<div class="col-md-10">
+					<input name="start_date" id="start_date" type="date" {% if convention is not none %}value="{{ convention.start_date }}"{% endif %} />
+					<input name="start_time" id="start_time" type="time" {% if convention is not none %}value="{{ convention.start_time }}"{% endif %} />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+					End
+				</div>
+				<div class="col-md-10">
+					<input name="end_date" id="end_date" type="date" {% if convention is not none %}value="{{ convention.end_date }}"{% endif %} />
+					<input name="end_time" id="end_time" type="time" {% if convention is not none %}value="{{ convention.end_time }}"{% endif %} />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+					Description
+				</div>
+				<div class="col-md-10">
+					<textarea name="description" id="description">{% if convention is not none %}{{ convention.description }}{% endif %}</textarea>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+					<input type=submit value="Submit" class="buttons" name=submitconvention id="submitconvention" />
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}

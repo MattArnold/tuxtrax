@@ -1,0 +1,33 @@
+{% extends "convention_base.html" %}
+{% block title %}{% if room is not none %}{{ room.room_name }}{% else %}Room{% endif %} properties{% endblock %}
+{% block body %}
+	{{ super() }}
+	<form action="/convention/{{ convention.url }}/updateroom" method=post>
+		{% if room is not none %}
+			<input type=hidden name=id value={{ room.id }} />
+		{% endif %}
+		<div class="row">
+			<div class="col-md-2">
+				Name
+			</div>
+			<div class="col-md-10">
+				<input name="name" {% if room is not none %}value="{{ room.room_name }}"{% endif %} />
+			</div>
+		</div>
+		{% if room is not none %}
+			<div class="row">
+				<div class="col-md-2">
+					Delete room
+				</div>
+				<div class="col-md-10">
+					<input name="delete" type=checkbox />
+				</div>
+			</div>
+		{% endif %}
+		<div class="row">
+			<div class="col-md-2">
+				<input type=submit value="Submit" class="buttons" name=submitroom />
+			</div>
+		</div>
+	</form>
+{% endblock %}
