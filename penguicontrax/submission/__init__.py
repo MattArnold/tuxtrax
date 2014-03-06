@@ -48,6 +48,7 @@ class Submission(db.Model):
     userPresenters = db.relationship('User', secondary=user_presenting_in, backref=db.backref('presenting_in'), passive_deletes=True)
     personPresenters = db.relationship('Person', secondary=person_presenting_in, backref=db.backref('presenting_in'), passive_deletes=True)
     private = db.Column(db.Boolean())
+    event_created = db.Column(db.Boolean())
 
     def __init__(self):
        self.private = False
@@ -65,7 +66,7 @@ class Tag(db.Model):
 
     def __repr__(self):
         return self.name
-    
+
 class Track(db.Model):
     __tablename__ = 'tracks'
     id = db.Column(db.Integer, primary_key=True)
