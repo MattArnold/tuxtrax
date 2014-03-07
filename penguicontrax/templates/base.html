@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link href="{{ url_for('static', filename='ptrax.css') }}" rel='stylesheet' type='text/css'>
+    <link href="{{ url_for('static', filename='ptrax.css') }}" rel='stylesheet' type='text/css'>
+    <script src="{{ url_for('static', filename='jquery.js') }}"  type='text/javascript'></script>
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
     <!--[if lt IE 9]>
     <script src="{{ url_for('static', filename='Flat-UI-master/js/html5shiv.js') }}"></script>
@@ -65,8 +67,10 @@
 <script src="{{ url_for('static', filename='Flat-UI-master/js/jquery.placeholder.js') }}"></script>
 
 <script type="text/javascript">
-    $('.tip').tooltip();
     $('.btn').button();
+    $('#hidenav').click(function(){
+        $('.tagsinput').css("display", "none");
+    }
 </script>
 {% block page_script %}{% endblock %}
 </body>

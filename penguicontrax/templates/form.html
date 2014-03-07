@@ -129,16 +129,18 @@
 	</div> <!-- class="row" -->
 	<div class="row jumbotron">
 	<div class="section who" id="who" >
-		<div class="col-md-4">
-		<div class="header">
+		<div class="col-md-1 header">
 			WHO
 		</div>
+        <div class="col-md-3">
 		Suggester 
 		{% if event is none %}
 			<input type=hidden name=submitter_id value={{user.id}} />{{ macros.user_link(user) }}
 		{% else %}
 			<input type=hidden name=submitter_id value={{event.submitter.id}} />{{ macros.user_link(event.submitter) }}
 		{% endif %}
+        </div>
+        <div class="col-md-8">
 		<span id="pptype" ></span>
 		<span id="pluralpptype" ></span>
 		{% if event is not none %}
@@ -149,7 +151,7 @@
 				{{ macros.person_link(person_presenter) }}
 			{% endfor %}
 		{% endif %}
-		<input name=person0 type=text size="24" onkeyup="countChar(this, 24)" class="pp" />
+		<input name=person0 type="text" size="24" onkeyup="countChar(this, 24)" class="pp" class="form-control" />
 		<button id="newperson"  class="pp" >+ someone else</button>
   		</div> <!-- col-md-4 -->
 	</div>
@@ -175,20 +177,29 @@
 			</div>
 			{% endfor %}
 		</div>
+        <!--		<div id="typechange" class="btn-group" data-toggle="buttons" >
+			<input type="radio" name="eventtype" class="typelist" value="noroomtype" id="noroomtype" style="display:none">
+			<label class="radio" for="talkbtn">
+				<input type="radio" data-toggle="radio" name=eventtype class="typelist where questioon roomtab" value="talk"  id="talkbtn" {{ event.eventType | is_checked('talk') }}>An audience sits and watches one or more speakers.
+			</label>
+
+            -->
+        
   		</div> <!-- col-md-4 -->
   		<div class="col-md-4">
 		<!-- <div class="divider"></div> -->
-		<div id="trackselection">
+		<div id="trackselection" >
 			<div style="float:left">
 				Choose one staffer to be your contact person:
 			</div>
-
+            <div class="btn-group" data-toggle="buttons">
 			{% for track in tracks %}
-			<label for="tbn_{{ track }}">
+			<label class="radio" for="tbn_{{ track }}">
 				<div class="what question track" id="track_{{ track }}">
-					<input type="radio" name=track class="tracklist" value="{{track}}"  id="tbn_{{ track }}" {{ event | checked_if_tracked(track) }}>{{ track }}
+					<input type="radio" data-toggle="radio" name=track class="tracklist" value="{{track}}"  id="tbn_{{ track }}" {{ event | checked_if_tracked(track) }}>{{ track }}
 				</div>
 			</label>
+            </div>
 			{% endfor %}
 
 

@@ -155,14 +155,14 @@ window.ptrax = window.ptrax || {};
 
       setInfoText: function (included, excluded, noResults) {
         var $info = $('.submissions-list .info');
-        var copy = "All submissions shown. Filter by tags using the widget on the left.";
+        var copy = 'All submissions shown. Filter by tags using the widget on the left.';
         var includePrefix = " Showing ";
         var includeSuffix = ".";
         var excludePrefix = " Excluding ";
         var excludeSuffix = ".";
 
         function getTagString(arr) {
-          var str = arr.join(',');
+          var str = arr.join(', ');
           str = str.replace(/,/, ", ");
 
           if (arr.length > 1) {
@@ -175,9 +175,9 @@ window.ptrax = window.ptrax || {};
 
           return str;
 
-        }
+        };
 
-        console.debug('setInfo',arguments)
+//        console.debug('setInfo', arguments);
         if(noResults){
           copy = "Nothing to show."
         }else{

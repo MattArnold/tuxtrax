@@ -8,26 +8,27 @@
 <div class="row">
     <div class="col-md-2">
         <div class="tagsinput">
-            <div class="col-md-6" align="left">
-                <button id="hidenav" class="btn btn-xs"><i class="fa fa-compress"></i>
-                </button>
-            </div>
-            <div data-toggle="tooltip" data-placement="bottom"
-                 data-original-title='Filter the schedule by topics. Click some tags if you want to see only events with those topics. If you click a tag again, it will exclude all events with that topic. If you click a tag a third time, your filter will not care about that topic. If you have no topics turned on, it will turn on all the tags.'
-                 class="col-md-6 tip" align="right"><i class="fa fa-info-circle"></i>
-            </div>
-            <div id="tagfilter"></div>
+            <button id="hidenav" class="btn btn-xs">
+                <i class="fa fa-compress"></i>
+            </button>
+            <i class="fa fa-info-circle tip" rel="tooltip" data-toggle="tooltip" data-placement="bottom" data-original-title="Filter the schedule by topics. Click some tags if you want to see only events with those topics. If you click a tag again, it will exclude all events with that topic. If you click a tag a third time, your filter will not care about that topic. If you have no topics turned on, it will turn on all the tags."></i>
+            <span id="tagfilter"></span>
         </div>
     </div>
-    <div class="col-md-10">
+    <div class="col-md-10" id="report">
         <div class="container-fluid">
             <div class="row ">
                 <div class="container-fluid">
                     <div class="row" style="margin-bottom:15px">
-                        <div class="col-md-4">
-                            <button id="createeventbutton" class="btn btn-primary">Create an event</button>
+                        <div class="col-md-5">
+                            <div id="shownav">
+                                <button id="shownavbtn" class="btn btn-xs">
+                                    <i class="fa fa-expand"></i>
+                                </button>
+                            </div>
+                            <button id="createeventbutton" class="btn btn-primary">Suggest an event</button>
                         </div>
-                        <div class="col-md-8 text-right legend">
+                        <div class="col-md-7 text-right legend">
                             <span>Legend:</span>
                             <span class="bs-callout suggested">Awaiting followup</span>
                             <span class="bs-callout followedup">Followed up</span>
@@ -40,7 +41,12 @@
                     <div class="row">
                         <div class="col-md-12 submissions-list">
                             <div class="row">
-                                <div class="col-md-8 info"></div>
+                                <div class="col-md-8 info">{% if hidden==True %}
+                                    {{ 'We regret that for various reasons, we can’t use these event suggestions this year. Maybe next year! Also, some of them may be here in error, in which case bear with us while we fix it.' }}
+                                    {% else %}
+                                    {{ 'Try clicking some tags!' }}
+                                    {% endif %}
+                                </div>
                                 <div class="col-md-3">
                                     <input class="form-control" type="search" placeholder="Search"/>
                                 </div>
@@ -81,18 +87,20 @@
 
     //Handle collapsing and expanding the navigation
 
-    $("#hidenav").click(function () {
-        if ($("#leftmenu .tag").is(":hidden")) {
-            //$('#hidenav').prependTo('#leftmenu');
-            $("#leftmenu .tag").show('slow');
-            $("#masthead, #report").addClass('withmenu');
-        } else {
-            //$('#hidenav').prependTo('body');
-            $("#leftmenu .tag").hide('slow');
-            $("#masthead, #report").removeClass('withmenu');
-        }
+    $('#hidenav').click(function(){
+        $('.tagsinput').css('display', 'none');
+        $('#shownav').css('display', 'block');
+        $('#report').removeClass('col-md-10');
+        $('#report').addClass('col-md-12');
     });
-
+    
+    $('#shownavbtn').click(function(){
+        $('.tagsinput').css('display', 'block');
+        $('#shownav').css('display', 'none');
+        $('#report').removeClass('col-md-12');
+        $('#report').addClass('col-md-10');
+    });
+    
     $("#createeventbutton").click(function () {
         document.location.href = "/eventform"
     });

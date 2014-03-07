@@ -61,13 +61,13 @@ def init():
 def index():
     submissions = Submission.query.order_by('id').all() if g.user is not None and g.user.staff == True else Submission.query.filter(Submission.followUpState != 3, Submission.private != True).order_by('id')
     tags = [tag.name for tag in Tag.query.all()]
-    return render_template('index.html', tags=tags, submissions=submissions, user=g.user)
+    return render_template('index.html', tags=tags, submissions=submissions, user=g.user, showhidden=False)
     
 @app.route('/hidden')
 def hidden():
     submissions = Submission.query.filter(Submission.followUpState == 3).order_by('id')
     tags = [tag.name for tag in Tag.query.all()]
-    return render_template('index.html', tags=tags, submissions=submissions, user=g.user)
+    return render_template('index.html', tags=tags, submissions=submissions, user=g.user, showhidden=True)
 
 
 @app.route('/report')
