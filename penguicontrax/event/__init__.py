@@ -56,6 +56,7 @@ class Events(db.Model):
     duration = db.Column(db.Integer)    # The number of intervals.
     convention_id = db.Column(db.Integer, db.ForeignKey('convention.id'))
     convention = db.relationship('Convention')
+    fixed = db.Column(db.Boolean())
 
     def __repr__(self):
         return 'Event: %' % self.event_name
@@ -99,21 +100,43 @@ class Convention(db.Model):
     def __repr__(self):
         return self.name
     
-
-class ScheduleTimeslot(db.Model):
+class Timeslot(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    convention_id = db.Column(db.Integer(), db.ForeignKey('convention.id'))
-    convention = db.relationship('Convention')
     name = db.Column(db.String())
-
-'''    
-class EventGrouping(db.Model):
+    convention_id = db.Column(db.Integer(), db.ForeignKey('convention.id', ondelete='CASCADE', onupdate='CASCADE'))
+    convention = db.relationship('Convention', backref=db.backref('timeslots'))
+    start_dt = db.Column(db.DateTime())
+    rsvp_conflicts = db.Column(db.Integer())
+    
+    def __init__(self):
+        self.rsvp_conflicts = 0
+    
+    def __repr__(self):
+        return self.name
+    
+class Presenterconflict(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    schedule_timeslot_id = db.Column(db.Integer(), db.ForeignKey(ScheduleTimeslot.id))
-    schedule_timeslot = db.relationship('ScheduleTimeslot', db.ForeignKey('ScheduleTimeslot.id', ondelete='CASCADE', onupdate='CASCADE'), backref=db.backref('event_group'))
-    event_id = db.Column(db.Integer(), db.ForeignKey(Events.id))
+    timeslot_id = db.Column(db.Integer(), db.ForeignKey('timeslot.id', ondelete='CASCADE', onupdate='CASCADE'))
+    timeslot = db.relationship('Timeslot', backref=db.backref('presenter_conflicts'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
+    user = db.relationship('User')
+    person_id = db.Column(db.Integer, db.ForeignKey('person.id', ondelete='CASCADE', onupdate='CASCADE'))
+    person = db.relationship('Person')
+
+class Timeslotbooking(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    timeslot_id = db.Column(db.Integer(), db.ForeignKey('timeslot.id', ondelete='CASCADE', onupdate='CASCADE'))
+    timeslot = db.relationship('Timeslot', backref=db.backref('bookings'))
+    room_id = db.Column(db.Integer(), db.ForeignKey('rooms.id', ondelete='CASCADE', onupdate='CASCADE'))
+    room = db.relationship('Rooms')
+    
+class Timeslotentry(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    booking_id = db.Column(db.Integer(), db.ForeignKey('timeslotbooking.id', ondelete='CASCADE', onupdate='CASCADE'))
+    booking = db.relationship('Timeslotbooking', backref=db.backref('timeslot_entries'))
+    event_id = db.Column(db.Integer(), db.ForeignKey('events.id', ondelete='CASCADE', onupdate='CASCADE'))
     event = db.relationship('Events')
-'''
+    time_elapsed = db.Column(db.Interval())
 
 def indent(elem, level=0):
     i = "\n" + level*"  "
@@ -235,25 +258,103 @@ def generate_schedule(convention):
             this_hour = {}
             cutoff_dt = convention.start_dt + convention.timeslot_duration
             this_hour['time_tag'] = '%s, %s' % (dow[convention.start_dt.weekday()], ('{:%I %p}'.format(convention.start_dt)).lstrip('0'))
+            this_hour['time'] = convention.start_dt
             this_hour['rooms'] = dict()
             scheduled_events.append(this_hour)
         elif event.start_dt >= cutoff_dt:
             this_hour = {}
             this_hour['time_tag'] = '%s, %s' % (dow[cutoff_dt.weekday()], ('{:%I %p}'.format(cutoff_dt).lstrip('0'))) if cutoff_dt.hour == 0 else ('{:%I %p}'.format(cutoff_dt).lstrip('0'))
+            this_hour['time'] = cutoff_dt
             this_hour['rooms'] = {}
             cutoff_dt = cutoff_dt + convention.timeslot_duration
             scheduled_events.append(this_hour)
-        if not event.rooms[0].room_name in this_hour['rooms']:
-            this_hour['rooms'][event.rooms[0].room_name] = []
-        this_hour['rooms'][event.rooms[0].room_name].append(event)
-    return scheduled_events
+        if not event.rooms[0] in this_hour['rooms']:
+            this_hour['rooms'][event.rooms[0]] = []
+        this_hour['rooms'][event.rooms[0]].append({'event':event, 'time_left': datetime.timedelta(minutes = 15 * event.duration)})
+        
+    # Deal with events longer than timeslot_duration
+    for hour_iter in range(len(scheduled_events)):
+        for room, event_list in scheduled_events[hour_iter]['rooms'].iteritems():
+            for event in event_list:
+                overflow_left = datetime.timedelta(minutes = 15 * event['event'].duration) - convention.timeslot_duration
+                next_hour = hour_iter
+                while overflow_left > datetime.timedelta():
+                    next_hour += 1
+                    if next_hour < len(scheduled_events):
+                        if scheduled_events[hour_iter]['rooms'][room] is None:
+                            scheduled_events[hour_iter]['rooms'][room] = []
+                        scheduled_events[hour_iter]['rooms'][room].append({'event':event, 'time_left':overflow_left})
+                        overflow_left -= convention.timeslot_duration
+                        
+    # Evaluate conflicts
+    for hour in scheduled_events:
+        presenters = {}
+        rsvps = {}
+        for room, event_list in hour['rooms'].iteritems():
+            for event_dict in event_list:
+                event = event_dict['event']
+                for userPresenter in event.userPresenters:
+                    if not userPresenter in presenters:
+                        presenters[userPresenter] = 0
+                    presenters[userPresenter] += 1
+                for personPresenter in event.personPresenters:
+                    if not personPresenter in presenters:
+                        presenters[personPresenter] = 0
+                    presenters[personPresenter] += 1
+                for user in event.rsvped_by:
+                    if not user in rsvps:
+                        rsvps[user] = 0
+                    rsvps[user] += 1
+        presenter_conflicts = []
+        for presenter, commitments in presenters.iteritems():
+            if commitments > 1:
+                presenter_conflicts.append(presenter)
+        rsvp_conflicts = 0
+        for user, commitments in rsvps.iteritems():
+            if commitments > 1:
+                rsvp_conflicts += 1
+        hour['presenter_conflicts'] = presenter_conflicts
+        hour['rsvp_conflicts'] = rsvp_conflicts
+        
+                
+    # Move everything over to the database
+    for timeslot in convention.timeslots:
+        db.session.delete(timeslot)
+    for hour in scheduled_events:
+        timeslot = Timeslot()
+        timeslot.convention = convention
+        timeslot.name = hour['time_tag']
+        timeslot.start_dt = hour['time']
+        timeslot.rsvp_conflicts = hour['rsvp_conflicts']
+        for presenter in hour['presenter_conflicts']:
+            presenter_conflict = Presenterconflict()
+            presenter_conflict.timeslot = timeslot
+            from penguicontrax.user import Person, User
+            if type(presenter) is Person:
+                presenter_conflict.person = presenter
+            elif type(presenter) is User:
+                presenter_conflict.user = presenter
+            db.session.add(presenter_conflict)
+        for room, event_list in hour['rooms'].iteritems():
+            booking = Timeslotbooking()
+            booking.timeslot = timeslot
+            booking.room = room
+            for event in event_list:
+                entry = Timeslotentry()
+                entry.booking = booking
+                entry.event = event['event']
+                entry.time_elapsed = datetime.timedelta(minutes = 15 * event['event'].duration) - event['time_left']
+                db.session.add(entry)
+            db.session.add(booking)
+        db.session.add(timeslot)
+    db.session.commit()
 
 def convention_schedule(convention):
     if convention is None:
         return redirect('/')
     unscheduled_events = Events.query.filter(Events.convention_id == convention.id, ((Events.start_dt == None) | (Events.rooms == None))).all()
-    scheduled_events = generate_schedule(convention)
-    return render_template('convention_schedule.html', user=g.user, convention=convention, scheduled_events = scheduled_events, unscheduled_events = unscheduled_events)
+    scheduled_events = convention.timeslots
+    return render_template('convention_schedule.html', user=g.user, convention=convention, scheduled_events = scheduled_events, unscheduled_events = unscheduled_events, empty_timedelta = datetime.timedelta())
 
 @app.route('/convention/<convention_url>/schedule')
 def convention_schedule_url(convention_url):
@@ -296,4 +397,11 @@ def convention_list():
     if g.user is None or not g.user.staff:
         return redirect('/')
     return render_template('conventions.html', user=g.user, conventions=Convention.query.all())
-    
+
+@app.template_filter()
+def get_date(dt):
+    return Markup(u'{:%Y-%m-%d}'.format(dt)) if not dt is None else Markup(u'')
+
+@app.template_filter()
+def get_time(dt):
+    return Markup(u'{:%H:%M}'.format(dt)) if not dt is None else Markup(u'')

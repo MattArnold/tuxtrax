@@ -130,4 +130,8 @@ def import_old(as_convention, random_rsvp_users = 0):
             user.points = 0
             penguicontrax.db.session.add(user)
         penguicontrax.db.session.commit()
+        
+    if as_convention == True:
+        from event import generate_schedule
+        generate_schedule(convention)
             
