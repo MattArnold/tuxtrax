@@ -35,13 +35,17 @@
 							<input type=submit value="Submit" class="buttons" />
 						</form>
 					{% endif %}
+					{% if user is not none and user.staff %}
+						Creation IP: {{ user.creation_ip }}
+						Login IPs: {% for ip in user.logged_in_from_ip %}{{ ip }} {% endfor %}
+					{% endif %}
 				</div>
 			</div>
 		</div>
 	</div>
 	<form action="/rsvp" method=post >
 	{% for submission in view_user.rsvped_to %}
-		{% if view_user == user %}
+		{% if view_user == user or (user is not none and user.staff) %}
 			{{ macros.event_summary(submission, user) }}
 		{% else %}
 			{{ macros.event_summary(submission, none) }}

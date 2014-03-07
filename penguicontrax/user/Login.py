@@ -2,7 +2,7 @@ from flask import g, redirect, request, session, flash, url_for, render_template
 from flask_openid import OpenID
 from flask_oauth import OAuth
 from penguicontrax import constants
-from . import lookup_current_user, User
+from . import lookup_current_user, User, UserLoginIP
 from .. import app, db
 from ..constants import constants
 import urllib, hashlib
@@ -52,6 +52,7 @@ def login():
     if g.user is not None:
         return redirect(oid.get_next_url())
     provider = request.args.get('provider', '')
+    session['ip'] = request.remote_addr
     if provider == 'google':
         return oid.try_login('https://www.google.com/accounts/o8/id', ask_for=['email','fullname'])
     elif provider == 'yahoo':
@@ -63,6 +64,16 @@ def login():
     return render_template('login.html', user=g.user)
 
 
+def update_user_login_ip(user, ip):
+    if UserLoginIP.query.filter_by(user_id=user.id, ip=ip).first() is None:
+        login_record = UserLoginIP()
+        login_record.user_id = user.id
+        login_record.ip = ip
+        db.session.add(login_record)
+        db.session.commit()
+
+from penguicontrax.audit import audit_user_creation
+
 @oid.after_login
 def new_openid_user(resp):
     session['openid'] = resp.identity_url
@@ -72,10 +83,14 @@ def new_openid_user(resp):
         user.email = resp.email
         user.openid = resp.identity_url
         user.name = resp.fullname
+        user.creation_ip = session['ip']
         gravatar_image_update(user)
         generate_account_name(user)
         db.session.add(user)
         db.session.commit()
+        g.user = user
+        audit_user_creation(user)
+    update_user_login_ip(g.user, session['ip'])
     return redirect(oid.get_next_url())
 
 @app.route('/logout')
@@ -105,7 +120,7 @@ def get_oauth_token_facebook(token=None):
 def update_fb_info(user):
     if user is not None:
         me = facebook.get('/me')
-        user.firstName = me.data['first_name'] + ' ' + me.data['last_name']
+        user.name = me.data['first_name'] + ' ' + me.data['last_name']
         user.email = me.data['email']
         user.fbid = me.data['id']
         user.image_small = 'http://graph.facebook.com/' + user.fbid + '/picture?type=small'
@@ -127,13 +142,17 @@ def oauth_authorized_facebook(resp):
     if g.user is None:
         user = User()
         user.oauth_token = resp['access_token']
+        user.creation_ip = session['ip']
         update_fb_info(user)
         generate_account_name(user)
         db.session.add(user)
         db.session.commit()
+        g.user = user
+        audit_user_creation(user)
     # Update name/email
     g.temp_oauth_token = None
     update_fb_info(g.user)
+    update_user_login_ip(g.user, session['ip'])
     return redirect(next_url)
 
 @app.route('/oauth-authorized-twitter')
@@ -150,10 +169,14 @@ def oauth_authorized_twitter(resp):
         user.oauth_token = resp['oauth_token']
         user.oauth_secret = resp['oauth_token_secret']
         user.name = resp['screen_name']
+        user.creation_ip = session['ip']
         gravatar_image_update(user)
         generate_account_name(user)
         db.session.add(user)
         db.session.commit()
+        g.user = user
+        audit_user_creation(user)
+    update_user_login_ip(g.user, session['ip'])
     return redirect(next_url)
        
     

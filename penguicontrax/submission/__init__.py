@@ -2,6 +2,7 @@ from flask import g, request, session, render_template, redirect, Response, Mark
 from sqlalchemy.orm import relationship
 from .. import app, db, dump_table_json
 from penguicontrax.user import User
+from copy import copy
 import string
 
 # Associates multiple tags to a submission
@@ -47,6 +48,7 @@ class Submission(db.Model):
     userPresenters = db.relationship('User', secondary=user_presenting_in, backref=db.backref('presenting_in'), passive_deletes=True)
     personPresenters = db.relationship('Person', secondary=person_presenting_in, backref=db.backref('presenting_in'), passive_deletes=True)
     private = db.Column(db.Boolean())
+    event_created = db.Column(db.Boolean())
 
     def __init__(self):
        self.private = False
@@ -64,7 +66,7 @@ class Tag(db.Model):
 
     def __repr__(self):
         return self.name
-    
+
 class Track(db.Model):
     __tablename__ = 'tracks'
     id = db.Column(db.Integer, primary_key=True)
@@ -88,6 +90,8 @@ class Resource(db.Model):
 
     def __repr__(self):
         return '<name: %s>' % self.name
+
+from penguicontrax import audit
 
 def get_tag(name):
     tags = Tag.query.filter(Tag.name==name)
@@ -150,8 +154,10 @@ def submitevent():
     eventid = request.form.get('eventid')
     if eventid is not None:
         submission = Submission.query.get(eventid)
+        old_submission = copy(submission)
     else:
         submission = Submission()
+        old_submission = Submission()
 
     fields = {'email':'email', 'title':'title', 'description':'description',
               'firstname':'firstname', 'lastname':'lastname',
@@ -181,9 +187,9 @@ def submitevent():
             submission.resources.append(matched_resource)
 
     submission.track = get_track(request.form.get('track'))
-
     db.session.add(submission)
     db.session.commit()
+    audit.audit_change(Submission.__table__, g.user, old_submission, submission) #We'd like submission.id to actually be real so commit the creation first
     return redirect('/')
 
 @app.route('/createtag', methods=['POST'])
