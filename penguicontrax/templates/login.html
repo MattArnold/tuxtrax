@@ -1,8 +1,28 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 {% block body %}
-	<div class="socialbuttonslarge">
-		<!-- TODO: Style this class -->
-		<a href="/login?provider=facebook"><img src="static/facebook-256x256.png"></a> <a href="/login?provider=twitter"><img src="static/twitter-256x256.png"></a> <a href="/login?provider=google"><img src="static/google-256x256.png"></a> <a href="/login?provider=yahoo"><img src="static/yahoo-256x256.png"></a>
-	</div>
+	<div class="row socialbuttonslarge">
+        <div class="col-md-5"></div>
+        <div class="col-md-2">Log in using:</div>
+        <div class="col-md-1">
+            <a href="/login?provider=facebook">
+                <i class="fa fa-facebook fa-3x"></i>
+            </a>
+        </div>
+        <div class="col-md-1">
+            <a href="/login?provider=twitter">
+                <i class="fa fa-twitter fa-3x"></i>
+            </a>
+        </div>
+        <div class="col-md-1">
+            <a href="/login?provider=google">
+                <i class="fa fa-google-plus fa-3x"></i>
+            </a>
+        </div>
+        <div class="col-md-1">
+            <a href="/login?provider=yahoo">
+                <span style="font-size:3em; font-weight:bold; position:relative; line-height:1em;">Y!</span>
+            </a>
+        </div>
+    </div>
 {% endblock %}

@@ -14,21 +14,29 @@
             <i class="fa fa-info-circle tip" rel="tooltip" data-toggle="tooltip" data-placement="bottom" data-original-title="Filter the schedule by topics. Click some tags if you want to see only events with those topics. If you click a tag again, it will exclude all events with that topic. If you click a tag a third time, your filter will not care about that topic. If you have no topics turned on, it will turn on all the tags."></i>
             <span id="tagfilter"></span>
         </div>
+        <div class="tagsinput">
+            <span class="smalllabel">User tags: </span>
+            <span id="usertagfilter"></span>
+        </div>
     </div>
     <div class="col-md-10" id="report">
         <div class="container-fluid">
             <div class="row ">
                 <div class="container-fluid">
                     <div class="row" style="margin-bottom:15px">
-                        <div class="col-md-5">
+                        <div class="col-md-2">
                             <div id="shownav">
                                 <button id="shownavbtn" class="btn btn-xs">
                                     <i class="fa fa-expand"></i>
                                 </button>
+                                <i class="fa fa-tag"></i>
                             </div>
                             <button id="createeventbutton" class="btn btn-primary">Suggest an event</button>
                         </div>
-                        <div class="col-md-7 text-right legend">
+                        <div class="col-md-4">
+                            <input class="form-control" type="search" placeholder="Search"/>
+                        </div>
+                        <div class="col-md-6 text-right legend">
                             <span>Legend:</span>
                             <span class="bs-callout suggested">Awaiting followup</span>
                             <span class="bs-callout followedup">Followed up</span>
@@ -46,9 +54,6 @@
                                     {% else %}
                                     {{ 'Try clicking some tags!' }}
                                     {% endif %}
-                                </div>
-                                <div class="col-md-3">
-                                    <input class="form-control" type="search" placeholder="Search"/>
                                 </div>
                             </div>
 

@@ -129,7 +129,7 @@ An important schema design element is the distinction between actual events and 
 
 *001*: A form to submit an event suggestion. A message at the top reads “this form doesn’t work yet”. -DONE
 
-*002*: Now the form saves to a database. The message now reads “we’re going to make these form results publicly visible soon.” - DONE (Although it's just hacked together with a PHP script.)
+*002*: Now the form saves to a database. The message now reads “we’re going to make these form results publicly visible soon.” - DONE
 
 *003*: A public-facing webpage lists every entry in the database. At the top of the page is the headline “Penguicon Events Suggested So Far!” Next to that is “Suggest An Event” with a link to the form. For now, just manually put the database on the page. -DONE
  
@@ -139,9 +139,9 @@ An important schema design element is the distinction between actual events and 
 
 *005*: Create a database of users that uses OpenID. -DONE
 
-*006*: Add OpenID login buttons to the top of the page through Google and Facebook. -DONE, need to add Facebook
+*006*: Add OpenID login buttons to the top of the page through Google and Facebook. -DONE
 
-*007*: Add a third OpenID provider that is not evil. -DONE, Yahoo?
+*007*: Add a third OpenID provider that is not evil. -DONE
 
 *008*: in the database of users, make a field for "User Type". Each user is either "staff" or "nonstaff". Manually confirm which specific OpenIDs are staff and add that status. - DONE
 
