@@ -9,7 +9,6 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link href="{{ url_for('static', filename='ptrax.css') }}" rel='stylesheet' type='text/css'>
     <link href="{{ url_for('static', filename='ptrax.css') }}" rel='stylesheet' type='text/css'>
-    <script src="{{ url_for('static', filename='jquery.js') }}"  type='text/javascript'></script>
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
     <!--[if lt IE 9]>
     <script src="{{ url_for('static', filename='Flat-UI-master/js/html5shiv.js') }}"></script>
@@ -18,35 +17,30 @@
     {% endblock %}
 </head>
 <body>
-<div class="row header">
-    <div class="col-md-7">
-    <h3 class="title">
-        <a href="/">Penguicon-TRAX <span style="font-size:small">(Tentative Requested Activity Xperiment)</span></a>
-    </h3>
-    </div>
-    <div class="col-md-5 text-right ptrax-login">
-        <div class="row">
-            <div class="col-md-12" style="margin: 10px 0 0 0">
-                <form action="/logout" method=get>
-                    {% if user is none %}
-                    <span>Log in using:
-                    <a href="/login?provider=facebook"><img src="static/facebook-16x16.png" hspace="5px"></a>
-                    <a href="/login?provider=twitter"><img src="static/twitter-16x16.png" hspace="5px"></a>
-                    <a href="/login?provider=google"><img src="static/google-16x16.png" hspace="5px"></a>
-                    <a href="/login?provider=yahoo"><img src="static/yahoo-16x16.png" hspace="5px"></a>
-                    {% else %}
-                    {{ macros.user_link(user) }} 
-                    {% if user.staff == 0 %}
-                    {{ user.points }} RSVP points left
-					{% else %}
-					<a href="/logs">Logs</a> <a href="/users">Users</a>
-                    {% endif %}
-                    <input class="btn btn-primary btn-xs" type=submit value="Logout">
-                    {% endif %}
-                    </span>
-                </form>
-            </div>
-        </div>
+<div class="header col-md-12">
+    <div class="row">
+        <span class="title">
+            <a href="/">Penguicon-TRAX 
+                <span style="font-size:small">(Tentative Requested Activity Xperiment)</span></a>
+        </span>
+        <form action="/logout" method=get  class="rightheader">
+            Feedback: <a href="mailto:matt.mattarn+traxfeedback@gmail.com?Subject=Feedback%20About%20Penguicon-TRAX"><i class="fa fa-envelope"></i></a>
+            {% if user is none %}
+            Log in using:
+            <a href="/login?provider=facebook"><i class="fa fa-facebook-square"></i></a>
+            <a href="/login?provider=twitter"><i class="fa fa-twitter-square"></i></a>
+            <a href="/login?provider=google"><i class="fa fa-google-plus-square"></i></a>
+            <a href="/login?provider=yahoo"><i class="fa fa-square"></i><span style="font-weight:bold; color:#eee; position:relative; left:-1em; letter-spacing:-.1em;"> Y!</span></a>
+            {% else %}
+            {{ macros.user_link(user) }} 
+            {% if user.staff == 0 %}
+            {{ user.points }} RSVP points left
+            {% else %}
+            <a href="/logs">Logs</a> <a href="/users">Users</a>
+            {% endif %}
+            <input class="btn btn-primary btn-xs" type=submit value="Logout">
+            {% endif %}
+        </form>
     </div>
 </div>
 <div class="container-fluid">
