@@ -19,7 +19,7 @@ var pluralized = false;
 
 $(document).ready(function () {
 
-  $('#resources, #players, #furniture, #otherfacility, #setupandrepeat, #othertime, .pp, #pptype, #pluralpptype').hide();
+  $('#resources, #players, #furniture, #otherfacility, .setupandrepeat, #othertime, .pp, #pptype, #pluralpptype').css('display', 'none');
 
   $('.typelist:checked').first().each(function (index, elm) {
     update_type_options($(elm).val(), true);
@@ -116,29 +116,29 @@ $(document).ready(function () {
 
     // now we have all of the values. set everything.
     if (furnitureshow)
-      $('#furniture').show('slow');
+      $('#furniture').css('display', 'block');
     else
-      $('#furniture').hide('slow');
+      $('#furniture').css('display', 'none');
     if (otherfacilityshow)
-      $('#otherfacility').show('slow');
+      $('#otherfacility').css('display', 'block');
     else
-      $('#otherfacility').hide('slow');
+      $('#otherfacility').css('display', 'none');
     if (playersshow)
-      $('#players').show('slow');
+      $('#players').css('display', 'block');
     else
-      $('#players').hide('slow');
+      $('#players').css('display', 'none');
     if (ppshow)
-      $('#pp').show('slow');
+      $('#pp').css('display', 'block');
     else
-      $('#pp').hide('slow');
+      $('#pp').css('display', 'none');
     if (pptypeshow)
-      $('#pptype').show('slow');
+      $('#pptype').css('display', 'block');
     else
-      $('#pptype').hide('slow');
+      $('#pptype').css('display', 'none');
     if (resourcesshow)
-      $('#resources').show('slow');
+      $('#resources').css('display', 'block');
     else
-      $('#resources').hide('slow');
+      $('#resources').css('display', 'none');
     $('#pptype').text(pptypetext);
     $('#pluralpptype').text(pluralpptypetext);
   });
@@ -157,14 +157,12 @@ $(document).ready(function () {
       animation = null;
     }
     if (timeval == 0) {
-      console.log("Hiding stuff");
-      $("#setupandrepeat, #othertime").hide("slow");
+      $(".setupandrepeat, #othertime").css("display", "none");
     } else if (timeval == 5) {
-      $("#setupandrepeat").hide("slow");
-      $("#othertime").show("slow");
+      $(".setupandrepeat").css("display", "none");
+      $("#othertime").css("display", "block");
     } else {
-      console.log("Showing stuff");
-      $("#setupandrepeat, #othertime").show("slow");
+      $(".setupandrepeat, #othertime").css("display", "block");
     }
   }
 
@@ -180,11 +178,11 @@ $(document).ready(function () {
 //});
 
   $('#moresetuplink').click(function () {
-    if ($('#setupandrepeat:visible').length == 0) {
-      $('#setupandrepeat').show();
+    if ($('.setupandrepeat:visible').length == 0) {
+      $('.setupandrepeat').show();
       $('#othertime').show();
     } else {
-      $('#setupandrepeat').hide();
+      $('.setupandrepeat').hide();
       $('#othertime').hide();
     }
     return false;
@@ -242,14 +240,14 @@ $(document).ready(function () {
     $("lastname").val(lastname);
 
     // Combine all the comment fields into one comment.
-    if ($("#facilityrequest").val("other facility requests")) {
+    if ($("#facilityrequest").val("Other room and furniture setup requests go here. If you selected 'More', we'll work out the specifics with you later.")) {
       $("#facilityrequest").val("");
     }
-    if ($("#timerequest").val("other time requests")) {
+    if ($("#timerequest").val("Other time requests go here. If you selected 'More', we'll work out the specifics with you later.")) {
       $("#timerequest").val("");
     }
     facilitycomment = $("facilityrequest").val();
     timecomment = $("timerequest").val();
-    $("#comments").val(facilitycomment + " " + timecomment);
+    $("#comments").val(facilitycomment + " | " + timecomment);
   });
 });
