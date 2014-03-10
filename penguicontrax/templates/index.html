@@ -6,7 +6,7 @@
 {% block body %}
 {{ super() }}
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-2" id="nav">
         <div class="tagsinput">
             <button id="hidenav" class="btn btn-xs">
                 <i class="fa fa-compress"></i>
@@ -81,7 +81,10 @@
 {{ super() }}
 <script type="text/javascript" src="{{ url_for('static', filename='tagFilter.js') }}"></script>
 <script type="text/javascript">
-
+    $(document).ready(function(){
+        $("[rel=tooltip]").tooltip({ placement: 'right'});
+    });
+    
     var tags = "{% for tag in tags %}{{tag}},{% endfor%}".split(",");
     tags = tags.slice(0, tags.length - 1);
 
@@ -94,14 +97,14 @@
 
     $('#hidenav').click(function(){
         $('.tagsinput').css('display', 'none');
-        $('#shownav').css('display', 'block');
+        $('#nav').css('display', 'block');
         $('#report').removeClass('col-md-10');
         $('#report').addClass('col-md-12');
     });
     
     $('#shownavbtn').click(function(){
         $('.tagsinput').css('display', 'block');
-        $('#shownav').css('display', 'none');
+        $('#nav').css('display', 'none');
         $('#report').removeClass('col-md-12');
         $('#report').addClass('col-md-10');
     });
