@@ -78,7 +78,6 @@
                 <textarea name=facilityrequest id="facilityrequest" rows="2" cols="50" placeholder="Other room and furniture setup requests go here. If you selected 'More', we'll work out the specifics with you later." class="form-control">{{event.facilityRequest | default('',true)}}</textarea> <br />
             </div>
 		</div>
-  	</div>
 	</div>
 	<div class="row jumbotron section when">
 		<div class="col-md-1">
@@ -177,12 +176,13 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <form action="/createtag" method=post >
+                    <!-- <form action="/createtag" method=post > -->
                         <div>
                             New topic tag: <input type=text name=tagname id="tagname" />
                             <input type=submit value="Submit tag" class="buttons" name=createtag id="createtag" />
+							TODO: MAKE AJAX CALL
                         </div>
-                    </form>
+                    <!-- </form> -->
                 </div>
             </div>
             <div id="trackselection" class="row">
