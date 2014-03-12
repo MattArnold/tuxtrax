@@ -18,7 +18,7 @@
 {%- endmacro %}
 
 {% macro event_summary(submission, user) -%}
-        <div class="submission row bs-callout-default bs-callout {% if submission.followUpState == 0 %}suggested {% elif submission.followUpState == 1 %} followedup {% elif submission.followUpState == 2 %} rejected {% elif submission.followUpState == 3 %} confirmed {% endif %}"
+        <div class="submission row bs-callout-default bs-callout {% if submission.followUpState == 0 %}suggested {% elif submission.followUpState == 1 %} followedup {% elif submission.followUpState == 2 %} accepted {% elif submission.followUpState == 3 %} rejected {% endif %}"
              data-tags="{% for tag in submission.tags %}{{tag}} {% endfor %}">
 
             <div class="drawer submissions">
