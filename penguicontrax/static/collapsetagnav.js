@@ -7,8 +7,8 @@ $(document).ready(function () {
         $('#report').addClass('col-md-12');
     });
     $('#shownavbtn').click(function () {
-        $('.tagsinput').css('display', 'none');
-        $('#shownav').css('display', 'block');
+        $('.tagsinput').css('display', 'block');
+        $('#shownav').css('display', 'none');
         $('#report').removeClass('col-md-12');
         $('#report').addClass('col-md-10');
     });
