@@ -34,9 +34,19 @@
                         {% endif %}
                       </label>
                     </div> 
-                     <span class="badge">
-                        0 <i class="fa fa-clock-o"></i>
-                    </span>&nbsp;
+					{% if submission.followUpState == 0 %}
+						{% set followUpDays = submission.submitted_dt | days_since_now %}
+						{% if followUpDays < 14 %}
+							<span class="badge">
+								{{ followUpDays }} <i class="fa fa-clock-o"></i>
+							</span>
+						{% else %}
+							<span class="badge overdue">
+								{{ followUpDays }} <i class="fa fa-warning"></i>
+							</span>
+						{% endif %}
+						&nbsp;
+					{% endif %}
                     <a href="/eventform?id={{submission.id}}">{{ submission.title }}</a>
                     {% if submission.duration != 1 %}
                     <span class="label">{{ submission.duration }} hrs</span>

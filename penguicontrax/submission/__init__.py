@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from .. import app, db, dump_table_json
 from penguicontrax.user import User
 from copy import copy
-import string
+import string, datetime
 
 # Associates multiple tags to a submission
 SubmissionToTags = db.Table('submission_tags', db.Model.metadata,
@@ -49,9 +49,11 @@ class Submission(db.Model):
     personPresenters = db.relationship('Person', secondary=person_presenting_in, backref=db.backref('presenting_in'), passive_deletes=True)
     private = db.Column(db.Boolean())
     event_created = db.Column(db.Boolean())
-
+    submitted_dt = db.Column(db.DateTime())
+    
     def __init__(self):
        self.private = False
+       self.submitted_dt = datetime.datetime.now()
 
     def __repr__(self):
         return '<email: %s, title: %s>' % (self.email, self.title)
@@ -254,3 +256,7 @@ def checked_if_tracked(submission, trackname):
 @app.template_filter()
 def number_total_rsvps(submission):
     return len(submission.rsvped_by)
+
+@app.template_filter()
+def days_since_now(dt):
+    return (datetime.datetime.now() - dt).days
