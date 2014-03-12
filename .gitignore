@@ -14,3 +14,4 @@ psql_runserver.sh
 bower_components
 node_modules
 .project
+penguicontrax/static/ptrax.css
