@@ -13,3 +13,4 @@ psql_runserver.sh
 .idea
 bower_components
 node_modules
+.project
