@@ -80,7 +80,9 @@
 {% block page_script %}
 {{ super() }}
 <script type="text/javascript" src="{{ url_for('static', filename='tagFilter.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='collapsetagnav.js') }}"></script>
 <script type="text/javascript">
+
     $(document).ready(function(){
         $("[rel=tooltip]").tooltip({ placement: 'right'});
     });
@@ -91,22 +93,6 @@
     new ptrax.TagFilter("#tagfilter", {
         tags : tags,
         tplUrl : "{{ url_for('static', filename='tagfilter.mustache') }}"
-    });
-
-    //Handle collapsing and expanding the navigation
-
-    $('#hidenav').click(function(){
-        $('.tagsinput').css('display', 'none');
-        $('#nav').css('display', 'block');
-        $('#report').removeClass('col-md-10');
-        $('#report').addClass('col-md-12');
-    });
-    
-    $('#shownavbtn').click(function(){
-        $('.tagsinput').css('display', 'block');
-        $('#nav').css('display', 'none');
-        $('#report').removeClass('col-md-12');
-        $('#report').addClass('col-md-10');
     });
     
     $("#createeventbutton").click(function () {

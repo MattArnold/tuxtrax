@@ -12013,17 +12013,18 @@ body {
   text-decoration: line-through;
 }
 .header {
-  margin-bottom: 15px;
+  padding: .5em;
+  color: #999;
+  background-color: #eee;
+  margin-bottom: .5em;
 }
 .header .title {
-  padding-left: .5em;
+  font-size: large;
+  font-weight: bold;
+  padding-left: 1em;
 }
-.ptrax-login {
-  font-size: small;
-}
-.ptrax-login .row {
-  margin-right: 10px;
-  margin-top: 15px;
+.header .rightheader {
+  float: right;
 }
 .person {
   font-style: italic;
@@ -12056,12 +12057,46 @@ body {
   background-color: #f2dede;
   border-color: #c04a48;
 }
-.submissions-list .info {
+.submissions-list {
   font-size: small;
 }
-.submissions .rsvp.checked {
+.rsvp.checked {
   color: #FDD017;
 }
-.tagsinput {
+.bs-callout-default {
+  margin: .5em;
+  padding: .5em;
+}
+.tagsinput,
+#shownav,
+.widget-hint {
+  background: white;
+  border: 2px solid #1abc9c;
+  border-radius: 6px;
+}
+.tagsinput,
+#shownav {
+  overflow-y: auto;
+  text-align: left;
   height: auto;
+  overflow-x: hidden;
+}
+.tagsinput {
+  margin-bottom: 18px;
+  padding: 6px 1px 1px 6px;
+}
+.tag.checked {
+  background-color: #cacfd2;
+}
+.smalllabel {
+  font-size: small;
+}
+#shownav {
+  margin-right: 18px;
+  padding: 6px;
+  float: left;
+  display: none;
+}
+.drawer {
+  padding-left: 0;
 }
