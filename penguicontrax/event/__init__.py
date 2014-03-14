@@ -398,6 +398,16 @@ def convention_list():
         return redirect('/')
     return render_template('conventions.html', user=g.user, conventions=Convention.query.all())
 
+def convention_solve(convention):
+    if convention is None:
+        return redirect('/')
+    import solve
+    return solve.solve_convention(convention)
+
+@app.route('/convention/<convention_url>/solve')
+def convention_solve_url(convention_url):
+    return convention_solve(Convention.query.filter_by(url=convention_url).first())
+
 @app.template_filter()
 def get_date(dt):
     return Markup(u'{:%Y-%m-%d}'.format(dt)) if not dt is None else Markup(u'')

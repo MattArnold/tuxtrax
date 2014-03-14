@@ -6,8 +6,9 @@ from user import Person, User
 from event import Convention, Rooms, Events
 import datetime, random
 from user.Login import generate_account_name, gravatar_image_update
+import sys
 
-def import_old(as_convention, random_rsvp_users = 0):
+def import_old(as_convention, random_rsvp_users = 0, submission_limit = sys.maxint):
     
     if as_convention == True:
         convention = Convention()
@@ -38,10 +39,13 @@ def import_old(as_convention, random_rsvp_users = 0):
         for track in ['literature', 'tech', 'music', 'food', 'science']:
             penguicontrax.db.session.add(Track(track,None))
             
+    submission_count = 0
     with penguicontrax.app.open_resource('schedule2013.html', mode='r') as f:
         tree = ET.fromstring(f.read())
         events = tree.find('document')
         for section in events:
+            if submission_count == submission_limit:
+                break
             if as_convention == True and section.tag == 'time':
                 time_text= section.text.split(' ')
                 hour = int(time_text[0])
@@ -70,6 +74,8 @@ def import_old(as_convention, random_rsvp_users = 0):
                 #Load presenters
                 submission.personPresenters= []
                 for presenter in [presenter.strip() for presenter in person.split(',')]:
+                    if presenter == 'Open':
+                        continue #"Open" person will cause the schedule to become infesible
                     person = None
                     if not presenter in existing_people:
                         person = Person(presenter)
@@ -109,6 +115,7 @@ def import_old(as_convention, random_rsvp_users = 0):
                         submission.duration = 4 #1 hour
                 existing_submissions.append(submission)
                 penguicontrax.db.session.add(submission)
+                submission_count = submission_count + 1
         penguicontrax.db.session.commit()
 
     if random_rsvp_users > 0:
