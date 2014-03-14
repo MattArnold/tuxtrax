@@ -44,43 +44,38 @@ def solve_convention(convention):
     
     prob = LpProblem('Convention Time Table Optimization Problem', LpMinimize)
     
-    f_range = []
-    for i in range(len(P)):
-        for j in range(len(T)):
-            for h in range(len(H)):
-                f_range.append((i, j, h))
                 
-    f = LpVariable.dicts("f", f_range, cat="Integer")
+    f = LpVariable.dicts("f", range(len(P)*len(T)*len(H)), cat="Integer")
     for k in f.viewkeys():
         f[k].lowBound = 0
         f[k].upBound = 1
-    f_range = None
-        
+    index = lambda i,j,h: i + j*len(T) + h*len(T)*len(H)  
 
-    prob += lpSum([f[(i,j,h)] for i in range(len(P)) for j in range(len(T)) for h in range(len(H))])
+    prob += lpSum([f[x] for x in range(len(P)*len(T)*len(H))])
     
     #the presenter and talk are both available to be scheduled at hour
     for i in range(len(P)):
         for j in range(len(T)):
             for h in range(len(H)):
-                available = 1 if (H[h] in P[i] and H[h] in T[j]) else 0
-                prob += (f[(i,j,h)] <= available)
+                if not (H[h] in P[i] and H[h] in T[j]):
+                    prob += (f[index(i,j,h)] == 0)
     
     #the ith presenter was scheduled for the jth talk the required number of times
     for i in range(len(P)):
         for j in range(len(T)):
-            prob += lpSum([f[(i,j,h)] for h in range(len(H))]) == G[i][j]
-            
+            prob += lpSum([f[index(i,j,h)] for h in range(len(H))]) == G[i][j]
+    '''        
     #no talk has more than one presenter at a time
     for j in range(len(T)):
         for h in range(len(H)):
-            prob += lpSum([f[(i,j,h)] for i in range(len(P))]) <= 1
+            prob += lpSum([f[index(i,j,h)] for i in range(len(P))]) <= 1
             
     #no presenter is giving more than one talk simultaneously
     for i in range(len(P)):
         for h in range(len(H)):
-            prob += lpSum([f[(i,j,h)] for j in range(len(T))]) <= 1
-    
+            prob += lpSum([f[index(i,j,h)] for j in range(len(T))]) <= 1
+    '''
+                
     filename = '%s.mps' % convention.name
     prob.writeMPS(filename)
     
