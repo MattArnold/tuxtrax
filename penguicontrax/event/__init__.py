@@ -402,7 +402,7 @@ def convention_solve(convention):
     if convention is None:
         return redirect('/')
     import solve
-    return solve.solve_convention(convention)
+    return solve.solve_convention(convention, type = solve.SolveTypes.CTTD)
 
 @app.route('/convention/<convention_url>/solve')
 def convention_solve_url(convention_url):
