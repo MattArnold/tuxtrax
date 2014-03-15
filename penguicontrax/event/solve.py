@@ -5,34 +5,37 @@ def solve_convention(convention):
     from penguicontrax.user import User, Person
     from penguicontrax.event import Events, Timeslot
     
-    #a finite set H of hours
     timeslots = Timeslot.query.filter_by(convention_id=convention.id)
-    H = [timeslot.id for timeslot in timeslots]
-    
-    combined_presenters = []
-    combined_presenters.extend([(0, user.id) for user in User.query.all()])
-    combined_presenters.extend([(1, person.id) for person in Person.query.all()])
-    
-    #a collection {P_1, P_2, ..., P_n}, where P_i is a subset of H
-    #there are n presenters and P_i is the set of hours during which the ith teacher is available for teaching
-    P = [H for presenter in combined_presenters] #all presenters always available
-    
     total_events = Events.query.filter_by(convention_id=convention.id)
-    
-    #a collection {T_1, T_2, ..., T_m}, where T_j is a subset of H
-    #there are m talks and T_j is the set of hours during which the jth talk can be given
-    T = [H for event in total_events] #all events always available
-    
     event_presenters= []
     for event in total_events:
         user_ids = [user.id for user in event.userPresenters]
         person_ids = [person.id for person in event.personPresenters]
         event_presenters.append((user_ids, person_ids))
     
+    combined_presenters_set = set()
+    for event_presenter_lists in event_presenters:
+        for user in event_presenter_lists[0]:
+            combined_presenters_set.add((0, user))
+        for person in event_presenter_lists[1]:
+            combined_presenters_set.add((1, person))
+    
+    
+    #a finite set H of hours
+    H = [timeslot.id for timeslot in timeslots]
+    
+    #a collection {P_1, P_2, ..., P_n}, where P_i is a subset of H
+    #there are n presenters and P_i is the set of hours during which the ith teacher is available for teaching
+    P = [H for presenter in combined_presenters_set] #all presenters always available 
+    
+    #a collection {T_1, T_2, ..., T_m}, where T_j is a subset of H
+    #there are m talks and T_j is the set of hours during which the jth talk can be given
+    T = [H for event in total_events] #all events always available
+    
     #an n x m matrix G of nonnegative integers 
     #G_ij is the number of hours (times) which the ith presenter will give the jth talk
     G = []
-    for presenter in combined_presenters:
+    for presenter in combined_presenters_set:
         GP = []
         for event_num in range(len(event_presenters)):
             event_presenter_list = event_presenters[event_num]
