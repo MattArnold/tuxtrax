@@ -47,8 +47,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12 submissions-list">
-                            <div class="row">
+                        <div class="submissions-list">
+                            <div class="row col-md-12">
                                 <div class="col-md-8 info">{% if hidden==True %}
                                     {{ 'We regret that for various reasons, we can’t use these event suggestions this year. Maybe next year! Also, some of them may be here in error, in which case bear with us while we fix it.' }}
                                     {% else %}
@@ -65,10 +65,10 @@
                             <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a
                                     href="form.html">create one</a>?
                             </div>
-                            {% if request.path != "/hidden" %}
-														<div><a href="/hidden">See hidden events</a></div>
-														{% endif %}
                         </div>
+                        {% if request.path != "/hidden" %}
+                        <div class="row"><a href="/hidden">See hidden events</a></div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

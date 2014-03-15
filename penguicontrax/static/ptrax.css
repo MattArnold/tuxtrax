@@ -12006,6 +12006,16 @@ footer p {
 .fa-plus-square-o:before {
   content: "\f196";
 }
+.icon-google-square,
+.icon-yahoo-square {
+  position: relative;
+  fill: #16a085;
+  top: .1em;
+}
+.google-large,
+.yahoo-large {
+  fill: #16a085;
+}
 body {
   font-family: "Droid Sans";
 }

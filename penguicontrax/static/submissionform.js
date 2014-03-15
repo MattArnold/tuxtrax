@@ -19,7 +19,7 @@ var pluralized = false;
 
 $(document).ready(function () {
 
-  $('#resources, #players, #furniture, #otherfacility, .setupandrepeat, #othertime, .pp, #pptype, #pluralpptype').css('display', 'none');
+  $('#resources, #players, #furniture, #otherfacility, .setupandrepeat, #othertime, #pptype, #pluralpptype').css('display', 'none');
 
   $('.typelist:checked').first().each(function (index, elm) {
     update_type_options($(elm).val(), true);

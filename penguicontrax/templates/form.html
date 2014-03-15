@@ -153,8 +153,8 @@
 				{{ macros.person_link(person_presenter) }}
 			{% endfor %}
 		{% endif %}
-		<input name=person0 type=text size="24" onkeyup="countChar(this, 24)" class="pp" />
-		<button id="newperson"  class="pp" >+ someone else</button>
+		<input name=person0 type=text size="24" onkeyup="countChar(this, 24)" class="pp form-control" />
+		<button id="newperson" class="pp btn btn-xs" >+ someone else</button>
   		</div>
 	</div>
 	</div>
@@ -256,4 +256,5 @@
 {% endblock %}
 {% block page_script %}
 <script src="static/submissionform.js"></script>
+<script src="static/addperson.js"></script>
 {% endblock %}
