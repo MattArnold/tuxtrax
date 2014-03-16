@@ -171,8 +171,8 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
                                 break
                     if scheduled == True:
                         if room == None:
-                            yield str(Markup.escape('%s is scheduled at %s' % (total_events[j].title, str(timeslots[h].start_dt)))) + '<br/>'
+                            yield unicode(Markup.escape(u'%s is scheduled at %s' % (total_events[j].title, unicode(timeslots[h].start_dt)))) + u'<br/>'
                         else:
-                            yield str(Markup.escape('%s is scheduled at %s in %s' % (total_events[j].title, str(timeslots[h].start_dt), Rooms.query.filter_by(id=room).first().room_name))) + '<br/>'
+                            yield unicode(Markup.escape(u'%s is scheduled at %s in %s' % (total_events[j].title, unicode(timeslots[h].start_dt), Rooms.query.filter_by(id=room).first().room_name))) + u'<br/>'
         
     return Response(solve())
