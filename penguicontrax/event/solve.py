@@ -12,9 +12,9 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
     def solve():
         
         yield 'Querying databse for timeslots and events</br>'
-        timeslots = Timeslot.query.filter_by(convention_id=convention.id)
-        total_events = Events.query.filter_by(convention_id=convention.id)
-        rooms = Rooms.query.filter_by(convention_id=convention.id)
+        timeslots = Timeslot.query.filter_by(convention_id=convention.id).all()
+        total_events = Events.query.filter_by(convention_id=convention.id).all()
+        rooms = Rooms.query.filter_by(convention_id=convention.id).all()
         
         yield 'Creating lists of presenters</br>'
         event_presenters= []
@@ -165,7 +165,7 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
                             for r in range(len(R)):
                                 if f[index(i,j,h,r)].varValue == 1:
                                     scheduled = True
-                                    room = r
+                                    room = R[r]
                                     break
                             if scheduled == True:
                                 break
@@ -173,6 +173,9 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
                         if room == None:
                             yield unicode(Markup.escape(u'%s is scheduled at %s' % (total_events[j].title, unicode(timeslots[h].start_dt)))) + u'<br/>'
                         else:
-                            yield unicode(Markup.escape(u'%s is scheduled at %s in %s' % (total_events[j].title, unicode(timeslots[h].start_dt), Rooms.query.filter_by(id=room).first().room_name))) + u'<br/>'
+                            db_room = Rooms.query.filter_by(id=room).first()
+                            if db_room is None:
+                                yield 'Unable to find room with id %d<br/>' % room
+                            yield unicode(Markup.escape(u'%s is scheduled at %s in %s' % (total_events[j].title, unicode(timeslots[h].start_dt), db_room.room_name))) + u'<br/>'
         
     return Response(solve())
