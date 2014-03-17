@@ -60,13 +60,13 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
         
         prob = LpProblem('Convention Time Table Optimization Problem', LpMinimize)
         
-        num_vars = len(P)*len(T)*len(H)*(len(R) if type == SolveTypes.ECTTD else 1)  
+        num_vars = len(P)*len(T)*len(H)
         yield 'Creating %d scheduling variables<br/>' % num_vars
         f = LpVariable.dicts("f", range(num_vars), cat="Integer")
         for k in f.viewkeys():
             f[k].lowBound = 0
             f[k].upBound = 1
-        index = lambda i,j,h,r=0: (i*len(T)*len(H) + j*len(H) + h) if type != SolveTypes.ECTTD else (i*len(T)*len(H)*len(R) + j*len(H)*len(R) + h*len(R) + r)
+        index = lambda i,j,h: (i*len(T)*len(H) + j*len(H) + h)
     
         yield 'Creating objective function<br/>'
         prob += lpSum([f[x] for x in range(num_vars)])
@@ -77,24 +77,14 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
             for j in range(len(T)):
                 for h in range(len(H)):
                     if not (H[h] in P[i] and H[h] in T[j]):
-                        if type == SolveTypes.ECTTD:
-                            for r in range(len(R)):
-                                prob += (f[index(i,j,h,r)] == 0)
-                        else:
-                            prob += (f[index(i,j,h)] == 0)
+                        prob += (f[index(i,j,h)] == 0)
                             
         
         yield 'Creating constraint that each presenter is scheduled for all their presentations<br/>'
         #the ith presenter was scheduled for the jth talk the required number of times
         for i in range(len(P)):
             for j in range(len(T)):
-                if type == SolveTypes.ECTTD:
-                    presenter_talk_sum = []
-                    for h in range(len(H)):
-                        for r in range(len(R)):
-                            presenter_talk_sum.append(f[index(i,j,h,r)])
-                else:
-                    presenter_talk_sum = [f[index(i,j,h)] for h in range(len(H))]
+                presenter_talk_sum = [f[index(i,j,h)] for h in range(len(H))]
                 presenter_talk_requirement = G[i][j]
                 prob += lpSum(presenter_talk_sum) == presenter_talk_requirement
         
@@ -113,30 +103,17 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
                     for j in range(len(T)):
                         for h in range(len(H)):
                             if G[i][j] > 0 and G[i_][j] > 0:
-                                if type == SolveTypes.ECTTD:
-                                    for r in range(len(R)):
-                                        prob += f[index(i,j,h,r)] == f[index(i_,j,h,r)]
-                                else:
-                                    prob += f[index(i,j,h)] == f[index(i_,j,h)]
+                                prob += f[index(i,j,h)] == f[index(i_,j,h)]
                           
                 
         yield 'Creating constraint that no presenter has multiple bookings in a timeslot</br>'
         #no presenter is giving more than one talk simultaneously
         for i in range(len(P)):
             for h in range(len(H)):
-                if type == SolveTypes.ECTTD:
-                    for r in range(len(R)):
-                        prob += lpSum([f[index(i,j,h,r)] for j in range(len(T))]) <= 1
-                else:
                     prob += lpSum([f[index(i,j,h)] for j in range(len(T))]) <= 1
                     
         if type == SolveTypes.ECTTD:
             yield 'Creating constraint that no room has more than one event per timeslot<br/>'
-            for j in range(len(T)):
-                num_presenters = len(event_presenters[j][0]) + len(event_presenters[j][1])
-                for r in range(len(R)):
-                    for h in range(len(H)):
-                        prob += lpSum([f[index(i,j,h,r)] for i in range(len(P))]) <= num_presenters
                 
         if write_files == True:
             yield 'Writing linear programming files<br/>'    
@@ -166,13 +143,7 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
                                 scheduled = True
                                 break
                         else:
-                            for r in range(len(R)):
-                                if f[index(i,j,h,r)].varValue == 1:
-                                    scheduled = True
-                                    room = R[r]
-                                    break
-                            if scheduled == True:
-                                break
+                            pass
                     if scheduled == True:
                         timeslot = Timeslot.query.filter_by(id=H[h]).first()
                         event.start_dt = timeslot.start_dt
