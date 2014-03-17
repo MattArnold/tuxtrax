@@ -8,7 +8,8 @@ class SolveTypes:
 
 def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
     from penguicontrax.user import User, Person
-    from penguicontrax.event import Events, Timeslot, Rooms
+    from penguicontrax.event import Events, Timeslot, Rooms, generate_schedule, Convention
+    from penguicontrax import db
     def solve():
         
         yield 'Querying databse for timeslots and events</br>'
@@ -151,11 +152,14 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
         
         if result == constants.LpStatusOptimal:
             yield 'Creating schedule from solution<br/>'
-            
-            for j in range(len(T)):
-                for h in range(len(H)):
+            for event in total_events:
+                event.start_dt = None
+                del event.rooms[:]
+            for h in range(len(H)):
+                for j in range(len(T)):
                     scheduled = False
                     room = None
+                    event = total_events[j]
                     for i in range(len(P)):
                         if type != SolveTypes.ECTTD:
                             if f[index(i,j,h)].varValue == 1:
@@ -170,12 +174,17 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
                             if scheduled == True:
                                 break
                     if scheduled == True:
+                        timeslot = Timeslot.query.filter_by(id=H[h]).first()
+                        event.start_dt = timeslot.start_dt
                         if room == None:
-                            yield unicode(Markup.escape(u'%s is scheduled at %s' % (total_events[j].title, unicode(timeslots[h].start_dt)))) + u'<br/>'
+                            yield unicode(Markup.escape(u'%s is scheduled at %s' % (event.title, unicode(timeslot.start_dt)))) + u'<br/>'
                         else:
                             db_room = Rooms.query.filter_by(id=room).first()
-                            if db_room is None:
-                                yield 'Unable to find room with id %d<br/>' % room
-                            yield unicode(Markup.escape(u'%s is scheduled at %s in %s' % (total_events[j].title, unicode(timeslots[h].start_dt), db_room.room_name))) + u'<br/>'
+                            yield unicode(Markup.escape(u'%s is scheduled at %s in %s' % (event.title, unicode(timeslot.start_dt), db_room.room_name))) + u'<br/>'
+                            event.rooms.append(db_room)
+                        db.session.add(event)
+            yield 'Applying schedule to database...<br/>'
+            db.session.commit()
+            generate_schedule(Convention.query.filter_by(id=convention.id).first())
         
     return Response(solve())
