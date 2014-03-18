@@ -26,10 +26,10 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
             person_ids = [person.id for person in event.personPresenters]
             total_presenters = len(user_ids) + len(person_ids)
             presenters_upperbound += total_presenters
-            if total_presenters > 0:
-                event_presenters.append((user_ids, person_ids))
-            else:
-                events_to_remove.append(event)
+            #if total_presenters > 0:
+            event_presenters.append((user_ids, person_ids))
+            #else:
+            #    events_to_remove.append(event)
         for event in events_to_remove:
             total_events.remove(event)
         combined_presenters_set = set()

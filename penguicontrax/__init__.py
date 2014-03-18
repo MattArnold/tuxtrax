@@ -56,9 +56,9 @@ def init():
     # GET RID OF THIS LATER
     if len(Submission.query.all()) == 0 and len(Events.query.all()) == 0:
         print 'Importing 2013 schedule into submissions'
-        import2013schedule.import_old(False, submission_limit = 20)
+        import2013schedule.import_old(False, submission_limit = 100)
         print 'Importing 2013 schedule into convention'
-        import2013schedule.import_old(True, random_rsvp_users = 40, submission_limit = 20)
+        import2013schedule.import_old(True, random_rsvp_users = 40, submission_limit = 100)
 
 @app.route('/')
 def index():
