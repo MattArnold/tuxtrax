@@ -20,11 +20,18 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
         yield 'Creating lists of presenters</br>'
         event_presenters= []
         presenters_upperbound = 0
+        events_to_remove = []
         for event in total_events:
             user_ids = [user.id for user in event.userPresenters]
             person_ids = [person.id for person in event.personPresenters]
-            presenters_upperbound += len(user_ids) + len(person_ids)
-            event_presenters.append((user_ids, person_ids))
+            total_presenters = len(user_ids) + len(person_ids)
+            presenters_upperbound += total_presenters
+            if total_presenters > 0:
+                event_presenters.append((user_ids, person_ids))
+            else:
+                events_to_remove.append(event)
+        for event in events_to_remove:
+            total_events.remove(event)
         combined_presenters_set = set()
         for event_presenter_lists in event_presenters:
             for user in event_presenter_lists[0]:
@@ -64,7 +71,8 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
         
         num_vars_f = len(P)*len(T)*len(H)
         num_vars_g = len(T)*len(H)*len(R) if type == SolveTypes.ECTTD else 0
-        yield 'Creating %d scheduling variables<br/>' % (num_vars_f + num_vars_g)
+        num_vars_z = len(T)*len(H) if type == SolveTypes.ECTTD else 0
+        yield 'Creating %d scheduling variables<br/>' % (num_vars_f + num_vars_g + num_vars_z)
         f = LpVariable.dicts('f', range(num_vars_f), cat='Integer')
         for k in f.viewkeys():
             f[k].lowBound = 0
@@ -72,13 +80,22 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
         index = lambda i,j,h: (i*len(T)*len(H) + j*len(H) + h)
         if type == SolveTypes.ECTTD:
             g = LpVariable.dicts('g', range(num_vars_g), cat='Integer')
+            z = LpVariable.dicts('z', range(num_vars_z), cat='Integer')
             for k in g.viewkeys():
                 g[k].lowBound = 0
                 g[k].upBound = 1
+            for k in z.viewkeys():
+                z[k].lowBound = 0
+                z[k].upBound = 1
             indexg = lambda j,h,r: (j*len(H)*len(R) + h*len(R) + r)
-    
+            indexz = lambda j,h : (j*len(H) + h)
         yield 'Creating objective function<br/>'
-        prob += lpSum(([f[x] for x in range(num_vars_f)].extend([g[x] for x in range(num_vars_g)])) if type == SolveTypes.ECTTD else ([f[x] for x in range(num_vars_f)]))
+        objective = [f[x] for x in range(num_vars_f)]
+        if type == SolveTypes.ECTTD:
+            objective.extend([g[x] for x in range(num_vars_g)])
+            objective.extend([z[x] for x in range(num_vars_z)])
+        prob += lpSum(objective)
+        objective = None
         
         yield 'Creating constraint that each presenter and presentation must be available<br/>'
         #the presenter and talk are both available to be scheduled at hour
@@ -125,13 +142,17 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
             yield 'Creating constraint that no room has more than one event per timeslot<br/>'
             for j in range(len(T)):
                 for h in range(len(H)):
-                    room_sum = lpSum([g[indexg(j,h,r)] for r in range(len(R))])
+                    presentation_scheduled = z[indexz(j,h)]
                     presenter_sum = lpSum([f[index(i,j,h)] for i in range(len(P))])
-                    prob += room_sum <= presenter_sum 
-                    prob += presenter_sum <= presenters_upperbound*room_sum
-                    prob += room_sum <= 1
+                    prob += presenter_sum <= presenters_upperbound*presentation_scheduled
+                    #z(j,h) will be 1 iff the jth talk is presented at hour h
+            for h in range(len(H)):
+                for j in range(len(T)):
+                    # the number of the rooms booked at hour h must be equal to the number of presentations being given at that hour
+                    prob += lpSum([g[indexg(j,h,r)] for r in range(len(R))]) == z[indexz(j,h)]
+                for r in range(len(R)):
+                    prob += lpSum([g[indexg(j,h,r)] for j in range(len(T))]) <= 1
                         
-                
         if write_files == True:
             yield 'Writing linear programming files<br/>'    
             filename = '%s.mps' % convention.name
