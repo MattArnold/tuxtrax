@@ -14,7 +14,7 @@
 			WHERE
 		</div>
   		</div>
-		<div class="col-md-6">
+		<div class="col-md-4">
 		<div id="typechange" class="btn-group" data-toggle="buttons" >
 			<input type="radio" name="eventtype" class="typelist" value="noroomtype" id="noroomtype" style="display:none">
 			<label class="radio" for="talkbtn">
@@ -37,17 +37,19 @@
 			</label>
 		</div>
   		</div>
-		<div class="col-md-5">
+		<div class="col-md-7">
 			<div class="question" id="resources">
 			{% for resource in resources %}
 				<label for="resource_{{ resource.id }}" class="checkbox-inline">
-				<input type="checkbox"  data-toggle="checkbox" name="resource_{{ resource.id }}" id="resource_{{ resource.id }}" value="{{ resource.id }}" {{ event | checked_if_resourced(resource) }}>
+				<input type="checkbox" name="resource_{{ resource.id }}" id="resource_{{ resource.id }}" value="{{ resource.id }}">
 				{{ resource.name }}
 				</label>
 			{% endfor %}
 			</div>
             <div class="question" id="players">
-                Number of Players:
+                <label for="players">
+                    Number of Players:
+                </label>
                 <select value="" tabindex="" name=players class="select-block">
                     <option value="2 {{event.players|is_selected(2)}}">2</option>
                     <option value="3" {{event.players|is_selected(3)}}>3</option>
@@ -57,7 +59,9 @@
                 </select>
             </div>
             <div class="question" id="furniture" >
-                Round tables:
+                <label for="roundtables">
+                    Round tables:
+                </label>
                 <select value="" tabindex="" name=roundtables class="select-block">
                     <option value="0" {{event.roundTables|is_selected(0)}}>0</option>
                     <option value="1" {{event.roundTables|is_selected(1)}}>1</option>
@@ -65,7 +69,9 @@
                     <option value="3" {{event.roundTables|is_selected(3)}}>3</option>
                     <option value="5" {{event.roundTables|is_selected(5)}}>more</option>
                 </select>
-                Long tables:
+                <label for="longtables">
+                    Long tables:
+                </label>
                 <select value="" tabindex="" name=longtables class="select-block">
                     <option value="0" {{event.longTables|is_selected(0)}}>0</option>
                     <option value="1" {{event.longTables|is_selected(1)}}>1</option>
@@ -175,12 +181,14 @@
                 {% endfor %}
             </div>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 form-group">
                     <!-- <form action="/createtag" method=post > -->
                         <div>
-                            New topic tag: <input type=text name=tagname id="tagname" />
+                            <label for="tagname">New topic tag: </label><input type=text name=tagname id="tagname" class="input-sm" size="12" />
                             <input type=submit value="Submit tag" class="buttons" name=createtag id="createtag" />
+<!--
 							TODO: MAKE AJAX CALL
+-->
                         </div>
                     <!-- </form> -->
                 </div>
@@ -209,11 +217,13 @@
         <div class="row">
             <div class="question col-md-3">
                 Title: 
-                <textarea name=title id="title" rows="2" onkeyup="countChar(this, 80)" class="form-control" />{{ event.title | default('',true) }}</textarea>
+                <textarea name=title id="title" rows="2" class="form-control countchar" />{{ event.title | default('',true) }}</textarea>
+                <span id="charnum"> 
+                </span>
             </div>
             <div class="question col-md-9">
                 Descriptive blurb: 
-                <textarea name=description id="blurb" rows="8" onkeyup="countChar(this, 700)" class="form-control">{{ event.description | default('',true) }}</textarea>
+                <textarea name=description id="blurb" rows="8" class="form-control countchar">{{ event.description | default('',true) }}</textarea>
             </div>
 		</div>
 	</div>
@@ -247,9 +257,7 @@
 					</div>
 				{% endif %}
 			{% endif %}
-			<div class="question">
-				<span id="charnum" ></span>
-			</div>
+
 		{% endif %}
 	</div>
 	</form>

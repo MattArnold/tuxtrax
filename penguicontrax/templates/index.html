@@ -33,6 +33,7 @@
                             </div>
                             <button id="createeventbutton" class="btn btn-primary">Suggest an event</button>
                         </div>
+                        <i class="fa fa-info-circle tip" rel="tooltip" data-toggle="tooltip" data-placement="bottom" data-original-title="Filter the schedule by topics. Click some tags if you want to see only events with those topics. If you click a tag again, it will exclude all events with that topic. If you click a tag a third time, your filter will not care about that topic. If you have no topics turned on, it will turn on all the tags."></i>
                         <div class="col-md-4">
                             <input class="form-control" type="search" placeholder="Search"/>
                         </div>
@@ -84,7 +85,7 @@
 <script type="text/javascript">
 
     $(document).ready(function(){
-        $("[rel=tooltip]").tooltip({ placement: 'right'});
+        $("[rel=tooltip]").tooltip();
     });
     
     var tags = "{% for tag in tags %}{{tag}},{% endfor%}".split(",");

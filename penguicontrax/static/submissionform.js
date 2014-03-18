@@ -18,6 +18,21 @@ $('input[name="typelist"]:not(input[name="typelist"]:checked)').click(function (
 var pluralized = false;
 
 $(document).ready(function () {
+    
+    $('.countchar').on( "input", function() {
+        var len = this.value.length;
+        var limit;
+        var remaining;
+        if (this.name == "title"){ limit = 80; };
+        if (this.name == "description"){ limit = 700; };
+        if (len >= limit) {
+            this.value = this.value.substring(0, limit);
+        } else {
+            remaining = limit - len;
+            $('#charnum').text(remaining + " characters remaining in " + this.name + ".");
+        };
+    });
+
 
   $('#resources, #players, #furniture, #otherfacility, .setupandrepeat, #othertime, #pptype, #pluralpptype').css('display', 'none');
 
