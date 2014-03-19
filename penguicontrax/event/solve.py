@@ -5,6 +5,7 @@ class SolveTypes:
     TTD = 1
     CTTD = 2
     ECTTD = 3
+    ECTTO = 4
 
 def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
     from penguicontrax.user import User, Person
@@ -53,6 +54,10 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
         
         R = [room.id for room in rooms]
         
+        A = [[timeslot.id for timeslot in room.available_timeslots] for room in rooms]
+        
+        S = [[room.id for room in event.suitable_rooms] for event in total_events]
+        
         yield 'Creating presentation requirement matrix<br/>'
         #an n x m matrix G of nonnegative integers 
         #G_ij is the number of hours (times) which the ith presenter will give the jth talk
@@ -89,13 +94,13 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
                 z[k].upBound = 1
             indexg = lambda j,h,r: (j*len(H)*len(R) + h*len(R) + r)
             indexz = lambda j,h : (j*len(H) + h)
+            
+        yield 'Creating conflict matrix<br/>'
+        if type == SolveTypes.ECTTO:
+            c = LpVariable.dicts('c', range(num_vars_z), cat ='Integer')
+            
         yield 'Creating objective function<br/>'
-        objective = [f[x] for x in range(num_vars_f)]
-        if type == SolveTypes.ECTTD:
-            objective.extend([g[x] for x in range(num_vars_g)])
-            objective.extend([z[x] for x in range(num_vars_z)])
-        prob += lpSum(objective)
-        objective = None
+        prob += 0
         
         yield 'Creating constraint that each presenter and presentation must be available<br/>'
         #the presenter and talk are both available to be scheduled at hour
@@ -152,6 +157,16 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
                     prob += lpSum([g[indexg(j,h,r)] for r in range(len(R))]) == z[indexz(j,h)]
                 for r in range(len(R)):
                     prob += lpSum([g[indexg(j,h,r)] for j in range(len(T))]) <= 1
+            yield 'Creating constraint that a room must be available for scheduling<br/>'
+            for r in range(len(R)):
+                for h in range(len(H)):
+                    if not H[h] in A[r]:
+                        prob += lpSum([g[indexg(j,h,r)] for j in range(len(T))]) == 0
+            yield 'Creating constraint that a presentation may only be scheduled in a room for which it is suitable<br/>'
+            for j in range(len(T)):
+                for r in range(len(R)):
+                    if not R[r] in S[j]:
+                        prob += lpSum([g[indexg(j,h,r)] for h in range(len(H))]) == 0
                         
         if write_files == True:
             yield 'Writing linear programming files<br/>'    

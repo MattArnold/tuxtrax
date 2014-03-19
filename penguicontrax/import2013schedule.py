@@ -32,7 +32,7 @@ def import_old(as_convention, random_rsvp_users = 0, submission_limit = sys.maxi
         
     existing_rooms = {}
     existing_submissions = []
-        
+
     if as_convention == False:
         for resource in ['Projector', 'Microphone', 'Sound system', 'Drinking water', 'Quiet (no airwalls)']:
             penguicontrax.db.session.add(Resource(resource))
@@ -139,6 +139,25 @@ def import_old(as_convention, random_rsvp_users = 0, submission_limit = sys.maxi
         penguicontrax.db.session.commit()
         
     if as_convention == True:
-        from event import generate_schedule
+        from event import generate_schedule, generate_timeslots
+        generate_timeslots(convention, submission_limit / 4)
+        all_rooms = [room for room in existing_rooms.viewvalues()]
+        hackerspace = [existing_rooms['Hackerspace A'], existing_rooms['Hackerspace B']]
+        food = [existing_rooms['Food']]
+        from copy import copy
+        general_rooms = copy(all_rooms)
+        general_rooms.remove(hackerspace[0])
+        general_rooms.remove(hackerspace[1])
+        general_rooms.remove(food[0])
+        timeslots = [timeslot for timeslot in convention.timeslots]
+        for submission in existing_submissions:
+            if food[0] in submission.rooms:
+                submission.suitable_rooms = food
+            elif hackerspace[0] in submission.rooms or hackerspace[1] in submission.rooms:
+                submission.suitable_rooms = hackerspace
+            else:
+                submission.suitable_rooms = general_rooms
+        for room in all_rooms:
+            room.available_timeslots = timeslots
         generate_schedule(convention)
             

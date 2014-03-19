@@ -1,7 +1,7 @@
 from flask import g, request, session, render_template, redirect, Response, Markup
 from .. import app, db
 import xml.etree.ElementTree as ET
-import datetime
+import datetime, sys
 
 # Associate multiple rooms to multiple events.
 room_events = db.Table('room_events',
@@ -31,6 +31,15 @@ person_event = db.Table('person_event',
     db.Column('events_id', db.Integer, db.ForeignKey('events.id', ondelete='CASCADE', onupdate='CASCADE')),
     db.Column('person_id', db.Integer, db.ForeignKey('person.id', ondelete='CASCADE', onupdate='CASCADE')))
 
+room_suitability = db.Table('room_suitability',
+    db.Column('event_id', db.Integer, db.ForeignKey('events.id', ondelete='CASCADE', onupdate='CASCADE')),
+    db.Column('room_id', db.Integer, db.ForeignKey('rooms.id', ondelete='CASCADE', onupdate='CASCADE'))
+)
+
+room_availability = db.Table('room_availability',
+    db.Column('timeslot_id', db.Integer, db.ForeignKey('timeslot.id', ondelete='CASCADE', onupdate='CASCADE')),
+    db.Column('room_id', db.Integer, db.ForeignKey('rooms.id', ondelete='CASCADE', onupdate='CASCADE'))
+)
 
 class Events(db.Model):
     __tablename__ = 'events'
@@ -70,6 +79,8 @@ class Rooms(db.Model):
     rooms_groups = db.relationship('RoomGroups', backref='rooms')
     convention_id = db.Column(db.Integer, db.ForeignKey('convention.id'))
     convention = db.relationship('Convention', backref='rooms')
+    suitable_events = db.relationship('Events', secondary=room_suitability, backref=db.backref('suitable_rooms'), passive_deletes=True)
+    available_timeslots = db.relationship('Timeslot', secondary=room_availability, backref=db.backref('available_rooms'), passive_deletes=True)
 
     def __repr__(self):
         return 'Room: %' % self.room_name
@@ -85,7 +96,6 @@ class RoomGroups(db.Model):
 
     def __repr__(self):
         return 'Room Group: %' % self.room_group_name
-
 
 class Convention(db.Model):
     __tablename__ = 'convention'
@@ -249,26 +259,42 @@ def convention_update():
     audit.audit_change(Convention.__table__, g.user, old_convention, convention)
     return redirect('/convention/%s/' % convention.url)
 
+def generate_timeslots(convention, timeslot_limit=sys.maxint):
+    for timeslot in convention.timeslots:
+        db.session.delete(timeslot)
+    current = convention.start_dt
+    end = convention.end_dt
+    dow = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    first = True
+    count = 0
+    while (current < end) and (count < timeslot_limit):
+        timeslot = Timeslot()
+        timeslot.convention = convention
+        timeslot.start_dt = current
+        timeslot.name = '%s, %s' % (dow[current.weekday()], ('{:%I %p}'.format(current).lstrip('0'))) if (current.hour == 0 or first == True) else ('{:%I %p}'.format(current).lstrip('0'))
+        db.session.add(timeslot)
+        current += convention.timeslot_duration
+        first = False
+        count = count + 1
+    db.session.commit()
+
 def generate_schedule(convention):
     all_scheduled_events = Events.query.filter(Events.convention_id == convention.id, Events.start_dt != None).all()
     from operator import attrgetter
     all_scheduled_events.sort(key = attrgetter('start_dt'))
     scheduled_events = []
     cutoff_dt = None
-    dow = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     this_hour = None
     unassigned_room = 'unassigned_room'
     for event in all_scheduled_events:
         if cutoff_dt == None:
             this_hour = {}
             cutoff_dt = convention.start_dt + convention.timeslot_duration
-            this_hour['time_tag'] = '%s, %s' % (dow[convention.start_dt.weekday()], ('{:%I %p}'.format(convention.start_dt)).lstrip('0'))
             this_hour['time'] = convention.start_dt
             this_hour['rooms'] = dict()
             scheduled_events.append(this_hour)
         elif event.start_dt >= cutoff_dt:
             this_hour = {}
-            this_hour['time_tag'] = '%s, %s' % (dow[cutoff_dt.weekday()], ('{:%I %p}'.format(cutoff_dt).lstrip('0'))) if cutoff_dt.hour == 0 else ('{:%I %p}'.format(cutoff_dt).lstrip('0'))
             this_hour['time'] = cutoff_dt
             this_hour['rooms'] = {}
             cutoff_dt = cutoff_dt + convention.timeslot_duration
@@ -327,17 +353,15 @@ def generate_schedule(convention):
         
                 
     # Move everything over to the database
-    for timeslot in convention.timeslots:
-        db.session.delete(timeslot)
     for timeslot_entry in convention.timeslot_entries:
         db.session.delete(timeslot_entry)
     for timeslot_booking in convention.timeslot_bookings:
         db.session.delete(timeslot_booking)
+    timeslots = {}
+    for timeslot in convention.timeslots:
+        timeslots[timeslot.start_dt] = timeslot
     for hour in scheduled_events:
-        timeslot = Timeslot()
-        timeslot.convention = convention
-        timeslot.name = hour['time_tag']
-        timeslot.start_dt = hour['time']
+        timeslot = timeslots[hour['time']]
         timeslot.rsvp_conflicts = hour['rsvp_conflicts']
         for presenter in hour['presenter_conflicts']:
             presenter_conflict = Presenterconflict()
@@ -418,7 +442,7 @@ def convention_solve(convention):
     if convention is None:
         return redirect('/')
     import solve
-    return solve.solve_convention(convention, type = solve.SolveTypes.ECTTD, write_files = True)
+    return solve.solve_convention(convention, type = solve.SolveTypes.ECTTD)
 
 @app.route('/convention/<convention_url>/solve')
 def convention_solve_url(convention_url):
