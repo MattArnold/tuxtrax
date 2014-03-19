@@ -25,11 +25,26 @@ $(document).ready(function () {
         var remaining;
         if (this.name == "title"){ limit = 80; };
         if (this.name == "description"){ limit = 700; };
+        if (len > 0) {
+            $('#charnum').css('display', 'block');
+        } else {
+            $('#charnum').css('display', 'none');
+        };
+        $('#charnum').removeClass('alert-danger alert-warning alert-info');
+        if (limit - len < 10) {
+            $('#charnum').addClass('alert-danger');
+        } else if ((limit / 2) - len < 10) {
+            $('#charnum').addClass('alert-warning');
+        } else if ((limit / 3) - len < 10) {
+            $('#charnum').addClass('alert-info');
+        } else if (len > 0) {
+            $('#charnum').addClass('alert-success');
+        };
         if (len >= limit) {
             this.value = this.value.substring(0, limit);
         } else {
             remaining = limit - len;
-            $('#charnum').text(remaining + " characters remaining in " + this.name + ".");
+            $('#charnum').text(remaining + " more characters can fit in the " + this.name + ".");
         };
     });
 

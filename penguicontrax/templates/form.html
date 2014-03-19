@@ -218,8 +218,8 @@
             <div class="question col-md-3">
                 Title: 
                 <textarea name=title id="title" rows="2" class="form-control countchar" />{{ event.title | default('',true) }}</textarea>
-                <span id="charnum"> 
-                </span>
+                <div id="charnum" class="alert" style="display: none"> 
+                </div>
             </div>
             <div class="question col-md-9">
                 Descriptive blurb: 
@@ -229,15 +229,15 @@
 	</div>
 	</div>
 	</div>
-	<div class="row">
+	<div class="row jumbotron">
         <div class="col-md-2" >
             <div class="header">
                 WHY NOT
             </div>
         </div>
         <div class="col-md-10">
+            		<input type=submit value="{% if event is not none %}Update event{% else %}Submit event{% endif %}" class="btn btn-default btn-primary" name=submitevent id="submitevent" />
 		<input type=text style="display: none" name=comments id="comments" {% if event is not none %}value="{{ event.comments }}"{% endif %} />
-		<input type=submit value="{% if event is not none %}Update event{% else %}Submit event{% endif %}" class="btn btn-default btn-primary" name=submitevent id="submitevent" />
 		</div>
 		{% if user is not none and user.staff == 1 %}
 			{% if event is not none %}
