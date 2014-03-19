@@ -8,7 +8,7 @@ import datetime, random
 from user.Login import generate_account_name, gravatar_image_update
 import sys
 
-def import_old(as_convention, random_rsvp_users = 0, submission_limit = sys.maxint):
+def import_old(as_convention, random_rsvp_users = 0, submission_limit = sys.maxint, timeslot_limit = sys.maxint):
     
     if as_convention == True:
         convention = Convention()
@@ -16,7 +16,7 @@ def import_old(as_convention, random_rsvp_users = 0, submission_limit = sys.maxi
         convention.url = '2013'
         convention.description = 'Penguicon 2013 schedule imported from schedule2013.html'
         convention.start_dt = datetime.datetime(year=2013, month=4, day=26, hour=16)
-        convention.end_dt = datetime.datetime(year=2013, month=4, day=28, hour=15)
+        convention.end_dt = datetime.datetime(year=2013, month=4, day=28, hour=16)
         convention.timeslot_duration = datetime.timedelta(hours=1)
         penguicontrax.db.session.add(convention)
         current_day = convention.start_dt.date()
@@ -140,7 +140,7 @@ def import_old(as_convention, random_rsvp_users = 0, submission_limit = sys.maxi
         
     if as_convention == True:
         from event import generate_schedule, generate_timeslots
-        generate_timeslots(convention, submission_limit / 4)
+        generate_timeslots(convention, timeslot_limit)
         all_rooms = [room for room in existing_rooms.viewvalues()]
         hackerspace = [existing_rooms['Hackerspace A'], existing_rooms['Hackerspace B']]
         food = [existing_rooms['Food']]

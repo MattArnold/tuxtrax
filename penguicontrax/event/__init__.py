@@ -132,6 +132,8 @@ class Presenterconflict(db.Model):
     user = db.relationship('User')
     person_id = db.Column(db.Integer, db.ForeignKey('person.id', ondelete='CASCADE', onupdate='CASCADE'))
     person = db.relationship('Person')
+    convention_id = db.Column(db.Integer(), db.ForeignKey('convention.id', ondelete='CASCADE', onupdate='CASCADE'))
+    convention = db.relationship('Convention', backref=db.backref('presenter_conflicts'))
 
 class Timeslotbooking(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -357,6 +359,8 @@ def generate_schedule(convention):
         db.session.delete(timeslot_entry)
     for timeslot_booking in convention.timeslot_bookings:
         db.session.delete(timeslot_booking)
+    for presenter_conflict in convention.presenter_conflicts:
+        db.session.delete(presenter_conflict)
     timeslots = {}
     for timeslot in convention.timeslots:
         timeslots[timeslot.start_dt] = timeslot
@@ -442,7 +446,7 @@ def convention_solve(convention):
     if convention is None:
         return redirect('/')
     import solve
-    return solve.solve_convention(convention, type = solve.SolveTypes.ECTTD)
+    return solve.solve_convention(convention, type = solve.SolveTypes.ECTTD, write_files = False)
 
 @app.route('/convention/<convention_url>/solve')
 def convention_solve_url(convention_url):

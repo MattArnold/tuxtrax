@@ -12,13 +12,27 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
     from penguicontrax.event import Events, Timeslot, Rooms, generate_schedule, Convention
     from penguicontrax import db
     def solve():
+        extended = type == SolveTypes.ECTTD or type == SolveTypes.ECTTO
+        problem_name = None
+        if type == SolveTypes.TTD:
+            problem_name = 'Timetable Decision'
+        elif type == SolveTypes.CTTD:
+            problem_name = 'Convention Timetable Decision'
+        elif type == SolveTypes.ECTTD:
+            problem_name = 'Extended Convention Timetable Decision'
+        elif type == SolveTypes.ECTTO:
+            problem_name = 'Extended Convention Timetable Optimization'
+        if problem_name == None:
+            yield 'Unknown problem type'
+            return
+        yield 'Problem: %s<br/>' % problem_name
         
-        yield 'Querying databse for timeslots and events</br>'
+        yield 'Querying databse for timeslots and events<br/>'
         timeslots = Timeslot.query.filter_by(convention_id=convention.id).all()
         total_events = Events.query.filter_by(convention_id=convention.id).all()
         rooms = Rooms.query.filter_by(convention_id=convention.id).all()
         
-        yield 'Creating lists of presenters</br>'
+        yield 'Creating lists of presenters<br/>'
         event_presenters= []
         presenters_upperbound = 0
         events_to_remove = []
@@ -71,37 +85,61 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
                 else:
                     GP.append(1 if presenter[1] in event_presenter_list[1] else 0)
             G.append(GP)
+        required_instances = [0] * len(T) #meta matrix telling us how many times each talk will be scheduled
+        for j in range(len(T)):
+            for i in range(len(P)):
+                if G[i][j] > 0:
+                    required_instances[j] = G[i][j]
+                    break
+                    
         
-        prob = LpProblem('Convention Time Table Optimization Problem', LpMinimize)
+        prob = LpProblem(problem_name, LpMinimize)
         
         num_vars_f = len(P)*len(T)*len(H)
-        num_vars_g = len(T)*len(H)*len(R) if type == SolveTypes.ECTTD else 0
-        num_vars_z = len(T)*len(H) if type == SolveTypes.ECTTD else 0
-        yield 'Creating %d scheduling variables<br/>' % (num_vars_f + num_vars_g + num_vars_z)
-        f = LpVariable.dicts('f', range(num_vars_f), cat='Integer')
-        for k in f.viewkeys():
+        num_vars_g = len(T)*len(H)*len(R) if extended == True else 0
+        num_vars_z = len(T)*len(H) if extended == True else 0
+        num_vars_c = len(H)*len(T)*len(T) if type == SolveTypes.ECTTO else 0
+        yield 'Creating %d scheduling variables<br/>' % (num_vars_f + num_vars_g + num_vars_z + num_vars_c )
+        f = LpVariable.dicts('f', range(num_vars_f), cat='Integer') #presenter schedule matrix. input: presenter, event, hour. output: 0/1 if event scheduled 
+        for k in range(num_vars_f):
             f[k].lowBound = 0
             f[k].upBound = 1
         index = lambda i,j,h: (i*len(T)*len(H) + j*len(H) + h)
-        if type == SolveTypes.ECTTD:
-            g = LpVariable.dicts('g', range(num_vars_g), cat='Integer')
-            z = LpVariable.dicts('z', range(num_vars_z), cat='Integer')
-            for k in g.viewkeys():
+        if extended == True:
+            g = LpVariable.dicts('g', range(num_vars_g), cat='Integer') #room schedule matrix. input: talk, hour, room. output: 0/1 if event scheduled
+            z = LpVariable.dicts('z', range(num_vars_z), cat='Integer') #event schedule matrix. input: event, hour. output 0/1 if scheduled
+            for k in range(num_vars_g):
                 g[k].lowBound = 0
                 g[k].upBound = 1
-            for k in z.viewkeys():
+            for k in range(num_vars_z):
                 z[k].lowBound = 0
                 z[k].upBound = 1
             indexg = lambda j,h,r: (j*len(H)*len(R) + h*len(R) + r)
             indexz = lambda j,h : (j*len(H) + h)
             
-        yield 'Creating conflict matrix<br/>'
-        if type == SolveTypes.ECTTO:
-            c = LpVariable.dicts('c', range(num_vars_z), cat ='Integer')
+        if type == SolveTypes.ECTTO:  
+            c = LpVariable.dicts('c', range(num_vars_c), cat ='Integer') #actual conflicts
+            possible_c = [0] * num_vars_c
+            for k in range(num_vars_c):
+                c[k].lowBound = 0
+            indexc = lambda h,t1,t2: (h*len(T)*len(T) + t1*len(T) + t2)
+            
+            yield 'Creating RSVP conflict matrix<br/>'
+            conflict_upperbound = 0
+            for h in range(len(H)):
+                for t1 in range(len(T)):
+                    for t2 in range(len(T)):
+                        if t1 != t2:
+                            t1_rsvps = set(total_events[t1].rsvped_by)
+                            t2_rsvps = set(total_events[t2].rsvped_by)
+                            conflicts = len(t1_rsvps.intersection(t2_rsvps))
+                            possible_c[indexc(h,t1,t2)] = conflicts
+                            conflict_upperbound += conflicts
             
         yield 'Creating objective function<br/>'
-        prob += 0
-        
+        #ECTTO is the only instance we need to minimize, otherwise we just want any feasible solution
+        prob += 0 if type != SolveTypes.ECTTO else lpSum([c[indexc(h,t1,t2)] for t2 in range(len(T)) for t1 in range(len(T)) for h in range(len(H))])
+
         yield 'Creating constraint that each presenter and presentation must be available<br/>'
         #the presenter and talk are both available to be scheduled at hour
         for i in range(len(P)):
@@ -125,7 +163,7 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
             for j in range(len(T)):
                 for h in range(len(H)):
                     prob += lpSum([f[index(i,j,h)] for i in range(len(P))]) <= 1
-        elif type == SolveTypes.CTTD or type == SolveTypes.ECTTD:
+        elif type == SolveTypes.CTTD or extended == True:
             yield 'Creating constraint that all talks have all presenters scheduled for them<br/>'
             for i in range(len(P)):
                 for i_ in range(len(P)):
@@ -143,7 +181,7 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
             for h in range(len(H)):
                     prob += lpSum([f[index(i,j,h)] for j in range(len(T))]) <= 1
                     
-        if type == SolveTypes.ECTTD:
+        if extended == True:
             yield 'Creating constraint that no room has more than one event per timeslot<br/>'
             for j in range(len(T)):
                 for h in range(len(H)):
@@ -167,6 +205,19 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
                 for r in range(len(R)):
                     if not R[r] in S[j]:
                         prob += lpSum([g[indexg(j,h,r)] for h in range(len(H))]) == 0
+            #the constraint that a talk is given exactly the required number of times is enforced in f
+            #but we need to enforce it in g as well
+            yield 'Creating constraint that each presentation is scheduled exactly the required number of times<br/>'
+            for j in range(len(T)):
+                prob += lpSum([g[indexg(j,h,r)] for h in range(len(H)) for r in range(len(R))]) == required_instances[j]
+        
+        if type == SolveTypes.ECTTO:
+            yield 'Creating RSVP conflict constraints<br/>'
+            for h in range(len(H)):
+                for t1 in range(len(T)):
+                    for t2 in range(t1, len(T)): #c(h,t1,t2) is reflexive on t1,t2
+                        conflicts = possible_c[indexc(h,t1,t2)]
+                        prob += (c[indexc(h,t1,t2)] == (z[indexz(t1,h)]*conflicts + z[indexz(t2,h)]*conflicts))
                         
         if write_files == True:
             yield 'Writing linear programming files<br/>'    
@@ -190,7 +241,7 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
                     scheduled = False
                     room = None
                     event = total_events[j]
-                    if type != SolveTypes.ECTTD:
+                    if extended == False:
                         for i in range(len(P)):
                             if f[index(i,j,h)].varValue == 1:
                                 scheduled = True
