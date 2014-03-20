@@ -57,6 +57,7 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
         yield 'Creating hour, presenter, and presentation sets<br/>'
         #a finite set H of hours
         H = [timeslot.id for timeslot in timeslots]
+        timeslots = None
         
         #a collection {P_1, P_2, ..., P_n}, where P_i is a subset of H
         #there are n presenters and P_i is the set of hours during which the ith teacher is available for teaching
@@ -95,33 +96,28 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
         
         prob = LpProblem(problem_name, LpMinimize)
         
+        #binaryType = LpVariableType(lowBound = 0, upBound = 1, cat = LpInteger)
+        #positiveType = LpVariableType(lowBound = 0, cat = LpInteger)
         num_vars_f = len(P)*len(T)*len(H)
         num_vars_g = len(T)*len(H)*len(R) if extended == True else 0
         num_vars_z = len(T)*len(H) if extended == True else 0
         num_vars_c = len(H)*len(T)*len(T) if type == SolveTypes.ECTTO else 0
         yield 'Creating %d scheduling variables<br/>' % (num_vars_f + num_vars_g + num_vars_z + num_vars_c )
-        f = LpVariable.dicts('f', range(num_vars_f), cat='Integer') #presenter schedule matrix. input: presenter, event, hour. output: 0/1 if event scheduled 
-        for k in range(num_vars_f):
-            f[k].lowBound = 0
-            f[k].upBound = 1
+        f = LpVariable.dicts('f', range(num_vars_f), lowBound = 0, upBound = 1, cat = LpInteger)
+        #f = LpVariable.dicts('f', range(num_vars_f), varType = binaryType) #presenter schedule matrix. input: presenter, event, hour. output: 0/1 if event scheduled 
         index = lambda i,j,h: (i*len(T)*len(H) + j*len(H) + h)
         if extended == True:
-            g = LpVariable.dicts('g', range(num_vars_g), cat='Integer') #room schedule matrix. input: talk, hour, room. output: 0/1 if event scheduled
-            z = LpVariable.dicts('z', range(num_vars_z), cat='Integer') #event schedule matrix. input: event, hour. output 0/1 if scheduled
-            for k in range(num_vars_g):
-                g[k].lowBound = 0
-                g[k].upBound = 1
-            for k in range(num_vars_z):
-                z[k].lowBound = 0
-                z[k].upBound = 1
+            #g = LpVariable.dicts('g', range(num_vars_g), varType = binaryType) #room schedule matrix. input: talk, hour, room. output: 0/1 if event scheduled
+            g = LpVariable.dicts('g', range(num_vars_g), lowBound = 0, upBound = 1, cat = LpInteger)
+            #z = LpVariable.dicts('z', range(num_vars_z), varType = binaryType) #event schedule matrix. input: event, hour. output 0/1 if scheduled
+            LpVariable.dicts('z', range(num_vars_z), lowBound = 0, upBound = 1, cat = LpInteger)
             indexg = lambda j,h,r: (j*len(H)*len(R) + h*len(R) + r)
             indexz = lambda j,h : (j*len(H) + h)
             
         if type == SolveTypes.ECTTO:  
-            c = LpVariable.dicts('c', range(num_vars_c), cat ='Integer') #actual conflicts
+            #c = LpVariable.dicts('c', range(num_vars_c), varType = positiveType) #actual conflicts
+            c = LpVariable.dicts('c', range(num_vars_c), lowBound = 0, cat = LpInteger)
             possible_c = [0] * num_vars_c
-            for k in range(num_vars_c):
-                c[k].lowBound = 0
             indexc = lambda h,t1,t2: (h*len(T)*len(T) + t1*len(T) + t2)
             
             yield 'Creating RSVP conflict matrix<br/>'
