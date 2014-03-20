@@ -15,3 +15,6 @@ bower_components
 node_modules
 *.lp
 *.mps
+*.o
+modeler/bin
+modeler/obj
