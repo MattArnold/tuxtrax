@@ -21,6 +21,13 @@ database::~database()
 {
 }
 
+extern "C" void register_factory_sqlite3();
+
+void database::register_dbs()
+{
+    register_factory_sqlite3();
+}
+
 
 std::vector<database::event> database::get_events()
 {

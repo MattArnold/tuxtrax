@@ -44,6 +44,7 @@ int main(int argc, char** argv)
 {
     string database, file;
     int convention = -1, mode = -1;
+    database::register_dbs();
 
     process_args(argc, argv, database, file, convention, mode);
     if(database.empty())

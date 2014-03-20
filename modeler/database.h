@@ -11,6 +11,8 @@ public:
     database(const std::string& dburl, int convention);
     ~database();
 
+    static void register_dbs();
+
     struct event
     {
         int id;
