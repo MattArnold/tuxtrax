@@ -31,11 +31,14 @@ public:
 
     struct timeslot : public object
     {
+        std::set<int> available_rooms;
     };
 
     struct room : public object
     {
         std::string name;
+        std::set<int> available_timeslots;
+        std::set<int> available_events;
     };
 
     struct person : public object
@@ -53,6 +56,8 @@ public:
         std::string name;
         std::set<int> user_presenters;
         std::set<int> person_presenters;
+        std::set<int> suitable_rooms;
+        std::set<int> rsvps;
     };
 
     std::vector<event> get_events();

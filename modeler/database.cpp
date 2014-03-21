@@ -39,6 +39,13 @@ std::vector<database::event> database::get_events()
         for(auto person_it = ps.begin() ; person_it != ps.end() ; ++person_it)
             e.person_presenters.insert(person_it->get<int>(0));
 
+        rowset<row> rooms = (db.prepare << "select room_id from room_suitability where event_id=:id;", use(e.id));
+        for(auto room_it = rooms.begin() ; room_it != rooms.end() ; ++room_it)
+            e.suitable_rooms.insert(room_it->get<int>(0));
+
+        rowset<row> rsvps = (db.prepare << "select user_id from event_rsvps where event_id=:id;", use(e.id));
+        for(auto rsvp_it = rsvps.begin() ; rsvp_it != rsvps.end() ; ++rsvp_it)
+            e.rsvps.insert(rsvp_it->get<int>(0));
 
         events.push_back(e);
     }
@@ -53,6 +60,11 @@ std::vector<database::timeslot> database::get_timeslots()
     {
         timeslot t;
         t.id = it->get<int>(0);
+
+        rowset<row> rooms = (db.prepare << "select room_id from room_availability where timeslot_id=:id;", use(t.id));
+        for(auto room_it = rooms.begin() ; room_it != rooms.end() ; ++room_it)
+            t.available_rooms.insert(room_it->get<int>(0));
+
         timeslots.push_back(t);
     }
     return timeslots;
@@ -67,6 +79,15 @@ std::vector<database::room> database::get_rooms()
         room r;
         r.id = it->get<int>(0);
         r.name = it->get<string>(1);
+
+        rowset<row> timeslots = (db.prepare << "select timeslot_id from room_availability where room_id=:id;", use(r.id));
+        for(auto timeslot_it = timeslots.begin() ; timeslot_it != timeslots.end() ; ++timeslot_it)
+            r.available_timeslots.insert(timeslot_it->get<int>(0));
+
+        rowset<row> events = (db.prepare << "select event_id from room_suitability where room_id=:id", use(r.id));
+        for(auto event_it = events.begin() ; event_it != events.end() ; ++event_it)
+            r.available_events.insert(event_it->get<int>(0));
+
         rooms.push_back(r);
     }
     return rooms;
