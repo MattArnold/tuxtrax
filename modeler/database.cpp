@@ -1,6 +1,6 @@
 #include "database.h"
-#include "soci-postgresql.h"
-#include "soci-sqlite3.h"
+#include <soci-postgresql.h>
+#include <soci-sqlite3.h>
 #include <iostream>
 
 using namespace std;
@@ -21,18 +21,10 @@ database::~database()
 {
 }
 
-extern "C" void register_factory_sqlite3();
-
-void database::register_dbs()
-{
-    register_factory_sqlite3();
-}
-
-
 std::vector<database::event> database::get_events()
 {
     std::vector<event> events;
-    rowset<row> rs = (db.prepare << "select id,name from conventions where id=:convention", use(convention));
+    rowset<row> rs = (db.prepare << "select id,name from convention where id=:convention", use(convention));
     for(auto it = rs.begin() ; it != rs.end() ; ++it)
     {
         event e;

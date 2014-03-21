@@ -11,6 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="-d sqlite3:///../penguicontrax/penguicontrax.db -f output.lp -c 1 -m 0" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -29,9 +30,22 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-std=c++0x" />
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="/usr/include/postgresql" />
+			<Add directory="/usr/local/include/soci" />
+			<Add directory="/usr/local/include/soci/postgresql" />
+			<Add directory="/usr/local/include/soci/sqlite3" />
 		</Compiler>
+		<Linker>
+			<Add library="libsoci_core.a" />
+			<Add library="libsoci_sqlite3.a" />
+			<Add library="libsoci_postgresql.a" />
+			<Add directory="../../soci-build/lib" />
+		</Linker>
+		<Unit filename="database.cpp" />
+		<Unit filename="database.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
