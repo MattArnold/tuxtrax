@@ -48,22 +48,3 @@ class UserAPI(Resource):
         if found:
             fields = ['id', 'name', 'email']
             return dict([(name, getattr(found, name)) for name in fields])
-
-
-class SearchUserAPI(Resource):
-    @return_null_if_not_logged_in
-    def get(self, search_string):
-        search_string = '%' + search_string + '%'
-        output = User.query.filter(
-            or_(
-                User.name.like(search_string),
-                User.email.like(search_string),
-                User.account_name.like(search_string)
-                )
-            )
-        output = dump_table(output, User.__table__)
-        fields = ['id', 'name', 'email']
-        return [
-            dict([(name, element[name]) for name in fields])
-            for element in output
-        ]
