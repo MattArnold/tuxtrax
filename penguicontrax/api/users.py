@@ -41,6 +41,15 @@ class UsersAPI(Resource):
         ]
 
 
+class UserAPI(Resource):
+    @return_null_if_not_logged_in
+    def get(self, id):
+        found = User.query.get(id)
+        if found:
+            fields = ['id', 'name', 'email']
+            return dict([(name, getattr(found, name)) for name in fields])
+
+
 class SearchUserAPI(Resource):
     @return_null_if_not_logged_in
     def get(self, search_string):

@@ -44,3 +44,5 @@ api.add_resource(users.SearchUserAPI,
                  '/api/search_users/<string:search_string>')
 api.add_resource(users.UsersAPI,
                  '/api/users')
+api.add_resource(users.UserAPI,
+                 '/api/users/<string:id>')
