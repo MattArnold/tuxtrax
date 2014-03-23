@@ -1,5 +1,5 @@
 #flask libs
-from flask import Flask, request
+from flask import Flask, request, g
 from flask.ext.restful import Resource, Api, reqparse
 from sqlalchemy import or_
 
@@ -42,9 +42,18 @@ class UsersAPI(Resource):
 
 
 class UserAPI(Resource):
-    @return_null_if_not_logged_in
     def get(self, id):
         found = User.query.get(id)
         if found:
-            fields = ['id', 'name', 'email']
+            self_fields = ['id', 'name', 'staff', 'email', 'points', 'image_large', 'image_small', 'public_rsvps', 'rsvped_to', 'superuser', 'creation_ip']
+            loggedin_fields = ['id', 'name', 'points', 'image_large', 'image_small', 'public_rsvps', 'rsvped_to']
+            anon_fields = ['id', 'name', 'image_large', 'image_small']
+            if g.user == None:
+                fields = anon_fields
+            elif g.user.id == id:
+                fields = self_fields
+            else:
+                fields = loggedin_fields
+                if not found.public_rsvps:
+                    fields.remove('rsvped_to')
             return dict([(name, getattr(found, name)) for name in fields])
