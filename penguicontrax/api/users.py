@@ -11,7 +11,7 @@ import os
 ## Import Local Libs
 from penguicontrax import dump_table
 from functions import return_null_if_not_logged_in
-##from .. import user
+from .. import db
 ##User = user.User
 from penguicontrax.user import User
 
@@ -57,3 +57,25 @@ class UserAPI(Resource):
                 if not found.public_rsvps:
                     fields.remove('rsvped_to')
             return dict([(name, getattr(found, name)) for name in fields])
+    def put(self, id):
+        found = User.query.get(id)
+        if g.user:
+            if found:
+                if g.user.id == id:
+                    fields = ['name', 'email']
+                    parser = reqparse.RequestParser()
+                    for field in fields:
+                        parser.add_argument(field, type=str)
+                    args = parser.parse_args()
+                    for field in fields:
+                        if args[field]:
+                            setattr(found, field, args[field])
+                    if any(args):
+                        db.session.commit()
+                    return "Success"
+                else:
+                    return "Unauthorized", 403
+            else:
+                return "Invalid ID", 404
+        else:
+            return "Unauthenticated", 401
