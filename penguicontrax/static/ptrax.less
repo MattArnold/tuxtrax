@@ -5,23 +5,15 @@
 @rejectedlight:#f2dede;
 @rejecteddark:#c04a48;
 
-@font-face {
-  font-family: 'Droid Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Droid Sans'), local('DroidSans'), url(DroidSans.woff) format('woff');
-}
-
-@font-face {
-  font-family: 'Droid Sans';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Droid Sans Bold'), local('DroidSans-Bold'), url(DroidSansBold.woff) format('woff');
-}
-
+//@import "fonts";
 @import (less) "Flat-UI-master/bootstrap/css/bootstrap.css";
 @import (less) "Flat-UI-master/less/flat-ui.less";
 @import (less) "font-awesome-4.0.3/less/font-awesome.less";
+
+
+//individual less files for components
+@import "submissions";
+@import "submission-form";
 
 .icon-google-square, .icon-yahoo-square {
     position: relative;
@@ -33,13 +25,6 @@
     fill: #16a085;
 }
 
-//global overrides
-body {
-  font-family: "Droid Sans";
-}
-
-//individual less files for components
-@import "submissions";
 
 .header {
     padding: .5em;
@@ -146,4 +131,26 @@ body {
 
 .drawer {
     padding-left:0;
+}
+
+.row {
+  @-webkit-keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  -webkit-animation: fadeIn .5s;
+  animation: fadeIn .5s;
 }

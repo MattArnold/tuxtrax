@@ -18,38 +18,54 @@ $('input[name="typelist"]:not(input[name="typelist"]:checked)').click(function (
 var pluralized = false;
 
 $(document).ready(function () {
+
+    //style select lists
+    $("select").selectpicker();
+
+    //style checkboxes
+    $(':checkbox[class!="button-checkbox"]').checkbox();
+
     
-    $('.countchar').on( "input", function() {
-        var len = this.value.length;
-        var limit;
-        var remaining;
-        if (this.name == "title"){ limit = 80; };
-        if (this.name == "description"){ limit = 700; };
+    $('form textarea[maxlength],form input[maxlength]').on( "input", function() {
+        var el,len,grp,limit,remaining,charnum,title;
+
+        len = this.value.length;
+        el = $(this);
+        grp = el.parents('.control-group');
+
+        limit = el.attr('maxlength');
+        title = el.attr('data-display-title') ? el.attr('data-display-title') : this.name;
+
+        charnum = grp.find('.charnum');
+        remaining = limit - len;
+
+        if(!charnum.length){
+            grp.append('<small class="charnum" style="display:none"></small>');
+            //rerun to get the pointer
+            charnum = grp.find('.charnum');
+        }
+
         if (len > 0) {
-            $('#charnum').css('display', 'block');
+            charnum.css('display', 'block');
         } else {
-            $('#charnum').css('display', 'none');
-        };
-        $('#charnum').removeClass('alert-danger alert-warning alert-info');
-        if (limit - len < 10) {
-            $('#charnum').addClass('alert-danger');
-        } else if ((limit / 2) - len < 10) {
-            $('#charnum').addClass('alert-warning');
-        } else if ((limit / 3) - len < 10) {
-            $('#charnum').addClass('alert-info');
-        } else if (len > 0) {
-            $('#charnum').addClass('alert-success');
-        };
-        if (len >= limit) {
-            this.value = this.value.substring(0, limit);
-        } else {
-            remaining = limit - len;
-            $('#charnum').text(remaining + " more characters can fit in the " + this.name + ".");
-        };
+            charnum.css('display', 'none');
+        }
+
+        charnum.text(remaining + " more characters can fit in the " + title + ".");
+
+        grp.removeClass('has-warning');
+
+        if(limit == len){
+            charnum.text("Maximum length of " + limit + " reached for " +  title);
+        }else if((limit - len) < 5){
+            grp.addClass('has-warning');
+        }
+    }).on('blur',function(){
+        $(this).parents('.control-group').removeClass('has-warning').find('.charnum').remove();
     });
 
 
-  $('#resources, #players, #furniture, #otherfacility, .setupandrepeat, #othertime, #pptype, #pluralpptype').css('display', 'none');
+  $('#pptype, #pluralpptype').css('display', 'none');
 
   $('.typelist:checked').first().each(function (index, elm) {
     update_type_options($(elm).val(), true);
@@ -174,45 +190,36 @@ $(document).ready(function () {
   });
 
 // Turn on time fields when a duration is selected.
-  $('.timechange').first().each(function (index, elm) {
-    console.log($(elm).val());
-    update_time_options(parseInt($(elm).val()), true);
+  $("[name=timechange]:checked").each(function(){
+      update_time_options(parseInt($(this).val(),10))
   });
-  $('.timechange').change(function () {
-    update_time_options(parseInt($(this).val()));
+
+  //add change handler to timechange radio field
+  $("form [name=timechange]").change(function () {
+
+       $("[name=timechange]:checked").each(function(){
+          update_time_options(parseInt($(this).val(),10))
+      });
+
   });
-  function update_time_options(timeval, firstShow) {
-    var animation = 'slow';
-    if (firstShow) {
-      animation = null;
-    }
+
+  function update_time_options(timeval) {
     if (timeval == 0) {
-      $(".setupandrepeat, #othertime").css("display", "none");
+      $("#setupandrepeat, #othertime").addClass('hidden');
     } else if (timeval == 5) {
-      $(".setupandrepeat").css("display", "none");
-      $("#othertime").css("display", "block");
+      $("#setupandrepeat").addClass('hidden');
+      $("#othertime").removeClass('hidden');
     } else {
-      $(".setupandrepeat, #othertime").css("display", "block");
+      $("#setupandrepeat, #othertime").removeClass('hidden');
     }
   }
 
-// $('.timechange').change(function() {
-//	if (parseInt($(this).val()) == 0) {
-//		$("#setupandrepeat, #othertime").hide("slow");
-//	} else if (parseInt($(this).val()) == 5){
-//		$("#setupandrepeat").hide("slow");
-//		$("#othertime").show("slow");
-//	} else {
-//		$("#setupandrepeat, #othertime").show("slow");
-//	}
-//});
-
   $('#moresetuplink').click(function () {
-    if ($('.setupandrepeat:visible').length == 0) {
-      $('.setupandrepeat').show();
+    if ($('#setupandrepeat:visible').length == 0) {
+      $('#setupandrepeat').show();
       $('#othertime').show();
     } else {
-      $('.setupandrepeat').hide();
+      $('#setupandrepeat').hide();
       $('#othertime').hide();
     }
     return false;
@@ -231,21 +238,6 @@ $(document).ready(function () {
     }
   });
 
-// Turn the tag buttons on and off.
-
-  $('.on').click(function () {
-    console.log('Clicked an on');
-    $($(this)).removeClass('on');
-    $($(this)).addClass('off');
-    $('#unusedtags').append($(this));
-  });
-
-  $('.off').click(function () {
-    console.log('Clicked an off');
-    $(this).removeClass('off');
-    $(this).addClass('on');
-    $('#selectedtags').append($(this));
-  });
 
 // Animate the track buttons when clicked.
 
