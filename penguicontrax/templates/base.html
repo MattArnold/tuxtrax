@@ -26,11 +26,10 @@
         </div>
         <div class="col-md-8">
         <form action="/logout" method=get class="rightheader">
-            <small>
-            <span>FAQ/Help/Feedback: </span><a href="mailto:matt.mattarn+traxfeedback@gmail.com?Subject=Feedback%20About%20Penguicon-TRAX"><i class="fa fa-question-circle"></i></a>
+
+            <span class="small">FAQ/Help/Feedback: </span><a href="mailto:matt.mattarn+traxfeedback@gmail.com?Subject=Feedback%20About%20Penguicon-TRAX"><i class="fa fa-question-circle"></i></a>
             {% if user is none %}
-            <span>Log in using: </span>
-            </small>
+            <span class="small">Log in using: </span>
             <a href="/login?provider=facebook"><i class="fa fa-facebook-square"></i></a>
             <a href="/login?provider=twitter"><i class="fa fa-twitter-square"></i></a>
             <a href="/login?provider=google">
@@ -40,12 +39,14 @@
                 {{ macros.yahoo_icon() }}
             </a>
             {% else %}
+            <span class="small">
             {{ macros.user_link(user) }} 
             {% if user.staff == 0 %}
             {{ user.points }} RSVP points left
             {% else %}
             <a href="/logs">Logs</a> <a href="/users">Users</a>
             {% endif %}
+            </span>
             <input class="btn btn-primary btn-xs" type=submit value="Logout">
             {% endif %}
         </form>

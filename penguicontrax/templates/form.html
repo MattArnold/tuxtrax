@@ -10,7 +10,7 @@
     <div class="col-md-12">
     <form action="/submitevent" method=post>
     {% if event is not none %}
-        <input type=hidden name=eventid value={{ event.id }}/>
+        <input type=hidden name=eventid value="{{ event.id }}">
     {% endif %}
     <div class="row well section where">
         <div class="col-md-2">
@@ -20,15 +20,14 @@
         </div>
         <div class="col-md-4">
             <div id="typechange" class="control-group">
-                <input type="radio" name="eventtype" class="typelist" value="noroomtype" id="noroomtype"
-                       style="display:none">
+                <input type="hidden" name="eventtype" value="noroomtype">
                 <label class="radio" for="talkbtn">
-                    <input type="radio" data-toggle="radio" name=eventtype class="typelist where questioon roomtab"
+                    <input type="radio" data-toggle="radio" name=eventtype
                            value="talk" id="talkbtn" {{ event.eventType | is_checked('talk') }}>An audience sits and
                     watches one or more speakers.
                 </label>
                 <label class="radio" for="workshopbtn">
-                    <input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab"
+                    <input type="radio" data-toggle="radio" name=eventtype
                            value="workshop" id="workshopbtn" {{ event.eventType | is_checked('workshop') }}>Hands-on
                     participatory activity.
                 </label>
@@ -38,16 +37,16 @@
                     presenter or organizer.
                 </label>
                 <label class="radio" for="gamebtn">
-                    <input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab"
+                    <input type="radio" data-toggle="radio" name=eventtype
                            value="game" id="gamebtn" {{ event.eventType | is_checked('game') }}>Tabletop game.
                 </label>
                 <label class="radio" for="onstagebtn">
-                    <input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab"
+                    <input type="radio" data-toggle="radio" name=eventtype
                            value="onstage" id="onstagebtn" {{ event.eventType | is_checked('onstage') }}>Concert, skit,
                     movie, or other onstage performance.
                 </label>
                 <label class="radio" for="rovingbtn">
-                    <input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab"
+                    <input type="radio" data-toggle="radio" name=eventtype
                            value="roving" id="rovingbtn" {{ event.eventType | is_checked('roving') }}>Activity located
                     throughout the hotel or elsewhere.
                 </label>
@@ -120,30 +119,25 @@
         <div class="col-md-10">
             <div class="col-md-2 question">
                 <div class="row btngroup timechange" data-toggle="buttons" id="duration">
-                    <!--
-                <label class="radio" for="0">
-                    <input type="hidden" class="timechange" css="display:none;" name=track value="0" id="unselected" {{ event.duration | is_selected(0) }}>
-                </label>
--->
                     <label class="radio timechange" for="1">
                         <input type="radio" class="timechange" data-toggle="radio" name="timechange" value="1"
-                               id="duration_50_mins" {{ event.duration | is_selected(1) }}>50 mins
+                               id="duration_50_mins" {{ event.duration | is_checked(1) }}>50 mins
                     </label>
                     <label class="radio timechange" for="2">
                         <input type="radio" class="timechange" data-toggle="radio" name="timechange" value="2"
-                               id="duration_1_hr_50_mins" {{ event.duration | is_selected(2) }}>1 hr 50 mins
+                               id="duration_1_hr_50_mins" {{ event.duration | is_checked(2) }}>1 hr 50 mins
                     </label>
                     <label class="radio timechange" for="3">
                         <input type="radio" class="timechange" data-toggle="radio" name="timechange" value="3"
-                               id="duration_2_hr_50_mins" {{ event.duration | is_selected(3) }}>2 hr 50 mins
+                               id="duration_2_hr_50_mins" {{ event.duration | is_checked(3) }}>2 hr 50 mins
                     </label>
                     <label class="radio timechange" for="4">
                         <input type="radio" class="timechange" data-toggle="radio" name="timechange" value="4"
-                               id="duration_more" {{ event.duration | is_selected(4) }}>more
+                               id="duration_more" {{ event.duration | is_checked(4) }}>more
                     </label>
                     <label class="radio timechange" for="5">
                         <input type="radio" class="timechange" data-toggle="radio" name="timechange" value="5"
-                               id="duration_all_weekend" {{ event.duration | is_selected(5) }}>all weekend
+                               id="duration_all_weekend" {{ event.duration | is_checked(5) }}>all weekend
                     </label>
                 </div>
             </div>
@@ -208,8 +202,8 @@
                     </small>
                 </p>
                 <label for="person0">
-                    <span id="pptype"></span>
-                    <span id="pluralpptype"></span>
+                    <span id="pptype" style="display:none"></span>
+                    <span id="pluralpptype" style="display:none"></span>
                     <input name=person0 data-display-title="additional presenter field" type=text size="24"
                            maxlength="24" class="pp form-control"/>
                 </label>
