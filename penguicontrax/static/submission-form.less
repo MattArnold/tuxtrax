@@ -1,0 +1,32 @@
+@where: #e67e22;
+@when: #9b59b6;
+@who : #1abc9c;
+@what : #bdc3c7;
+
+
+.type(@which) {
+  background-color: fadeout(@which, 50%);
+  border : 3px solid @which;
+}
+
+h6 {
+  padding : 10px;
+  width: 95%;
+  border-radius : 2px;
+}
+
+.where h6{
+ .type(@where)
+}
+
+.when h6{
+ .type(@when)
+}
+
+.who h6 {
+  .type(@who)
+}
+
+.what h6{
+  .type(@what)
+}
