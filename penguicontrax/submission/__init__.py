@@ -30,7 +30,7 @@ class Submission(db.Model):
     description = db.Column(db.String())
     comments = db.Column(db.String())
     submitter_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    submitter = db.relationship('User')
+    submitter = db.relationship('User', backref='submissions')
     trackId = db.Column(db.Integer(), db.ForeignKey('tracks.id'))
     track = db.relationship('Track')
     tags = db.relationship('Tag', secondary=SubmissionToTags, backref=db.backref('submissions'), passive_deletes=True)

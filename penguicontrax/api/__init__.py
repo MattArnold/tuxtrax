@@ -31,10 +31,20 @@ def json_date(data, code, headers=None):
     return resp
 
 #submissions
-##api.add_resource(submissions.SubmissionAPI,'/api/submission/<string:submission_id>/rsvp')
-api.add_resource(submissions.SubmissionAPI, '/api/submission/<string:submission_id>',
+##api.add_resource(submissions.SubmissionAPI,
+##                 '/api/submission/<string:submission_id>/rsvp')
+api.add_resource(submissions.SubmissionAPI,
+                 '/api/submission/<string:submission_id>',
                  '/api/submission/<string:submission_id>/<string:noun>')
-api.add_resource(submissions.SubmissionsAPI, '/api/submissions')
+api.add_resource(submissions.SubmissionsAPI,
+                 '/api/submissions')
 
 #users
-api.add_resource(users.SearchUserAPI, '/api/search_users/<string:search_string>')
+api.add_resource(users.UsersAPI,
+                 '/api/users')
+api.add_resource(users.UserAPI,
+                 '/api/user/<int:id>')
+api.add_resource(users.UserSubmissionsAPI,
+                 '/api/user/<int:id>/submissions')
+api.add_resource(users.UserPresentationsAPI,
+                 '/api/user/<int:id>/presentations')
