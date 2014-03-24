@@ -19,3 +19,5 @@ node_modules
 modeler/bin
 modeler/obj
 *.layout
+*.exe
+*.sol

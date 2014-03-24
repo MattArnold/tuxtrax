@@ -412,7 +412,8 @@ def convention_schedule_args():
 
 @app.route('/convention/<convention_url>/')
 def convention_index_url(convention_url):
-   return convention_schedule_url(convention_url)
+   return convention_schedule_url(convention_url)
+
 @app.route('/convention')
 def convention_index_args():
     return convention_schedule_args()
@@ -445,8 +446,10 @@ def convention_list():
 def convention_solve(convention):
     if convention is None:
         return redirect('/')
-    import solve
-    return solve.solve_convention(convention, type = solve.SolveTypes.ECTTD, write_files = False)
+    #from solve import solve_convention_pulp
+    #return solve_convention(convention, type = solve.SolveTypes.ECTTD, write_files = False)
+    from solve import solve_convetion_modeler
+    return solve_convetion_modeler(convention)
 
 @app.route('/convention/<convention_url>/solve')
 def convention_solve_url(convention_url):

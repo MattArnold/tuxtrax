@@ -43,6 +43,8 @@ void generate_model(const string& dbstring, const string& file, int convention)
 
     ofstream lp;
     lp.open(file.c_str());
+    if(lp.bad())
+        throw runtime_error("Unable to open output file");
 
     lp << "\\* Extended Convention Timetable Optimization *\\" << endl;
     lp << "Minimize" << endl;
@@ -390,6 +392,62 @@ void generate_model(const string& dbstring, const string& file, int convention)
     lp.close();
 }
 
+void load_schedule(const string& dbstring, const string& file, int convention)
+{
+    database db(dbstring, convention);
+
+    auto events = db.get_events();
+    auto timeslots = db.get_timeslots();
+    auto rooms = db.get_rooms();
+    auto users = db.get_users();
+    auto people = db.get_people();
+
+    ifstream sol;
+    sol.open(file);
+    if(sol.bad())
+        throw runtime_error("Unable to open input file");
+
+    char input[1024];
+    sol.getline(input, 1024);
+
+    string first(input);
+    if(first.find("optimal") != 0)
+        throw runtime_error("Non-optimal solution");
+
+    for(auto it = events.begin() ; it != events.end() ; ++it)
+        db.clear_event_time(it->id);
+
+    sol.getline(input, 1024); //Read header
+
+    const char* delim = "_\r\n";
+    while(!sol.eof())
+    {
+        float line, value, other;
+        sol >> line;
+        if(sol.eof())
+            break;
+        sol >> input;
+        sol >> value;
+        sol >> other;
+
+        if(input[0] != 'g')
+            continue;
+
+        atoi(strtok(input, delim));
+        int j = atoi(strtok(NULL, delim));
+        int h = atoi(strtok(NULL, delim));
+        int r = atoi(strtok(NULL, delim));
+
+        db.set_event_time(events[j].id, timeslots[h].start_dt);
+        db.set_event_room(events[j].id, rooms[r].id);
+
+        cout << events[j].name << " is scheduled at " << asctime(&timeslots[h].start_dt) << " in " << rooms[r].name << endl;
+
+    }
+
+}
+
+
 int main(int argc, char** argv)
 {
     string database, file;
@@ -426,6 +484,9 @@ int main(int argc, char** argv)
                 cout << setprecision(2);
                 cout << "Generated model in " << total << " seconds" << endl;
             }
+            break;
+        case 1:
+            load_schedule(database, file, convention);
             break;
         default:
             cerr << "Unknown mode" << endl;

@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <time.h>
+#include <ctime>
 
 class database
 {
@@ -31,6 +33,7 @@ public:
 
     struct timeslot : public object
     {
+        std::tm start_dt;
         std::set<int> available_rooms;
     };
 
@@ -65,6 +68,10 @@ public:
     std::vector<room> get_rooms();
     std::vector<person> get_people();
     std::vector<user> get_users();
+
+    void clear_event_time(int id);
+    void set_event_time(int id, const std::tm& start_dt);
+    void set_event_room(int id, int room_id);
 
 private:
 

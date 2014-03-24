@@ -1,4 +1,3 @@
-from pulp import *
 from flask import Markup, Response
 
 class SolveTypes:
@@ -7,7 +6,35 @@ class SolveTypes:
     ECTTD = 3
     ECTTO = 4
 
-def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
+def solve_convetion_modeler(convention):
+    import os, subprocess, sys
+    from penguicontrax import constants
+    from penguicontrax.event import generate_schedule, Convention
+    def solve():
+        d = os.path.join(os.getcwd(), 'penguicontrax')
+        model = subprocess.Popen([constants.MODELER_PATH, '-d', constants.DATABASE_URL, '-f', 'output.lp', '-c', str(convention.id), '-m', '0'], stdout = subprocess.PIPE, cwd=d)
+        ret = None
+        while ret is None:
+            yield model.communicate()[0].replace(os.linesep, '<br/>')
+            ret = model.poll()
+        if ret != 0:
+            return
+        sol = subprocess.Popen(['clp', 'output.lp', '-solve', '-solu', 'output.sol'], stdout = subprocess.PIPE, cwd=d)
+        ret = None
+        while ret is None:
+            yield sol.communicate()[0].replace(os.linesep, '<br/>')
+            ret = sol.poll()
+        db = subprocess.Popen([constants.MODELER_PATH, '-d', constants.DATABASE_URL, '-f', 'output.sol', '-c', str(convention.id), '-m', '1'], stdout = subprocess.PIPE, cwd=d)
+        ret = None
+        while ret is None:
+            yield db.communicate()[0].replace(os.linesep, '<br/>')
+            ret = db.poll()
+        generate_schedule(Convention.query.filter_by(id=convention.id).first())
+    return Response(solve())
+
+'''
+def solve_convention_pulp(convention, type = SolveTypes.TTD, write_files = False):
+    from pulp import *
     from penguicontrax.user import User, Person
     from penguicontrax.event import Events, Timeslot, Rooms, generate_schedule, Convention
     from penguicontrax import db
@@ -263,3 +290,4 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
             generate_schedule(Convention.query.filter_by(id=convention.id).first())
         
     return Response(solve())
+'''

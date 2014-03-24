@@ -13,6 +13,11 @@ database::database(const std::string& dburl, int _convention) : convention(_conv
         auto file = dburl.substr(11);
         db.open(sqlite3, file);
     }
+    else if(dburl.find("sqlite:///") == 0)
+    {
+        auto file = dburl.substr(10);
+        db.open(sqlite3, file);
+    }
 
     //TODO: POSTGRES
 }
@@ -55,11 +60,12 @@ std::vector<database::event> database::get_events()
 std::vector<database::timeslot> database::get_timeslots()
 {
     std::vector<timeslot> timeslots;
-    rowset<row> rs = (db.prepare << "select id from timeslot where convention_id=:convention;", use(convention));
+    rowset<row> rs = (db.prepare << "select id,start_dt from timeslot where convention_id=:convention;", use(convention));
     for(auto it = rs.begin() ; it != rs.end() ; ++it)
     {
         timeslot t;
         t.id = it->get<int>(0);
+        t.start_dt = it->get<tm>(1);
 
         rowset<row> rooms = (db.prepare << "select room_id from room_availability where timeslot_id=:id;", use(t.id));
         for(auto room_it = rooms.begin() ; room_it != rooms.end() ; ++room_it)
@@ -119,4 +125,20 @@ std::vector<database::user> database::get_users()
         users.push_back(u);
      }
     return users;
+}
+
+void database::clear_event_time(int id)
+{
+    db << "update events set start_dt = NULL where id = :id;", use(id);
+}
+
+void database::set_event_time(int id, const std::tm& start_dt)
+{
+    db << "update events set start_dt = :start_dt where id = :id;", use(start_dt, "start_dt"), use(id, "id");
+}
+
+void database::set_event_room(int id, int room_id)
+{
+    db << "delete from room_events where room_id=:room_id;", use(room_id);
+    db << "insert into room_events(event_id, room_id) values(:event_id, :room_id)", use(id, "event_id"), use(room_id, "room_id");
 }
