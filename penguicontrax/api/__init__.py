@@ -43,4 +43,4 @@ api.add_resource(submissions.SubmissionsAPI,
 api.add_resource(users.UsersAPI,
                  '/api/users')
 api.add_resource(users.UserAPI,
-                 '/api/users/<int:id>')
+                 '/api/user/<int:id>')
