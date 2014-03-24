@@ -446,10 +446,18 @@ def convention_list():
 def convention_solve(convention):
     if convention is None:
         return redirect('/')
-    #from solve import solve_convention_pulp
-    #return solve_convention(convention, type = solve.SolveTypes.ECTTD, write_files = False)
+    from penguicontrax import conn
     from solve import solve_convetion_modeler
-    return solve_convetion_modeler(convention)
+    from rq import Queue
+    import time
+    if conn is None:
+        return solve_convetion_modeler(str(convention.id))
+    else:
+        q = Queue(connection = conn)
+        job = q.enqueue(solve_convetion_modeler, str(convention.id))
+        while job.result is None:
+            time.sleep(2)
+        return job.result
 
 @app.route('/convention/<convention_url>/solve')
 def convention_solve_url(convention_url):
