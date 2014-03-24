@@ -44,3 +44,7 @@ api.add_resource(users.UsersAPI,
                  '/api/users')
 api.add_resource(users.UserAPI,
                  '/api/user/<int:id>')
+api.add_resource(users.UserSubmissionsAPI,
+                 '/api/user/<int:id>/submissions')
+api.add_resource(users.UserPresentationsAPI,
+                 '/api/user/<int:id>/presentations')

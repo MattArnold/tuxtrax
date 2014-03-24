@@ -100,3 +100,25 @@ class UserAPI(Resource):
                 return "Invalid ID", 404
         else:
             return "Unauthenticated", 401
+
+
+class UserSubmissionsAPI(Resource):
+    def get(self, id):
+        found = User.query.get(id)
+        if found:
+            fields = ['id', 'title', 'description']
+            return [
+                dict([(name, getattr(submission, name)) for name in fields])
+                for submission in found.submissions
+            ]
+
+
+class UserPresentationsAPI(Resource):
+    def get(self, id):
+        found = User.query.get(id)
+        if found:
+            fields = ['id', 'title', 'description']
+            return [
+                dict([(name, getattr(presentation, name)) for name in fields])
+                for presentation in found.presentations
+            ]
