@@ -29,7 +29,9 @@ def solve_convetion_modeler(convention):
         while ret is None:
             yield db.communicate()[0].replace(os.linesep, '<br/>')
             ret = db.poll()
+        yield 'Applying schedule to database...<br/>'
         generate_schedule(Convention.query.filter_by(id=convention.id).first())
+        yield 'Finished'
     return Response(solve())
 
 '''

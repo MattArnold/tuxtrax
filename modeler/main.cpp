@@ -295,7 +295,7 @@ void generate_model(const string& dbstring, const string& file, int convention)
                 G(j,h,r);
             }
         }
-        lp << " = " << required_times << endl;;
+        lp << " = " << required_times << endl;
     }
 
     // Each pair of talks in each hour gives rise to a certain number of rsvp conflicts
@@ -392,6 +392,8 @@ void generate_model(const string& dbstring, const string& file, int convention)
     lp.close();
 }
 
+#define FLOAT_TO_BOOL(X) (X >= 0.5f ? true : false)
+
 void load_schedule(const string& dbstring, const string& file, int convention)
 {
     database db(dbstring, convention);
@@ -411,13 +413,14 @@ void load_schedule(const string& dbstring, const string& file, int convention)
     sol.getline(input, 1024);
 
     string first(input);
-    if(first.find("optimal") != 0)
+    if(first.find("Optimal") != 0 && first.find("optimal") != 0)
         throw runtime_error("Non-optimal solution");
 
     for(auto it = events.begin() ; it != events.end() ; ++it)
         db.clear_event_time(it->id);
 
-    sol.getline(input, 1024); //Read header
+    if(input[0] == 'o') //clp has extra line and lowercase o
+        sol.getline(input, 1024); //Read header
 
     const char* delim = "_\r\n";
     while(!sol.eof())
@@ -433,7 +436,10 @@ void load_schedule(const string& dbstring, const string& file, int convention)
         if(input[0] != 'g')
             continue;
 
-        atoi(strtok(input, delim));
+        if(!FLOAT_TO_BOOL(value))
+            continue;
+
+        strtok(input, delim);
         int j = atoi(strtok(NULL, delim));
         int h = atoi(strtok(NULL, delim));
         int r = atoi(strtok(NULL, delim));
@@ -441,7 +447,9 @@ void load_schedule(const string& dbstring, const string& file, int convention)
         db.set_event_time(events[j].id, timeslots[h].start_dt);
         db.set_event_room(events[j].id, rooms[r].id);
 
-        cout << events[j].name << " is scheduled at " << asctime(&timeslots[h].start_dt) << " in " << rooms[r].name << endl;
+        string time_str(asctime(&timeslots[h].start_dt));
+        time_str = time_str.substr(0,time_str.size()-1);
+        cout << events[j].name << " is scheduled at " << time_str << " in " << rooms[r].name << endl;
 
     }
 

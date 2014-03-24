@@ -139,6 +139,6 @@ void database::set_event_time(int id, const std::tm& start_dt)
 
 void database::set_event_room(int id, int room_id)
 {
-    db << "delete from room_events where room_id=:room_id;", use(room_id);
+    db << "delete from room_events where event_id=:id;", use(id);
     db << "insert into room_events(event_id, room_id) values(:event_id, :room_id)", use(id, "event_id"), use(room_id, "room_id");
 }
