@@ -457,7 +457,7 @@ def convention_solve(convention):
         job = q.enqueue(solve_convetion_modeler, str(convention.id))
         while job.result is None:
             time.sleep(2)
-        return job.result
+        return 'Using redis queue<br/>' + job.result
 
 @app.route('/convention/<convention_url>/solve')
 def convention_solve_url(convention_url):
