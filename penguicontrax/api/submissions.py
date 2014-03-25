@@ -1,6 +1,7 @@
 #flask libs
-from flask.ext.restful import Resource
+from flask.ext.restful import Resource, reqparse
 from flask import g
+from sqlalchemy import or_
 
 #global libs
 from penguicontrax import dump_table, db
@@ -68,7 +69,21 @@ class SubmissionAPI(Resource):
 class SubmissionsAPI(Resource):
     @staticmethod
     def get():
-        submissions = Submission.query.all()
+        """ Returns a list of objects to represent users in the database
+            Pass a ?q=query to conduct a search by name and email
+        """
+        parser = reqparse.RequestParser()
+        parser.add_argument('state', type=str)
+        args = parser.parse_args()
+
+        query = Submission.query
+        if args['state']:
+            parts = args['state'].split(',')
+            orbits = [Submission.followUpState == i for i in parts]
+            query = query.filter(or_(*orbits))
+        else:
+            query = query.filter(Submission.followUpState != 3)
+        submissions = query.all()
         output = dump_table(submissions, Submission.__table__)
         for index, element in enumerate(output):
             element['tags'] = [_.name for _ in submissions[index].tags]

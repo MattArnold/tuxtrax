@@ -6,14 +6,24 @@
 @rejecteddark:#c04a48;
 
 //@import "fonts";
-@import (less) "Flat-UI-master/bootstrap/css/bootstrap.css";
-@import (less) "Flat-UI-master/less/flat-ui.less";
+//@import (less) "Flat-UI-master/bootstrap/css/bootstrap.css";
+//@import (less) "Flat-UI-master/less/flat-ui.less";
+@import (less) "bootstrap-3.1.1/less/bootstrap.less";
+@import (less) "bootstrap-selectpicker/bootstrap-select.css";
 @import (less) "font-awesome-4.0.3/less/font-awesome.less";
-
+@import "fonts";
 
 //individual less files for components
 @import "submissions";
 @import "submission-form";
+
+//mixin
+.transition (@transition) {
+	-webkit-transition: @transition;
+	-moz-transition:    @transition;
+	-ms-transition:     @transition;
+	-o-transition:      @transition;
+}
 
 .icon-google-square, .icon-yahoo-square {
     position: relative;
@@ -133,7 +143,14 @@
     padding-left:0;
 }
 
-.row {
+#tagfilter,#topics {
+  .btn {
+    margin: 2px 0;
+  }
+}
+
+//some fun pretty stuff
+.form-group {
   @-webkit-keyframes fadeIn {
     from {
       opacity: 0;
@@ -153,4 +170,17 @@
   }
   -webkit-animation: fadeIn .5s;
   animation: fadeIn .5s;
+}
+
+.dynamic-content {
+    .transition(1s);
+}
+
+//animate buttons when selected
+.btn {
+  .transition(padding .25s ease-out);
+  &.active {
+    .transition(padding .25s ease);
+    padding: 2px 7px;
+  }
 }

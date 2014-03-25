@@ -179,7 +179,6 @@ def event_form():
 
 @app.route('/submitevent', methods=['POST'])
 def submitevent():
-    print("Yay")
     eventid = request.form.get('eventid')
     if eventid is not None:
         submission = Submission.query.get(eventid)
@@ -194,19 +193,18 @@ def submitevent():
               'timerequest': 'timeRequest',
               'eventtype': 'eventType', 'players': 'players', 'roundtables': 'roundTables', 'longtables': 'longTables',
               'facilityrequest': 'facilityRequest',
-              'comments': 'comments',
-              'person0': 'person0', 'person1': 'person1', 'person2': 'person2', 'person3': 'person3'}
+              'comments': 'comments'}
     for field, dbfield in fields.items():
         if field in request.form:
             setattr(submission, dbfield, request.form[field])
-    print request.form
+    # print request.form.getlist('presenter')
     if 'submitter_id' in request.form:
         submission.submitter = User.query.filter_by(id=request.form['submitter_id']).first()
     submission.private = 'private' in request.form
     submission.followUpState = request.form['followupstate'] if 'followupstate' in request.form and request.form[
         'followupstate'] is not None else 0
 
-    tags = [t[4:] for t, v in request.form.items() if len(t) > 4 and t[:4] == 'tag_' and v]
+    tags = request.form.getlist('tag')
     del submission.tags[:]
     for tag in tags:
         submission.tags.append(get_tag(tag))

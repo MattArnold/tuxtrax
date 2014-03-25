@@ -14,47 +14,61 @@
     {% endif %}
     <div class="row well section where">
         <div class="col-md-2">
-            <h6 class="row">
+            <h4 class="row">
                 WHERE
-            </h6>
+            </h4>
         </div>
         <div class="col-md-4">
             <div id="typechange" class="control-group">
                 <input type="hidden" name="eventtype" value="noroomtype">
-                <label class="radio" for="talkbtn">
-                    <input type="radio" data-toggle="radio" name=eventtype
-                           value="talk" id="talkbtn" {{ event.eventType | is_checked('talk') }}>An audience sits and
-                    watches one or more speakers.
-                </label>
-                <label class="radio" for="workshopbtn">
-                    <input type="radio" data-toggle="radio" name=eventtype
-                           value="workshop" id="workshopbtn" {{ event.eventType | is_checked('workshop') }}>Hands-on
-                    participatory activity.
-                </label>
-                <label class="radio" for="bofbtn">
-                    <input type="radio" data-toggle="radio" name=eventtype class="typelist where question roomtab"
-                           value="bof" id="bofbtn" {{ event.eventType | is_checked('bof') }}>Open discussion with no
-                    presenter or organizer.
-                </label>
-                <label class="radio" for="gamebtn">
-                    <input type="radio" data-toggle="radio" name=eventtype
-                           value="game" id="gamebtn" {{ event.eventType | is_checked('game') }}>Tabletop game.
-                </label>
-                <label class="radio" for="onstagebtn">
-                    <input type="radio" data-toggle="radio" name=eventtype
-                           value="onstage" id="onstagebtn" {{ event.eventType | is_checked('onstage') }}>Concert, skit,
-                    movie, or other onstage performance.
-                </label>
-                <label class="radio" for="rovingbtn">
-                    <input type="radio" data-toggle="radio" name=eventtype
-                           value="roving" id="rovingbtn" {{ event.eventType | is_checked('roving') }}>Activity located
-                    throughout the hotel or elsewhere.
-                </label>
+
+                <div class="radio">
+                    <label for="talkbtn">
+                        <input type="radio" name=eventtype
+                               value="talk" id="talkbtn" {{ event.eventType | is_checked('talk') }}>An audience sits and
+                        watches one or more speakers.
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="workshopbtn">
+                        <input type="radio" name=eventtype
+                               value="workshop" id="workshopbtn" {{ event.eventType | is_checked('workshop') }}>Hands-on
+                        participatory activity.
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="bofbtn">
+                        <input type="radio" name=eventtype class="typelist where question roomtab"
+                               value="bof" id="bofbtn" {{ event.eventType | is_checked('bof') }}>Open discussion with no
+                        presenter or organizer.
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="gamebtn">
+                        <input type="radio" name=eventtype
+                               value="game" id="gamebtn" {{ event.eventType | is_checked('game') }}>Tabletop game.
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="onstagebtn">
+                        <input type="radio" name=eventtype
+                               value="onstage" id="onstagebtn" {{ event.eventType | is_checked('onstage') }}>Concert,
+                        skit,
+                        movie, or other onstage performance.
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name=eventtype
+                               value="roving" id="rovingbtn" {{ event.eventType | is_checked('roving') }}>Activity
+                        located throughout the hotel or elsewhere.
+                    </label>
+                </div>
             </div>
 
         </div>
-        <div class="col-md-6">
-            <div class="control-group" id="resources" style="display:none">
+        <div class="col-md-6 dynamic-content">
+            <div class="form-group hidden" id="resources">
                 {% for resource in resources %}
                     <label for="resource_{{ resource.id }}" class="checkbox">
                         <input type="checkbox" name="resource_{{ resource.id }}" id="resource_{{ resource.id }}"
@@ -63,11 +77,11 @@
                     </label>
                 {% endfor %}
             </div>
-            <div class="question" id="players" style="display:none">
+            <div class="form-group hidden" id="players">
                 <label for="players">
                     Number of Players
 
-                    <select tabindex="" name="players" data-size="false" data-width="100%">
+                    <select tabindex="" name="players" data-size="false" data-width="100%" data-style="btn-info">
                         <option value="2 {{ event.players|is_selected(2) }}">2</option>
                         <option value="3" {{ event.players|is_selected(3) }}>3</option>
                         <option value="5" {{ event.players|is_selected(4) }}>4</option>
@@ -76,11 +90,11 @@
                     </select>
                 </label>
             </div>
-            <div class="question" id="furniture" style="display:none">
+            <div class="form-group hidden" id="furniture">
                 <label for="roundtables">
                     Round tables
 
-                    <select tabindex="" name=roundtables data-size="false" data-width="100%">
+                    <select tabindex="" name=roundtables data-size="false" data-width="100%" data-style="btn-info">
                         <option value="0" {{ event.roundTables|is_selected(0) }}>0</option>
                         <option value="1" {{ event.roundTables|is_selected(1) }}>1</option>
                         <option value="2" {{ event.roundTables|is_selected(2) }}>2</option>
@@ -92,7 +106,7 @@
                 <label for="longtables">
                     Long tables
 
-                    <select tabindex="" name=longtables data-size="false" data-width="100%">
+                    <select tabindex="" name=longtables data-size="false" data-width="100%" data-style="btn-info">
                         <option value="0" {{ event.longTables|is_selected(0) }}>0</option>
                         <option value="1" {{ event.longTables|is_selected(1) }}>1</option>
                         <option value="2" {{ event.longTables|is_selected(2) }}>2</option>
@@ -101,51 +115,62 @@
                     </select>
                 </label>
             </div>
-            <div class="question" id="otherfacility" style="display:none">
+            <div class="form-group hidden" id="otherfacility">
                 <label for="facilityrequest">Additional Requests</label>
                 <textarea name=facilityrequest id="facilityrequest" rows="2" cols="50"
                           placeholder="Other room and furniture setup requests go here. If you selected 'More', we'll work out the specifics with you later."
-                          class="form-control">{{ event.facilityRequest | default('',true) }}</textarea> <br/>
+                          class="form-control">{{ event.facilityRequest | default('',true) }}</textarea>
             </div>
         </div>
 
     </div>
     <div class="row well section when">
         <div class="col-md-2">
-            <h6 class="row">
+            <h4 class="row">
                 WHEN
-            </h6>
+            </h4>
         </div>
         <div class="col-md-10">
-            <div class="col-md-2 question">
-                <div class="row btngroup timechange" data-toggle="buttons" id="duration">
-                    <label class="radio timechange" for="1">
-                        <input type="radio" class="timechange" data-toggle="radio" name="timechange" value="1"
-                               id="duration_50_mins" {{ event.duration | is_checked(1) }}>50 mins
-                    </label>
-                    <label class="radio timechange" for="2">
-                        <input type="radio" class="timechange" data-toggle="radio" name="timechange" value="2"
-                               id="duration_1_hr_50_mins" {{ event.duration | is_checked(2) }}>1 hr 50 mins
-                    </label>
-                    <label class="radio timechange" for="3">
-                        <input type="radio" class="timechange" data-toggle="radio" name="timechange" value="3"
-                               id="duration_2_hr_50_mins" {{ event.duration | is_checked(3) }}>2 hr 50 mins
-                    </label>
-                    <label class="radio timechange" for="4">
-                        <input type="radio" class="timechange" data-toggle="radio" name="timechange" value="4"
-                               id="duration_more" {{ event.duration | is_checked(4) }}>more
-                    </label>
-                    <label class="radio timechange" for="5">
-                        <input type="radio" class="timechange" data-toggle="radio" name="timechange" value="5"
-                               id="duration_all_weekend" {{ event.duration | is_checked(5) }}>all weekend
-                    </label>
+            <div class="col-md-2">
+                <div class="row" id="duration">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" class="timechange" name="timechange" value="1"
+                                   id="duration_50_mins" {{ event.duration | is_checked(1) }}>50 mins
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" class="timechange" name="timechange" value="2"
+                                   id="duration_1_hr_50_mins" {{ event.duration | is_checked(2) }}>1 hr 50 mins
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" class="timechange" name="timechange" value="3"
+                                   id="duration_2_hr_50_mins" {{ event.duration | is_checked(3) }}>2 hr 50 mins
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" class="timechange" name="timechange" value="4"
+                                   id="duration_more" {{ event.duration | is_checked(4) }}>more
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" class="timechange" name="timechange" value="5"
+                                   id="duration_all_weekend" {{ event.duration | is_checked(5) }}>all weekend
+                        </label>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-10 form-group">
-                <div class="row hidden" id="setupandrepeat">
+            <div class="col-md-10">
+                <div class="row hidden form-group" id="setupandrepeat">
                     <div class="col-md-6">
                         <label for="setuptime">Setup time
-                            <select tabindex="2" name=setuptime" data-size="false" data-width="100%">
+                            <select tabindex="2" name=setuptime" data-size="false" data-width="100%"
+                                    data-style="btn-info">
                                 <option value="0" {{ event.setupTime | is_selected(0) }}>No</option>
                                 <option value="1" {{ event.setupTime | is_selected(1) }}>1 hour</option>
                                 <option value="2" {{ event.setupTime | is_selected(2) }}>2 hours</option>
@@ -157,7 +182,8 @@
                     <div class="col-md-6">
 
                         <label for="repetition">Repeat
-                            <select tabindex="2" name=repetition data-size="false" data-width="100%">
+                            <select tabindex="2" name=repetition data-size="false" data-width="100%"
+                                    data-style="btn-info">
                                 <option value="0" {{ event.repetition | is_selected(0) }}>No</option>
                                 <option value="1" {{ event.repetition | is_selected(1) }}>twice</option>
                                 <option value="2" {{ event.repetition | is_selected(2) }}>thrice</option>
@@ -166,7 +192,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="row hidden" id="othertime" style="margin-top:15px;">
+                <div class="row hidden form-group" id="othertime" style="margin-top:15px;">
                     <textarea name=timerequest id="timerequest" rows="2" cols="50"
                               placeholder="Other time requests go here. If you selected 'More', we'll work out the specifics with you later."
                               class="form-control">{{ event.timeRequest | default('',true) }}</textarea>
@@ -176,16 +202,17 @@
     </div>
     <div class="row well who">
         <div class="col-md-2">
-            <h6 class="row">
+            <h4 class="row">
                 WHO
-            </h6>
+            </h4>
         </div>
         <div class="col-md-10">
             <div class="row control-group">
                 <p>
                     <small>Suggested by
                         {% if event is none %}
-                            <input type=hidden name=submitter_id value={{ user.id }}/>{{ macros.user_link(user) }}
+                            <input type=hidden name=submitter_id value={{ user.id }}/>
+                            {{ macros.user_link(user) }}
                         {% else %}
                             <input type=hidden name=submitter_id value={{ event.submitter.id }}/>
                             {{ macros.user_link(event.submitter) }}
@@ -201,21 +228,20 @@
                         {% endif %}
                     </small>
                 </p>
-                <label for="person0">
+                <label for="presenter">
                     <span id="pptype" style="display:none"></span>
                     <span id="pluralpptype" style="display:none"></span>
-                    <input name=person0 data-display-title="additional presenter field" type=text size="24"
-                           maxlength="24" class="pp form-control"/>
+                    <input name=presenter type=text size="24" maxlength="24" class="pp form-control"/>
                 </label>
-                <button id="newperson" class="pp btn btn-sm"><span class="fui-plus"></span> someone else</button>
+                <button id="newperson" class="pp btn"><span class="glyphicon glyphicon-plus"></span> someone else</button>
             </div>
         </div>
     </div>
     <div class="row well what">
         <div class="col-md-2">
-            <h6 class="row">
+            <h4 class="row">
                 WHAT
-            </h6>
+            </h4>
         </div>
         <div class="col-md-10">
             <div class="row">
@@ -225,8 +251,10 @@
                             <p class="help-block">
                                 <small>The following information will appear to attendees on the website and in the
                                     schedule
-                                    book. <em>Please do not leave comments here for the convention committee.</em>
+                                    book.
                                 </small>
+                                <br/>
+                                <small><em>Please do not leave comments here for the convention committee.</em></small>
                             </p>
                         </div>
                     </div>
@@ -261,10 +289,9 @@
 
                     <div class="control-group" id="topics" data-toggle="buttons">
                         {% for tag in tags %}
-                            <label value="{{ tag }}" {{ event | checked_if_tagged(tag) }} class="btn btn-xs btn-inverse"
-                                   id="{{ tag }}tagbtn">
-                                <input type="checkbox" name="tag_{{ tag }}" class="button-checkbox">
-                                {{ tag }}
+                            <label value="{{ tag }}" class="btn btn-xs btn-info">
+                                <input type="checkbox" name="tag"
+                                       value="{{ tag }}" {{ event | checked_if_tagged(tag) }}>{{ tag | trim }}
                             </label>
                         {% endfor %}
                     </div>
@@ -303,9 +330,9 @@
     </div>
     <div class="row well submit">
         <div class="col-md-2">
-            <h6 class="row">
+            <h4 class="row">
                 WHY NOT
-            </h6>
+            </h4>
         </div>
         <div class="col-md-10">
             <div class="row">
@@ -317,7 +344,8 @@
                     {% if event is not none %}
                         <div class="question">
                             <span style="color:#7f8c8d;">Submission status:</span>
-                            <select value="" tabindex="2" name=followupstate class="select-block">
+                            <select value="" tabindex="2" name=followupstate class="select-block"
+                                    data-style="btn-primary">
                                 <option value="0" {{ event.followUpState | is_selected(0) }}>Suggested</option>
                                 <option value="1" {{ event.followUpState | is_selected(1) }}>Followed up</option>
                                 <option value="2" {{ event.followUpState | is_selected(2) }}>Accepted</option>

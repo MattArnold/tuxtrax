@@ -29,13 +29,13 @@ class UsersAPI(Resource):
         output = User.query
         if args['q']:
             search_string = '%' + args['q'] + '%'
-            output = User.query.filter(
+            output = output.filter(
                 or_(
                     User.name.like(search_string),
                     User.email.like(search_string),
                     User.account_name.like(search_string)
-                    )
                 )
+            )
         output = dump_table(output, User.__table__)
         # fields to show in search results
         fields = ['id', 'name', 'email']

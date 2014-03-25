@@ -1,10 +1,8 @@
 $(document).ready(function () {
 
-    //style select lists
-    $("select").selectpicker();
 
     //style checkboxes
-    $(':checkbox[class!="button-checkbox"]').checkbox();
+    //$(':checkbox[class!="button-checkbox"]').checkbox();
 
     //display a message as people type into fields with max length set on them
     $('form textarea[maxlength],form input[maxlength]').on("input",function () {
@@ -114,29 +112,29 @@ $(document).ready(function () {
 
         // now we have all of the values. set everything.
         if (furnitureshow)
-            $('#furniture').css('display', 'block');
+            $('#furniture').removeClass('hidden');
         else
-            $('#furniture').css('display', 'none');
+            $('#furniture').addClass('hidden');
         if (otherfacilityshow)
-            $('#otherfacility').css('display', 'block');
+            $('#otherfacility').removeClass('hidden');
         else
-            $('#otherfacility').css('display', 'none');
+            $('#otherfacility').addClass('hidden');
         if (playersshow)
-            $('#players').css('display', 'block');
+            $('#players').removeClass('hidden');
         else
-            $('#players').css('display', 'none');
+            $('#players').addClass('hidden');
         if (ppshow)
-            $('#pp').css('display', 'block');
+            $('#pp').removeClass('hidden');
         else
-            $('#pp').css('display', 'none');
+            $('#pp').addClass('hidden');
         if (pptypeshow)
-            $('#pptype').css('display', 'block');
+            $('#pptype').removeClass('hidden');
         else
-            $('#pptype').css('display', 'none');
+            $('#pptype').addClass('hidden');
         if (resourcesshow)
-            $('#resources').css('display', 'block');
+            $('#resources').removeClass('hidden');
         else
-            $('#resources').css('display', 'none');
+            $('#resources').addClass('hidden');
         $('#pptype').text(pptypetext);
         $('#pluralpptype').text(pluralpptypetext);
     }
@@ -201,25 +199,21 @@ $(document).ready(function () {
         }
     });
 
-    $('#submitevent').click(function () {
-        var names, firstname, lastname, facilitycomment, timecomment;
+    $('#submitevent').click(function (ev) {
+        var facilitycomment, timecomment;
+        var $presenter = $('[name="presenter"]');
 
-        // Turn the submitter field into firstname and lastname.
-        names = $("#submitter").split(" ");
-        firstname = names.shift();
-        lastname = names.join();
-        $("firstname").val(firstname);
-        $("lastname").val(lastname);
+        ev.preventDefault();
+
+        if(!$presenter.val().length){
+            $presenter.val($('[name="submitter_name"]').val());
+        }
 
         // Combine all the comment fields into one comment.
-        if ($("#facilityrequest").val("Other room and furniture setup requests go here. If you selected 'More', we'll work out the specifics with you later.")) {
-            $("#facilityrequest").val("");
-        }
-        if ($("#timerequest").val("Other time requests go here. If you selected 'More', we'll work out the specifics with you later.")) {
-            $("#timerequest").val("");
-        }
         facilitycomment = $("facilityrequest").val();
         timecomment = $("timerequest").val();
         $("#comments").val(facilitycomment + " | " + timecomment);
+
+        $('form').submit();
     });
 });

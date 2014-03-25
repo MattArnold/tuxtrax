@@ -1,5 +1,3 @@
-window.ptrax = window.ptrax || {};
-
 (function (ptrax) {
 
   ptrax.TagFilter = can.Control.extend(
@@ -198,4 +196,4 @@ window.ptrax = window.ptrax || {};
       }
     });
 
-})(ptrax);
+})(window.ptrax);
