@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 
 BASEDIR=$(dirname $0)
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$BASEDIR/soci-3.2.2/build/lib
