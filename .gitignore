@@ -2,7 +2,6 @@
 *.swp
 *~
 #flask env stuff
-bin/
 include/
 lib/
 local/
