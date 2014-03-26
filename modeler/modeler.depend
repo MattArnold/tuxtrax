@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1395689928 source:/home/jq/penguicontrax/modeler/main.cpp
+1395692457 source:/home/jq/penguicontrax/modeler/main.cpp
 	<stdlib.h>
 	<iostream>
 	<iomanip>
@@ -9,13 +9,14 @@
 	<time.h>
 	"database.h"
 
-1395690138 source:/home/jq/penguicontrax/modeler/database.cpp
+1395870187 source:/home/jq/penguicontrax/modeler/database.cpp
 	"database.h"
 	<soci-postgresql.h>
 	<soci-sqlite3.h>
 	<iostream>
+	<sstream>
 
-1395689622 /home/jq/penguicontrax/modeler/database.h
+1395870722 /home/jq/penguicontrax/modeler/database.h
 	<soci.h>
 	<string>
 	<vector>
@@ -586,6 +587,287 @@
 	<vector>
 
 1378874658 /usr/local/include/soci/sqlite3/soci-sqlite3.h
+	<cstdarg>
+	<vector>
+	"soci-backend.h"
+	<sqlite3.h>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/soci.h
+	"backend-loader.h"
+	"blob.h"
+	"blob-exchange.h"
+	"connection-pool.h"
+	"error.h"
+	"exchange-traits.h"
+	"into.h"
+	"into-type.h"
+	"once-temp-type.h"
+	"prepare-temp-type.h"
+	"procedure.h"
+	"ref-counted-prepare-info.h"
+	"ref-counted-statement.h"
+	"row.h"
+	"row-exchange.h"
+	"rowid.h"
+	"rowid-exchange.h"
+	"rowset.h"
+	"session.h"
+	"soci-backend.h"
+	"soci-config.h"
+	"soci-platform.h"
+	"statement.h"
+	"transaction.h"
+	"type-conversion.h"
+	"type-conversion-traits.h"
+	"type-holder.h"
+	"type-ptr.h"
+	"unsigned-types.h"
+	"use.h"
+	"use-type.h"
+	"values.h"
+	"values-exchange.h"
+	<boost/version.hpp>
+	"boost-fusion.h"
+	"boost-optional.h"
+	"boost-tuple.h"
+	"boost-gregorian-date.h"
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/backend-loader.h
+	"soci-backend.h"
+	<string>
+	<vector>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/soci-backend.h
+	"soci-config.h"
+	"error.h"
+	<cstddef>
+	<map>
+	<string>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/soci-config.h
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/error.h
+	"soci-config.h"
+	<stdexcept>
+	<string>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/blob.h
+	"soci-config.h"
+	<cstddef>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/blob-exchange.h
+	"blob.h"
+	"into-type.h"
+	"use-type.h"
+	<string>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/into-type.h
+	"soci-backend.h"
+	"type-ptr.h"
+	"exchange-traits.h"
+	<cstddef>
+	<vector>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/type-ptr.h
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/exchange-traits.h
+	"type-conversion-traits.h"
+	"soci-backend.h"
+	<ctime>
+	<string>
+	<vector>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/type-conversion-traits.h
+	"soci-backend.h"
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/use-type.h
+	"soci-backend.h"
+	"type-ptr.h"
+	"exchange-traits.h"
+	<cstddef>
+	<string>
+	<vector>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/connection-pool.h
+	"soci-config.h"
+	<cstddef>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/into.h
+	"into-type.h"
+	"exchange-traits.h"
+	"type-conversion.h"
+	<cstddef>
+	<vector>
+
+1378856657 /home/jq/penguicontrax/modeler/soci-3.2.2/core/type-conversion.h
+	"type-conversion-traits.h"
+	"into-type.h"
+	"use-type.h"
+	<cassert>
+	<cstddef>
+	<string>
+	<vector>
+
+1378856646 /home/jq/penguicontrax/modeler/soci-3.2.2/core/once-temp-type.h
+	"ref-counted-statement.h"
+	"prepare-temp-type.h"
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/ref-counted-statement.h
+	"statement.h"
+	"into-type.h"
+	"use-type.h"
+	<sstream>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/statement.h
+	"into-type.h"
+	"into.h"
+	"use-type.h"
+	"soci-backend.h"
+	"row.h"
+	<cstddef>
+	<string>
+	<map>
+	<vector>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/row.h
+	"type-holder.h"
+	"soci-backend.h"
+	"type-conversion.h"
+	<cassert>
+	<cstddef>
+	<map>
+	<string>
+	<vector>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/type-holder.h
+	<typeinfo>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/prepare-temp-type.h
+	"into-type.h"
+	"use-type.h"
+	"ref-counted-prepare-info.h"
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/ref-counted-prepare-info.h
+	"ref-counted-statement.h"
+	<string>
+	<vector>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/procedure.h
+	"statement.h"
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/row-exchange.h
+	"into-type.h"
+	"exchange-traits.h"
+	"row.h"
+	"statement.h"
+	<cstddef>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/rowid.h
+	"soci-config.h"
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/rowid-exchange.h
+	"rowid.h"
+	"into-type.h"
+	"use-type.h"
+	"exchange-traits.h"
+	<string>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/rowset.h
+	"statement.h"
+	<iterator>
+	<memory>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/session.h
+	"once-temp-type.h"
+	"query_transformation.h"
+	"connection-parameters.h"
+	<cstddef>
+	<memory>
+	<ostream>
+	<sstream>
+	<string>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/query_transformation.h
+	"soci-config.h"
+	<functional>
+	<string>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/connection-parameters.h
+	"soci-config.h"
+	<map>
+	<string>
+
+1378856657 /home/jq/penguicontrax/modeler/soci-3.2.2/core/soci-platform.h
+	<stdlib.h>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/transaction.h
+	"session.h"
+	"soci-config.h"
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/unsigned-types.h
+	"type-conversion-traits.h"
+	<limits>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/use.h
+	"use-type.h"
+	"exchange-traits.h"
+	"type-conversion.h"
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/values.h
+	"statement.h"
+	"into-type.h"
+	"use-type.h"
+	<cstddef>
+	<map>
+	<sstream>
+	<string>
+	<utility>
+	<vector>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/values-exchange.h
+	"values.h"
+	"into-type.h"
+	"use-type.h"
+	"row-exchange.h"
+	<cstddef>
+	<string>
+	<vector>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/boost-fusion.h
+	"values.h"
+	"type-conversion-traits.h"
+	<boost/fusion/container/vector.hpp>
+	<boost/fusion/sequence/intrinsic/at.hpp>
+	<boost/fusion/sequence/intrinsic/size.hpp>
+	<boost/fusion/include/at.hpp>
+	<boost/fusion/support/is_sequence.hpp>
+	<boost/preprocessor/repetition/repeat.hpp>
+	<boost/preprocessor/repetition/repeat_from_to.hpp>
+	<boost/utility/enable_if.hpp>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/boost-optional.h
+	"type-conversion-traits.h"
+	<boost/optional.hpp>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/boost-tuple.h
+	"values.h"
+	"type-conversion-traits.h"
+	<boost/tuple/tuple.hpp>
+	"boost-fusion.h"
+	<boost/fusion/adapted/boost_tuple.hpp>
+
+1377124811 /home/jq/penguicontrax/modeler/soci-3.2.2/core/boost-gregorian-date.h
+	"type-conversion-traits.h"
+	<boost/date_time/gregorian/gregorian_types.hpp>
+	<boost/date_time/gregorian/conversion.hpp>
+	<ctime>
+
+1378856657 /home/jq/penguicontrax/modeler/soci-3.2.2/backends/postgresql/soci-postgresql.h
+	<soci-backend.h>
+	<libpq-fe.h>
+	<vector>
+
+1378856657 /home/jq/penguicontrax/modeler/soci-3.2.2/backends/sqlite3/soci-sqlite3.h
 	<cstdarg>
 	<vector>
 	"soci-backend.h"

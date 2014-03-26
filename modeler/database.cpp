@@ -2,12 +2,14 @@
 #include <soci-postgresql.h>
 #include <soci-sqlite3.h>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 using namespace soci;
 
 database::database(const std::string& dburl, int _convention) : convention(_convention)
 {
+    is_postgres = false;
     if(dburl.find("sqlite3:///") == 0)
     {
         auto file = dburl.substr(11);
@@ -18,8 +20,47 @@ database::database(const std::string& dburl, int _convention) : convention(_conv
         auto file = dburl.substr(10);
         db.open(sqlite3, file);
     }
+    else if(dburl.find("postgresql://") == 0)
+    {
+        // URL is of the form postgresql://username:password@server:port/databasename
+        auto path = dburl.substr(13);
+        int loc = path.find(':');
+        if(loc != -1)
+        {
+            auto user = path.substr(0, loc);
+            path = path.substr(loc + 1);
+            loc = path.find('@');
+            if(loc != -1)
+            {
+                auto password = path.substr(0, loc);
+                path = path.substr(loc + 1);
+                loc = path.find('/');
+                if(loc != -1)
+                {
+                    auto server = path.substr(0, loc);
+                    auto dbname = path.substr(loc + 1);
 
-    //TODO: POSTGRES
+                    string port;
+                    loc = server.find(':');
+                    if(loc != -1)
+                    {
+                        port = server.substr(loc + 1);
+                        server = server.substr(0,loc);
+                    }
+
+                    stringstream params;
+                    params << "dbname=" << dbname << " host=" << server << " user=" << user << " password=" << password;
+                    if(!port.empty())
+                        params << " port=" << port;
+
+                    auto params_str = params.str();
+                    db.open(postgresql, params_str);
+                    is_postgres = true;
+                }
+            }
+        }
+
+    }
 }
 
 database::~database()
@@ -116,7 +157,8 @@ std::vector<database::person> database::get_people()
 std::vector<database::user> database::get_users()
 {
     std::vector<user> users;
-    rowset<row> rs = (db.prepare << "select id,name from user;");
+    const char* user_sel_sql = is_postgres ? "select id,name from public.user;" : "select id,name from user;"; //postgres has a built-in "user" table
+    rowset<row> rs = (db.prepare << user_sel_sql);
     for(auto it = rs.begin() ; it != rs.end() ; ++it)
     {
         user u;

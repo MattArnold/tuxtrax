@@ -64,7 +64,7 @@ if [ ! -d "$BASEDIR/cmake-2.8.12.2/Bootstrap.cmk" ]
 then
 	./bootstrap
 fi
-make -j4
+make cmake -j4
 
 # Make sqlite3
 cd $BASEDIR/sqlite-autoconf-3080401
@@ -79,7 +79,7 @@ cd $BASEDIR/soci-3.2.2
 mkdir build
 cd build
 export PATH=$PATH:$BASEDIR/cmake-2.8.12.2/bin
-cmake -G "Unix Makefiles" -DWITH_BOOST=OFF -DSQLITE3_FOUND=ON -DSQLITE3_LIBRARY=$BASEDIR/sqlite-autoconf-3080401/.libs/libsqlite3.so -DSQLITE3_LIBRARIES=$BASEDIR/sqlite-autoconf-3080401/.libs/libsqlite3.so -DSQLITE3_INCLUDE_DIR=$BASEDIR/sqlite-autoconf-3080401 ../
+cmake -G "Unix Makefiles" -DWITH_BOOST=OFF -DWITH_MYSQL=OFF -DSQLITE3_FOUND=ON -DSQLITE3_LIBRARY=$BASEDIR/sqlite-autoconf-3080401/.libs/libsqlite3.so -DSQLITE3_LIBRARIES=$BASEDIR/sqlite-autoconf-3080401/.libs/libsqlite3.so -DSQLITE3_INCLUDE_DIR=$BASEDIR/sqlite-autoconf-3080401 ../
 make -j4
 cd ../../
 
