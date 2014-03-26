@@ -46,6 +46,18 @@ then
 	tar xvfz $TMPDIR/sqlite-autoconf-3080401.tar.gz -C $BASEDIR
 fi
 
+# Check for clp file
+if [ ! -f "$TMPDIR/Clp-1.15.6.tgz" ]
+then
+	curl http://www.coin-or.org/download/source/Clp/Clp-1.15.6.tgz > $TMPDIR/Clp-1.15.6.tgz
+fi
+
+# Check for clp source
+if [ ! -d "$BASEDIR/Clp-1.15.6" ]
+then
+	tar xvfz $TMPDIR/Clp-1.15.6.tgz -C $BASEDIR
+fi
+
 # Make cmake
 cd $BASEDIR/cmake-2.8.12.2
 if [ ! -d "$BASEDIR/cmake-2.8.12.2/Bootstrap.cmk" ]
@@ -71,7 +83,7 @@ cmake -G "Unix Makefiles" -DWITH_BOOST=OFF -DSQLITE3_FOUND=ON -DSQLITE3_LIBRARY=
 make
 cd ../../
 
-# Create output directories
+# Make modeler
 if [ ! -d "$BASEDIR/bin" ]
 then
 	mkdir $BASEDIR/bin
@@ -80,9 +92,16 @@ if [ ! -d "$BASEDIR/obj" ]
 then
 	mkdir $BASEDIR/obj
 fi
-
-# Make modeler
 make
+
+# Make clp
+cd $BASEDIR/Clp-1.15.6
+mkdir build
+cd build
+../configure
+make
+make install
+cd ../
 
 # Return to root directory
 cd ../
