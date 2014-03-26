@@ -21,4 +21,6 @@ modeler/obj
 *.exe
 *.sol
 *.zip
-modeler/soci-3.2.2/build
+modeler/soci-3.2.2
+tmp/
+modeler/cmake-2.8.12.2
