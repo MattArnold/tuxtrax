@@ -64,7 +64,7 @@ if [ ! -d "$BASEDIR/cmake-2.8.12.2/Bootstrap.cmk" ]
 then
 	./bootstrap
 fi
-make
+make -j4
 
 # Make sqlite3
 cd $BASEDIR/sqlite-autoconf-3080401
@@ -72,7 +72,7 @@ if [ ! -f "$BASEDIR/sqlite-autoconf-3080401/Makefile" ]
 then
 	./configure --disable-static CFLAGS="-g -O2 -DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_SECURE_DELETE=1"
 fi
-make
+make -j4
 
 # Make soci
 cd $BASEDIR/soci-3.2.2
@@ -80,7 +80,7 @@ mkdir build
 cd build
 export PATH=$PATH:$BASEDIR/cmake-2.8.12.2/bin
 cmake -G "Unix Makefiles" -DWITH_BOOST=OFF -DSQLITE3_FOUND=ON -DSQLITE3_LIBRARY=$BASEDIR/sqlite-autoconf-3080401/.libs/libsqlite3.so -DSQLITE3_LIBRARIES=$BASEDIR/sqlite-autoconf-3080401/.libs/libsqlite3.so -DSQLITE3_INCLUDE_DIR=$BASEDIR/sqlite-autoconf-3080401 ../
-make
+make -j4
 cd ../../
 
 # Make modeler
@@ -92,14 +92,14 @@ if [ ! -d "$BASEDIR/obj" ]
 then
 	mkdir $BASEDIR/obj
 fi
-make
+make -j4
 
 # Make clp
 cd $BASEDIR/Clp-1.15.6
 mkdir build
 cd build
 ../configure
-make
+make -j4
 make install
 cd ../
 
