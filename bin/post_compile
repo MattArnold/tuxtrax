@@ -20,3 +20,6 @@ then
 		echo "worker: python runworker.py" > Procfile
 	fi
 fi
+
+rm -rf *.o
+rm -rf *.a
