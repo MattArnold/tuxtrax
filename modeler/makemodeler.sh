@@ -13,7 +13,7 @@ fi
 # Check for cmake file
 if [ ! -f "$TMPDIR/cmake-2.8.12.2.tar.gz" ]
 then
-	wget -P $TMPDIR http://www.cmake.org/files/v2.8/cmake-2.8.12.2.tar.gz 
+	curl http://www.cmake.org/files/v2.8/cmake-2.8.12.2.tar.gz > $TMPDIR/cmake-2.8.12.2.tar.gz
 fi
 
 # Check for cmake source
@@ -25,7 +25,7 @@ fi
 # Check for soci file
 if [ ! -f "$TMPDIR/soci-3.2.2.tar.gz" ]
 then
-	wget -P $TMPDIR http://sourceforge.net/projects/soci/files/soci/soci-3.2.2/soci-3.2.2.tar.gz
+	curl http://sourceforge.net/projects/soci/files/soci/soci-3.2.2/soci-3.2.2.tar.gz > $TMPDIR/soci-3.2.2.tar.gz
 fi
 
 # Check for soci source
