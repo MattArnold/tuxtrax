@@ -5,6 +5,7 @@ EXECUTABLE=bin/modeler
 SOCI_INC_DIR=soci-3.2.2
 POSTGRES_INC_DIR=/usr/include/postgresql
 SOCI_LIB_DIR=soci-3.2.2/build/lib
+SQLITE_INCLUDE_DIR=sqlite-autoconf-3080401
 OBJ_DIR=obj
 OBJECTS=$(OBJ_DIR)/database.o $(OBJ_DIR)/main.o
 
@@ -17,4 +18,4 @@ clean:
 	rm -rf $(OBJECTS) $(EXECUTABLE)
 
 $(OBJ_DIR)/%.o: %.cpp
-	$(CC) $(CFLAGS) -I$(SOCI_INC_DIR)/core -I$(SOCI_INC_DIR)/backends/postgresql -I$(SOCI_INC_DIR)/backends/sqlite3 -I$(POSTGRES_INC_DIR) $< -o $@
+	$(CC) $(CFLAGS) -I$(SQLITE_INCLUDE_DIR) -I$(SOCI_INC_DIR)/core -I$(SOCI_INC_DIR)/backends/postgresql -I$(SOCI_INC_DIR)/backends/sqlite3 -I$(POSTGRES_INC_DIR) $< -o $@
