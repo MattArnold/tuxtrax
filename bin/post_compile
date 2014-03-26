@@ -1,4 +1,4 @@
 #!/bin/bash
 
 echo "In post-compile hook"
-pwd
+modeler/makemodeler.sh
