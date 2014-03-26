@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 FILE=$(readlink -f $0)
 BASEDIR=`dirname $FILE`
@@ -25,7 +25,7 @@ fi
 # Check for soci file
 if [ ! -f "$TMPDIR/soci-3.2.2.tar.gz" ]
 then
-	curl http://sourceforge.net/projects/soci/files/soci/soci-3.2.2/soci-3.2.2.tar.gz > $TMPDIR/soci-3.2.2.tar.gz
+	curl -L http://sourceforge.net/projects/soci/files/soci/soci-3.2.2/soci-3.2.2.tar.gz > $TMPDIR/soci-3.2.2.tar.gz
 fi
 
 # Check for soci source
