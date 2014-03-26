@@ -1,4 +1,22 @@
 #!/bin/bash
 
 echo "In post-compile hook"
-modeler/makemodeler.sh
+
+if [ -f $ENV_DIR/PENGUICONTRAX_MAKE_MODELER ]
+then
+	PENGUICONTRAX_MAKE_MODELER=$(cat $ENV_DIR/PENGUICONTRAX_MAKE_MODELER)
+	if [ "$PENGUICONTRAX_MAKE_MODELER" == "1" ]
+	then
+		modeler/makemodeler.sh
+	fi
+fi
+
+if [ -f $ENV_DIR/PENGUICONTRAX_WORKER ]
+then
+	PENGUICONTRAX_WORKER=$(cat $ENV_DIR/PENGUICONTRAX_WORKER)
+	if [ "$PENGUICONTRAX_WORKER" == "1" ]
+	then
+		echo "Changing Procfile to worker"
+		echo "worker: python runworker.py" > Procfile
+	fi
+fi
