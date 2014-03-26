@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 
 cd modeler/soci-3.2.2
 mkdir build
