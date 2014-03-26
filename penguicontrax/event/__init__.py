@@ -450,14 +450,14 @@ def convention_solve(convention):
     from solve import solve_convetion_modeler
     from rq import Queue
     import time
-    if conn is None:
-        return solve_convetion_modeler(str(convention.id))
-    else:
+    try:
         q = Queue(connection = conn)
         job = q.enqueue(solve_convetion_modeler, str(convention.id))
-        while job.result is None:
-            time.sleep(2)
-        return 'Using redis queue<br/>' + job.result
+    except: # No connection to redis worker, solve inline
+        return solve_convetion_modeler(str(convention.id))
+    while job.result is None:
+        time.sleep(2)
+    return 'Using redis queue<br/>' + job.result
 
 @app.route('/convention/<convention_url>/solve')
 def convention_solve_url(convention_url):

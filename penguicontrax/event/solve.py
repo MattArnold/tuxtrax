@@ -16,8 +16,8 @@ def solve_convetion_modeler(convention_id_str):
         status += model.communicate()[0].replace(os.linesep, '<br/>')
         ret = model.poll()
     if ret != 0:
-        return
-    sol = subprocess.Popen(['clp', 'output.lp', '-solve', '-solu', 'output.sol'], stdout = subprocess.PIPE, cwd=d)
+        return status
+    sol = subprocess.Popen([constants.CLP_PATH, 'output.lp', '-solve', '-solu', 'output.sol'], stdout = subprocess.PIPE, cwd=d)
     ret = None
     while ret is None:
         status += sol.communicate()[0].replace(os.linesep, '<br/>')
