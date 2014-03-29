@@ -1,4 +1,11 @@
 (function (ptrax) {
+  var INCLUDED = 1;
+  var NEUTRAL = 0;
+  var EXCLUDED = -1;
+
+  isIncluded = function(tag) { return tag.attr('state') === INCLUDED; };
+  isNeutral = function(tag) { return tag.attr('state') === NEUTRAL; };
+  isExcluded = function(tag) { return tag.attr('state') === EXCLUDED; };
 
   ptrax.TagFilter = can.Control.extend(
     {
@@ -11,26 +18,44 @@
       init: function () {
 
         var tagList = [], view, data,tpl, renderer;
+        var submissions = this.options.submissions;
 
         can.each(this.options.tags, function (tag) {
           tagList.push({
             name: tag,
-            excluded: false,
-            included: true
+            status: NEUTRAL
           });
         });
+
+        var submissionsByTagName = _.zipObject(_.pluck(tagList,'name'),
+                                         _.map(tagList, function(){return []}));
+        can.each(this.options.submissions, function(submission) {
+          can.each(submission.attr('tags'), function(tag) {
+            submissionsByTagName[tag] = submissionsByTagName[tag] || [];
+            submissionsByTagName[tag].push(submission);
+          });
+        });
+
+        isTagNameIncluded = function(tag) { return isIncluded(data.tagsByName[tag]); };
+        isTagNameNeutral = function(tag) { return isNeutral(data.tagsByName[tag]); };
+        isTagNameExcluded = function(tag) { return isExcluded(data.tagsByName[tag]); };
 
         data = new can.Map({
           infoText: "",
           all: true,
-          tags: tagList
+          tags: tagList,
+          tagsByName: _.zipObject(_.pluck(tagList,'name'), tagList),
+          submissionsByTagName: submissionsByTagName
         });
 
         tpl = ptrax.util.tplDecode(this.options.tpl);
         renderer = can.view.mustache(tpl);
 
         this.options.viewModel = data;
-        this.element.html(renderer(data));
+        this.element.html(renderer(data, {
+          isIncluded: function(tag, options) {if (isIncluded(tag)) {return options.fn(this)}},
+          isExcluded: function(tag, options) {if (isExcluded(tag)) {return options.fn(this)}}
+        }));
         this.on();
         this.setInfoText();
       },
@@ -38,12 +63,12 @@
       //set the tag button state, updates the data object
       ".btn click": function (el) {
         var data = this.options.viewModel;
-        var tag = el.data('tag');
+        var tagName = el.data('tag');
         var tagList = data.tags;
         var all = data.attr('all');
 
         //look up the tag object
-        var t = _.find(tagList, {name: tag});
+        var t = data.tagsByName[tagName];
 
         //user clicked a tag button
         if (t) {
@@ -55,35 +80,33 @@
 
           can.batch.start();
           //exclude if included
-          if (t.attr('included')) {
+          if (isIncluded(t)) {
             //console.debug(t.name, 'included, set to excluded')
-            t.attr('included', false);
-            t.attr('excluded', true);
+            t.attr('state', EXCLUDED);
             //if there is nothing included, include everything that isn't explicitly excluded
-            if (!_.any(tagList, "included")) {
+            if (!_.any(tagList, isIncluded)) {
               _.forEach(tagList, function (tag) {
-                if (!tag.attr('excluded') && !(tag.attr('name') === t.attr('name'))) {
-                  tag.attr('included', true);
+                if (!isExcluded(tag) && !(tag.attr('name') === t.attr('name'))) {
+                  tag.attr('state', INCLUDED);
                 }
               });
             }
-          } else if (t.attr('excluded')) {
+          } else if (isExcluded(t)) {
             //console.debug(t.name, 'excluded, set to ignore')
-            t.attr('excluded', false);
-            t.attr('included', false);
+            t.attr('state', NEUTRAL);
           } else {
             //console.debug(t.name, 'neither included or excluded, set to included')
             //include if not excluded or included already
-            t.attr('included', true);
+            t.attr('state', INCLUDED);
           }
 
           //if nothing is now included or excluded, reselect all
-          if (!_.any(tagList, "included") && !_.any(tagList, "excluded")) {
+          if (!_.any(tagList, isIncluded) && !_.any(tagList, isExcluded)) {
             data.attr('all', true);
           }
 
           //if everything is now included, reselect all
-          if (_.all(tagList, "included")) {
+          if (_.all(tagList, isIncluded)) {
             data.attr('all', true);
           }
 
@@ -95,9 +118,9 @@
         }
 
         if (!data.attr('all')) {
-          var included = _.pluck(_.filter(tagList, "included"), "name");
-          var excluded = _.pluck(_.filter(tagList, "excluded"), "name");
-          if(!_.isEmpty(included) || !_.isEmpty(excludded)){
+          var included = _.pluck(_.filter(tagList, isIncluded), "name");
+          var excluded = _.pluck(_.filter(tagList, isExcluded), "name");
+          if(!(_.isEmpty(included) && _.isEmpty(excluded))){
             this.setInfoText(included, excluded);
           }
         }
@@ -107,10 +130,9 @@
         var tagList = data.tags;
         if (attr === "all") {
           can.batch.start();
-          _.forEach(tagList, function (tagBtn) {
+          _.forEach(tagList, function (tag) {
             //toggle all state
-            tagBtn.attr('excluded', false);
-            tagBtn.attr('included', newVal);
+            tag.attr('state', newVal ? INCLUDED : NEUTRAL);
           });
           can.batch.stop();
 
@@ -132,24 +154,12 @@
         //console.debug(prop, newVal, tag.name);
 
         //submissions that match the tag
-        var submissions = $('.submission[data-tags~="' + tag.name + '"]');
-
-        switch (prop) {
-          case "included":
-            if (newVal) {
-              submissions.removeClass('hidden');
-            } else {
-              submissions.addClass('hidden');
-            }
-            break;
-          case "excluded":
-            if (newVal) {
-              submissions.addClass('hidden');
-            } else {
-              submissions.removeClass('hidden');
-            }
-            break;
-        }
+        var submissions = data.submissionsByTagName[tag.name] || [];
+        can.each(submissions, function (submission) {
+          var visible = _.any(submission.tags, isTagNameIncluded)
+                        && !_.any(submission.tags, isTagNameExcluded);
+          submission.hidden = !visible;
+        });
       },
 
       setInfoText: function (included, excluded, noResults) {
