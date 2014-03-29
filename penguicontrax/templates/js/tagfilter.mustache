@@ -1,5 +1,5 @@
      <button class="btn btn-default btn-sm {{#all}}btn-inverse{{/all}}">all</button>
     {{#tags}}
-        <button class="btn btn-default btn-xs {{#included}}btn-inverse{{/included}} {{#excluded}}btn-danger excluded{{/excluded}}"
+        <button class="btn btn-default btn-xs {{#isIncluded . }}btn-inverse{{/isIncluded}} {{#isExcluded . }}btn-danger excluded{{/isExcluded}}"
                 data-tag="{{name}}">{{name}}</button>
     {{/tags}}
