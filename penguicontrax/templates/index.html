@@ -1,27 +1,33 @@
 {% extends "base.html" %}
 {% block head %}
-{{ super() }}
+    {{ super() }}
 {% endblock %}
 {% block body %}
-{{ super() }}
-<div class="row">
-    <div class="col-md-2" id="nav">
-        <div class="tagsinput">
-            <button id="hidenav" class="btn btn-xs">
-                <i class="fa fa-compress"></i>
-            </button>
-            <i class="fa fa-info-circle tip" rel="tooltip" data-toggle="tooltip" data-placement="bottom" data-original-title="Filter the schedule by topics. Click some tags if you want to see only events with those topics. If you click a tag again, it will exclude all events with that topic. If you click a tag a third time, your filter will not care about that topic. If you have no topics turned on, it will turn on all the tags."></i>
-            <span id="tagfilter"></span>
+    {{ super() }}
+    <div class="row">
+        <div class="col-md-2" id="nav">
+            <div class="tagsinput">
+                <button id="hidenav" class="btn btn-xs">
+                    <i class="fa fa-compress"></i>
+                </button>
+                <i class="fa fa-info-circle tip" rel="tooltip" data-toggle="tooltip" data-placement="bottom"
+                   data-original-title="Filter the schedule by topics. Click some tags if you want to see only events with those topics. If you click a tag again, it will exclude all events with that topic. If you click a tag a third time, your filter will not care about that topic. If you have no topics turned on, it will turn on all the tags."></i>
+
+                <div id="tagfilter">
+                    <div class="alert alert-info">
+                        <p>Loading...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="tagsinput">
+                <span class="smalllabel">User tags: </span>
+                <span id="usertagfilter"></span>
+            </div>
         </div>
-        <div class="tagsinput">
-            <span class="smalllabel">User tags: </span>
-            <span id="usertagfilter"></span>
-        </div>
-    </div>
-    <div class="col-md-10" id="report">
-        <div class="container-fluid">
-            <div class="row ">
-                 <div class="row" style="margin-bottom:15px">
+        <div class="col-md-10" id="report">
+            <div class="container-fluid">
+                <div class="row ">
+                    <div class="row" style="margin-bottom:15px">
                         <div class="col-md-2">
                             <div id="shownav">
                                 <button id="shownavbtn" class="btn btn-xs">
@@ -40,60 +46,81 @@
                             <span class="bs-callout followedup">Followed up</span>
                             <span class="bs-callout accepted">Accepted</span>
                             {% if user is not none and user.staff == 1 %}
-                            <span class="bs-callout rejected">Rejected</span>
+                                <span class="bs-callout rejected">Rejected</span>
                             {% endif %}
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="submissions-list">
-                            <div class="row col-md-12">
+                    <div class="row submissions-list">
+                        <div class="col-md-12">
+                            <div class="row">
                                 <div class="col-md-8 info">{% if hidden==True %}
                                     {{ 'We regret that for various reasons, we can’t use these event suggestions this year. Maybe next year! Also, some of them may be here in error, in which case bear with us while we fix it.' }}
-                                    {% else %}
+                                {% else %}
                                     {{ 'Try clicking some tags!' }}
-                                    {% endif %}
+                                {% endif %}
                                 </div>
                             </div>
-
-                            <form action="/rsvp" method=post>
-                                {% for submission in submissions %}
-                                {{ macros.event_summary(submission, user) }}
-                                {% endfor %}
-                            </form>
-                            <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a
-                                    href="form.html">create one</a>?
+                            <div id="submissions" class="row">
+                                <div class="alert alert-info">
+                                    <p>Loading...</p>
+                                </div>
                             </div>
                         </div>
+
+                        {#                            <form action="/rsvp" method=post>#}
+                        {#                                {% for submission in submissions %}#}
+                        {#                                {{ macros.event_summary(submission, user) }}#}
+                        {#                                {% endfor %}#}
+                        {#                            </form>#}
+
+
+                        <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a
+                                href="form.html">create one</a>?
+                        </div>
                         {% if request.path != "/hidden" %}
-                        <div class="row"><a href="/hidden">See hidden events</a></div>
+                            <div class="row"><a href="/hidden">See hidden events</a></div>
                         {% endif %}
                     </div>
+                </div>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
 {% endblock %}
 {% block page_script %}
-{{ super() }}
-<script type="text/javascript" src="{{ url_for('static', filename='tagFilter.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='collapsetagnav.js') }}"></script>
-<script type="text/javascript">
+    {{ super() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='tagFilter.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='submissionList.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='collapsetagnav.js') }}"></script>
+    <script type="text/javascript">
 
-    $(document).ready(function(){
-        $("[rel=tooltip]").tooltip();
-    });
-    
-    var tags = "{% for tag in tags %}{{tag}},{% endfor%}".split(",");
-    tags = tags.slice(0, tags.length - 1);
+        $(document).ready(function () {
+            $("[rel=tooltip]").tooltip();
+        });
 
-    new ptrax.TagFilter("#tagfilter", {
-        tags : tags,
-        tplUrl : "{{ url_for('static', filename='tagfilter.mustache') }}"
-    });
-    
-    $("#createeventbutton").click(function () {
-        document.location.href = "/eventform"
-    });
-</script>
+        var tags = "{% for tag in tags %}{{tag}},{% endfor%}".split(",");
+        tags = tags.slice(0, tags.length - 1);
+
+        ptrax.model.Submissions.findAll().done(function (submissions) {
+
+            new ptrax.TagFilter("#tagfilter", {
+                tags: tags,
+                tpl: "{{ "js/tagfilter.mustache" | get_js_template }}",
+                submissions: submissions
+            });
+
+            new ptrax.SubmissionList("#submissions", {
+                submissionsTpl: "{{ "js/submissions.mustache" | get_js_template }}",
+                userLinkTpl: "{{ "js/user_link.mustache" | get_js_template }}",
+                userTextTpl: "{{ "js/user_text.mustache" | get_js_template }}",
+                submissions: submissions
+            });
+
+
+        });
+
+        $("#createeventbutton").click(function () {
+            document.location.href = "/eventform"
+        });
+    </script>
 {% endblock %}

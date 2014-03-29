@@ -158,7 +158,7 @@ $(document).ready(function () {
             if (this.checked) {
                 updateTypeOptions.call(this);
             }
-        }).delegate('input[name=timechange]', 'change', function handleTimeChange() {
+        }).delegate('input[name=duration]', 'change', function handleTimeChange() {
             if (this.checked) {
                 update_time_options.call(this);
             }

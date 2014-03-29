@@ -7452,8 +7452,22 @@ button.close {
 body {
   font-family: "Droid Sans", sans-serif;
 }
+#tagfilter {
+  margin: 10px;
+}
 #tagfilter .btn.excluded {
   text-decoration: line-through;
+}
+#submissions {
+  margin: 15px 0;
+}
+#submissions ul {
+  margin: 0;
+  padding: 0;
+}
+#submissions li {
+  list-style-type: none;
+  margin-left: 0;
 }
 h4 {
   padding: 10px;

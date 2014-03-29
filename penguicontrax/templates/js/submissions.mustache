@@ -1,0 +1,26 @@
+<ul>
+    {{#submissions}}
+        <li class="submission row bs-callout-default bs-callout {{_followUpState}}">
+            <div class="col-md-12">
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-xs btn-inverse">
+                        <input type="checkbox" class="rsvp" data-id="{{id}}">
+                        {{num_rsvp}}<i class="fa fa-star-o rsvp {{user_rsvp}}"></i>
+                    </label>
+                </div>
+                <span class="badge {{#overdue}}overdue{{/overdue}}">{{ followUpDays }} <i class="fa"></i></span>
+                <a href="/eventform?id={{id}}">{{ title }}</a>
+                <span>{{ _duration }}</span>
+                <span><small>Presented by: {{#userPresenters}}{{>user_link}}{{/userPresenters}} {{#personPresenters}}{{>user_link}}{{/personPresenters}}</small></span>
+
+                {{#tags}}
+                    <span class="label label-default"><i class="fa fa-tag"></i>&nbsp;{{ . }}</span>
+                {{/tags}}
+
+                &nbsp;{{ description }}
+
+            </div>
+        </li>
+    {{/submissions}}
+</ul>
+

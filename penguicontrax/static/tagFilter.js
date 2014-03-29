@@ -10,7 +10,7 @@
     {
       init: function () {
 
-        var tagList = [], view, data;
+        var tagList = [], view, data,tpl, renderer;
 
         can.each(this.options.tags, function (tag) {
           tagList.push({
@@ -26,10 +26,11 @@
           tags: tagList
         });
 
-        view = can.view(this.options.tplUrl, data);
+        tpl = ptrax.util.tplDecode(this.options.tpl);
+        renderer = can.view.mustache(tpl);
 
         this.options.viewModel = data;
-        this.element.html(view);
+        this.element.html(renderer(data));
         this.on();
         this.setInfoText();
       },

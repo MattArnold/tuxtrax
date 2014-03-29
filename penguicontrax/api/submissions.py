@@ -1,7 +1,10 @@
 #flask libs
+import datetime
+
 from flask.ext.restful import Resource, reqparse
 from flask import g
 from sqlalchemy import or_
+
 
 #global libs
 from penguicontrax import dump_table, db
@@ -93,4 +96,10 @@ class SubmissionsAPI(Resource):
                                          submissions[index].userPresenters]
             element['rsvped_by'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
                                     submissions[index].rsvped_by]
-        return output
+            element['overdue'] = (datetime.datetime.now() - submissions[index].submitted_dt).days > 13
+            element['followUpDays'] = (datetime.datetime.now() - submissions[index].submitted_dt).days
+        expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
+        return output, 200, {
+            "Expires": expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+            "Cache-Control": "public, max-age=86400"
+        }
