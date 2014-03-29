@@ -7452,6 +7452,34 @@ button.close {
 body {
   font-family: "Droid Sans", sans-serif;
 }
+.tagsinput,
+#shownav {
+  overflow-y: auto;
+  text-align: left;
+  height: auto;
+  overflow-x: hidden;
+}
+.tagsinput,
+#shownav,
+.widget-hint {
+  background: white;
+  border: 2px solid #1abc9c;
+  border-radius: 6px;
+}
+.tagsinput {
+  margin-bottom: 18px;
+  padding: 6px 1px 1px 6px;
+}
+.tagsinput h6 {
+  position: relative;
+}
+.tagsinput .info {
+  position: absolute;
+  top: 0;
+  right: 15px;
+  font-size: larger;
+  cursor: pointer;
+}
 #tagfilter {
   margin: 10px;
 }
@@ -7510,6 +7538,36 @@ h4 {
 .what h4 {
   background-color: rgba(189, 195, 199, 0.5);
   border: 3px solid #bdc3c7;
+}
+form .btn-xs {
+  transition: padding 0.25s ease-out;
+  -webkit-transition: padding 0.25s ease-out;
+  -moz-transition: padding 0.25s ease-out;
+  -ms-transition: padding 0.25s ease-out;
+  -o-transition: padding 0.25s ease-out;
+}
+form .btn-xs.active {
+  transition: padding 0.25s ease;
+  -webkit-transition: padding 0.25s ease;
+  -moz-transition: padding 0.25s ease;
+  -ms-transition: padding 0.25s ease;
+  -o-transition: padding 0.25s ease;
+  padding: 2px 7px;
+}
+form .btn-sm {
+  transition: padding 0.25s ease-out;
+  -webkit-transition: padding 0.25s ease-out;
+  -moz-transition: padding 0.25s ease-out;
+  -ms-transition: padding 0.25s ease-out;
+  -o-transition: padding 0.25s ease-out;
+}
+form .btn-sm.active {
+  transition: padding 0.25s ease;
+  -webkit-transition: padding 0.25s ease;
+  -moz-transition: padding 0.25s ease;
+  -ms-transition: padding 0.25s ease;
+  -o-transition: padding 0.25s ease;
+  padding: 7px 14px;
 }
 .icon-google-square,
 .icon-yahoo-square {
@@ -7576,24 +7634,6 @@ h4 {
   margin: .5em;
   padding: .5em;
 }
-.tagsinput,
-#shownav,
-.widget-hint {
-  background: white;
-  border: 2px solid #1abc9c;
-  border-radius: 6px;
-}
-.tagsinput,
-#shownav {
-  overflow-y: auto;
-  text-align: left;
-  height: auto;
-  overflow-x: hidden;
-}
-.tagsinput {
-  margin-bottom: 18px;
-  padding: 6px 1px 1px 6px;
-}
 .tag.checked {
   background-color: #cacfd2;
 }
@@ -7639,36 +7679,4 @@ h4 {
   -moz-transition: 1s;
   -ms-transition: 1s;
   -o-transition: 1s;
-}
-.btn-xs,
-.btn-group-xs > .btn {
-  transition: padding 0.25s ease-out;
-  -webkit-transition: padding 0.25s ease-out;
-  -moz-transition: padding 0.25s ease-out;
-  -ms-transition: padding 0.25s ease-out;
-  -o-transition: padding 0.25s ease-out;
-}
-.btn-xs.active {
-  transition: padding 0.25s ease;
-  -webkit-transition: padding 0.25s ease;
-  -moz-transition: padding 0.25s ease;
-  -ms-transition: padding 0.25s ease;
-  -o-transition: padding 0.25s ease;
-  padding: 2px 7px;
-}
-.btn-sm,
-.btn-group-sm > .btn {
-  transition: padding 0.25s ease-out;
-  -webkit-transition: padding 0.25s ease-out;
-  -moz-transition: padding 0.25s ease-out;
-  -ms-transition: padding 0.25s ease-out;
-  -o-transition: padding 0.25s ease-out;
-}
-.btn-sm.active {
-  transition: padding 0.25s ease;
-  -webkit-transition: padding 0.25s ease;
-  -moz-transition: padding 0.25s ease;
-  -ms-transition: padding 0.25s ease;
-  -o-transition: padding 0.25s ease;
-  padding: 7px 14px;
 }

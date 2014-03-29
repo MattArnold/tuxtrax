@@ -6,12 +6,15 @@
     {{ super() }}
     <div class="row">
         <div class="col-md-2" id="nav">
-            <div class="tagsinput">
-                <button id="hidenav" class="btn btn-xs">
-                    <i class="fa fa-compress"></i>
-                </button>
-                <i class="fa fa-info-circle tip" rel="tooltip" data-toggle="tooltip" data-placement="bottom"
-                   data-original-title="Filter the schedule by topics. Click some tags if you want to see only events with those topics. If you click a tag again, it will exclude all events with that topic. If you click a tag a third time, your filter will not care about that topic. If you have no topics turned on, it will turn on all the tags."></i>
+            <div class="tagsinput system" data-container="body" data-placement="right" data-trigger="manual"
+                      data-html="true" data-content="<p>Click some tags if you want to see only events with those topics.</p><p>If you click a tag again, it will exclude all events with that topic.</p><p>If you click a tag a third time, your filter will not care about that topic.</p><p>If you have no topics turned on, it will turn on all the tags.</p>">
+                <h6>
+                    <button id="hidenav" class="btn btn-default btn-xs">
+                        <i class="fa fa-compress"></i>
+                    </button>&nbsp;
+                    Filter by topics&nbsp;
+                    <button class="btn btn-xs btn-info info" data-toggle="button"><i class="glyphicon glyphicon-info-sign"></i></button>
+                </h6>
 
                 <div id="tagfilter">
                     <div class="alert alert-info">
@@ -30,7 +33,7 @@
                     <div class="row" style="margin-bottom:15px">
                         <div class="col-md-2">
                             <div id="shownav">
-                                <button id="shownavbtn" class="btn btn-xs">
+                                <button id="shownavbtn" class="btn btn-default btn-xs active">
                                     <i class="fa fa-expand"></i>
                                 </button>
                                 <i class="fa fa-tag"></i>
@@ -38,8 +41,14 @@
                             <button id="createeventbutton" class="btn btn-primary">Suggest an event</button>
                         </div>
                         <div class="col-md-4">
-{#                            TODO implement search via JS#}
-                            <input class="form-control" type="search" placeholder="Search"/>
+                            {# TODO implement search via JS#}
+                            <div class="input-group">
+                                <input type="search" class="form-control" placeholder="Search submissions">
+                                  <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button"><i
+                                            class="glyphicon glyphicon-search "></i></button>
+                                  </span>
+                            </div>
                         </div>
                         <div class="col-md-6 text-right legend">
                             <span>Legend:</span>
@@ -68,9 +77,9 @@
                             </div>
                         </div>
                         {#TODO reimplement this#}
-{#                        <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a#}
-{#                                href="form.html">create one</a>?#}
-{#                        </div>#}
+                        {#                        <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a#}
+                        {#                                href="form.html">create one</a>?#}
+                        {#                        </div>#}
                         {% if request.path != "/hidden" %}
                             <div class="row"><a href="/hidden">See hidden events</a></div>
                         {% endif %}
@@ -89,7 +98,15 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            $("[rel=tooltip]").tooltip();
+            $("[data-toggle=popover]").popover();
+            $("[data-toggle=tooltip]").tooltip();
+
+            $('.tagsinput').popover();
+
+            //toggle the popover when clicking the info ball
+            $(".tagsinput.system .info").on('click',function(ev){
+                $('.tagsinput.system').popover('toggle');
+            });
         });
 
         var tags = "{% for tag in tags %}{{tag}},{% endfor%}".split(",");

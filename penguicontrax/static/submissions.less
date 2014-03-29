@@ -1,7 +1,35 @@
+.tagsinput, #shownav {
+    overflow-y: auto;
+    text-align: left;
+    height: auto;
+    overflow-x: hidden;
+}
+
+.tagsinput, #shownav, .widget-hint {
+    background: white;
+    border: 2px solid #1abc9c;
+    border-radius: 6px;
+}
+
+.tagsinput {
+   margin-bottom: 18px;
+    padding: 6px 1px 1px 6px;
+
+  h6 {
+    position: relative;
+  }
+  .info {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: larger;
+    cursor: pointer;
+  }
+}
+
 #tagfilter {
   margin: 10px;
   .btn {
-
     &.excluded {
       text-decoration: line-through;
     }
