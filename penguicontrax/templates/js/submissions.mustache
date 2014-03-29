@@ -20,7 +20,7 @@
                 <a href="/eventform?id={{id}}" class="submission-link">{{ title }}</a>&nbsp;
                 <span>{{ _duration }}</span>&nbsp;
                 <span><small>Presented
-                    by: {{#userPresenters}}{{>user_link}}{{/userPresenters}} {{#personPresenters}}{{>user_link}}{{/personPresenters}}</small>
+                    by: {{#if userPresenters.length}}{{>user_link}} {{#if personPresenters.length}}and{{/if}} {{/if}} {{#personPresenters}}{{.}}{{/personPresenters}}</small>
                 </span>&nbsp;
                 {{#tags}}
                     <span class="label label-info"><i class="fa fa-tag"></i>&nbsp;{{ . }}</span>&nbsp;
