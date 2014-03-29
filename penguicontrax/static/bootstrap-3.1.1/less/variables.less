@@ -52,8 +52,8 @@
 //@brand-warning:         #f0ad4e;
 //@brand-danger:          #d9534f;
 
-@brand-primary:             @midnight-blue;
-@brand-secondary:           @green-sea;
+@brand-primary:             @green-sea;
+@brand-secondary:           @midnight-blue;
 @brand-success:             @nephritis;
 @brand-warning:             @carrot;
 @brand-danger:              @pomegranate;
@@ -186,7 +186,7 @@
 @btn-default-border:             #ccc;
 
 @btn-primary-color:              #fff;
-@btn-primary-bg:                 @brand-secondary;
+@btn-primary-bg:                 @brand-primary;
 @btn-primary-border:             darken(@btn-primary-bg, 5%);
 
 @btn-success-color:              #fff;
@@ -206,7 +206,7 @@
 @btn-danger-border:              darken(@btn-danger-bg, 5%);
 
 @btn-inverse-color:              #fff;
-@btn-inverse-bg:                 @brand-primary;
+@btn-inverse-bg:                 @brand-secondary;
 @btn-inverse-border:             darken(@btn-inverse-bg, 5%);
 
 @btn-link-disabled-color:        @gray-light;
@@ -540,7 +540,7 @@
 //** Tooltip text color
 @tooltip-color:               #fff;
 //** Tooltip background color
-@tooltip-bg:                  #000;
+@tooltip-bg:                  @gray-darker;
 @tooltip-opacity:             .9;
 
 //** Tooltip arrow width
@@ -585,7 +585,7 @@
 //** Default label background color
 @label-default-bg:            @gray-light;
 //** Primary label background color
-@label-primary-bg:            @brand-primary;
+@label-primary-bg:            @brand-secondary;
 //** Success label background color
 @label-success-bg:            @brand-success;
 //** Info label background color

@@ -497,10 +497,10 @@ cite {
   color: #999999;
 }
 .text-primary {
-  color: #2c3e50;
+  color: #16a085;
 }
 a.text-primary:hover {
-  color: #1a242f;
+  color: #107360;
 }
 .text-success {
   color: #3c763d;
@@ -528,10 +528,10 @@ a.text-danger:hover {
 }
 .bg-primary {
   color: #fff;
-  background-color: #2c3e50;
+  background-color: #16a085;
 }
 a.bg-primary:hover {
-  background-color: #1a242f;
+  background-color: #107360;
 }
 .bg-success {
   background-color: #dff0d8;
@@ -3101,7 +3101,7 @@ input[type="button"].btn-block {
   color: #ffffff;
   text-decoration: none;
   outline: 0;
-  background-color: #2c3e50;
+  background-color: #16a085;
 }
 .dropdown-menu > .disabled > a,
 .dropdown-menu > .disabled > a:hover,
@@ -3616,7 +3616,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
   color: #ffffff;
-  background-color: #2c3e50;
+  background-color: #16a085;
 }
 .nav-stacked > li {
   float: none;
@@ -4220,8 +4220,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .pagination > .active > span:focus {
   z-index: 2;
   color: #ffffff;
-  background-color: #2c3e50;
-  border-color: #2c3e50;
+  background-color: #16a085;
+  border-color: #16a085;
   cursor: default;
 }
 .pagination > .disabled > span,
@@ -4578,7 +4578,7 @@ a.thumbnail.active {
   line-height: 20px;
   color: #ffffff;
   text-align: center;
-  background-color: #2c3e50;
+  background-color: #16a085;
   -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   transition: width 0.6s ease;
@@ -4695,8 +4695,8 @@ a.list-group-item.active:hover,
 a.list-group-item.active:focus {
   z-index: 2;
   color: #ffffff;
-  background-color: #2c3e50;
-  border-color: #2c3e50;
+  background-color: #16a085;
+  border-color: #16a085;
 }
 a.list-group-item.active .list-group-item-heading,
 a.list-group-item.active:hover .list-group-item-heading,
@@ -4706,7 +4706,7 @@ a.list-group-item.active:focus .list-group-item-heading {
 a.list-group-item.active .list-group-item-text,
 a.list-group-item.active:hover .list-group-item-text,
 a.list-group-item.active:focus .list-group-item-text {
-  color: #8aa4be;
+  color: #92f0de;
 }
 .list-group-item-success {
   color: #3c763d;
@@ -5016,18 +5016,18 @@ a.list-group-item-danger.active:focus {
   border-bottom-color: #dddddd;
 }
 .panel-primary {
-  border-color: #2c3e50;
+  border-color: #16a085;
 }
 .panel-primary > .panel-heading {
   color: #ffffff;
-  background-color: #2c3e50;
-  border-color: #2c3e50;
+  background-color: #16a085;
+  border-color: #16a085;
 }
 .panel-primary > .panel-heading + .panel-collapse .panel-body {
-  border-top-color: #2c3e50;
+  border-top-color: #16a085;
 }
 .panel-primary > .panel-footer + .panel-collapse .panel-body {
-  border-bottom-color: #2c3e50;
+  border-bottom-color: #16a085;
 }
 .panel-success {
   border-color: #d6e9c6;
@@ -5281,7 +5281,7 @@ button.close {
   color: #ffffff;
   text-align: center;
   text-decoration: none;
-  background-color: #000000;
+  background-color: #222222;
   border-radius: 4px;
 }
 .tooltip-arrow {
@@ -5296,52 +5296,52 @@ button.close {
   left: 50%;
   margin-left: -5px;
   border-width: 5px 5px 0;
-  border-top-color: #000000;
+  border-top-color: #222222;
 }
 .tooltip.top-left .tooltip-arrow {
   bottom: 0;
   left: 5px;
   border-width: 5px 5px 0;
-  border-top-color: #000000;
+  border-top-color: #222222;
 }
 .tooltip.top-right .tooltip-arrow {
   bottom: 0;
   right: 5px;
   border-width: 5px 5px 0;
-  border-top-color: #000000;
+  border-top-color: #222222;
 }
 .tooltip.right .tooltip-arrow {
   top: 50%;
   left: 0;
   margin-top: -5px;
   border-width: 5px 5px 5px 0;
-  border-right-color: #000000;
+  border-right-color: #222222;
 }
 .tooltip.left .tooltip-arrow {
   top: 50%;
   right: 0;
   margin-top: -5px;
   border-width: 5px 0 5px 5px;
-  border-left-color: #000000;
+  border-left-color: #222222;
 }
 .tooltip.bottom .tooltip-arrow {
   top: 0;
   left: 50%;
   margin-left: -5px;
   border-width: 0 5px 5px;
-  border-bottom-color: #000000;
+  border-bottom-color: #222222;
 }
 .tooltip.bottom-left .tooltip-arrow {
   top: 0;
   left: 5px;
   border-width: 0 5px 5px;
-  border-bottom-color: #000000;
+  border-bottom-color: #222222;
 }
 .tooltip.bottom-right .tooltip-arrow {
   top: 0;
   right: 5px;
   border-width: 0 5px 5px;
-  border-bottom-color: #000000;
+  border-bottom-color: #222222;
 }
 .popover {
   position: absolute;
@@ -7465,9 +7465,27 @@ body {
   margin: 0;
   padding: 0;
 }
-#submissions li {
+#submissions li.submission {
   list-style-type: none;
   margin-left: 0;
+}
+#submissions li.submission .toggle-user-rsvp {
+  cursor: pointer;
+  margin-left: -20px;
+  display: inline-block;
+}
+#submissions li.submission .toggle-user-rsvp i {
+  font-size: large;
+  color: #555555;
+}
+#submissions li.submission .toggle-user-rsvp i.fa-star-o {
+  color: #999999;
+}
+#submissions li.submission.updating {
+  cursor: progress;
+}
+#submissions li.submission.updating .toggle-user-rsvp {
+  pointer-events: none;
 }
 h4 {
   padding: 10px;
@@ -7619,18 +7637,35 @@ h4 {
   -ms-transition: 1s;
   -o-transition: 1s;
 }
-.btn {
+.btn-xs,
+.btn-group-xs > .btn {
   transition: padding 0.25s ease-out;
   -webkit-transition: padding 0.25s ease-out;
   -moz-transition: padding 0.25s ease-out;
   -ms-transition: padding 0.25s ease-out;
   -o-transition: padding 0.25s ease-out;
 }
-.btn.active {
+.btn-xs.active {
   transition: padding 0.25s ease;
   -webkit-transition: padding 0.25s ease;
   -moz-transition: padding 0.25s ease;
   -ms-transition: padding 0.25s ease;
   -o-transition: padding 0.25s ease;
   padding: 2px 7px;
+}
+.btn-sm,
+.btn-group-sm > .btn {
+  transition: padding 0.25s ease-out;
+  -webkit-transition: padding 0.25s ease-out;
+  -moz-transition: padding 0.25s ease-out;
+  -ms-transition: padding 0.25s ease-out;
+  -o-transition: padding 0.25s ease-out;
+}
+.btn-sm.active {
+  transition: padding 0.25s ease;
+  -webkit-transition: padding 0.25s ease;
+  -moz-transition: padding 0.25s ease;
+  -ms-transition: padding 0.25s ease;
+  -o-transition: padding 0.25s ease;
+  padding: 7px 14px;
 }

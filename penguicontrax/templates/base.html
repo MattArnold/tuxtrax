@@ -75,14 +75,17 @@
     };
 
     ptrax.user = {
+        sid : "{{ user.id }}",
         name :  "{{ user }}",
+        email : "{{ user.email }}",
         account_name : "{{ user.account_name }}",
         image_small : "{{ user.image_small }}",
         special_tag : "{{ user.special_tag }}"
-        {#,
-        user_link : "{{ macros.user_link(user) }}",
-        user_text : "{{ macros.user_text(user) }}"#}
     };
+
+    if(ptrax.user.sid.length){
+        ptrax.user.id = parseInt(ptrax.user.sid,10);
+    }
 
     ptrax.util = {
         tplDecode: function (input) {

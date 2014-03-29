@@ -1,5 +1,5 @@
 #tagfilter {
-  margin : 10px;
+  margin: 10px;
   .btn {
 
     &.excluded {
@@ -9,13 +9,36 @@
 }
 
 #submissions {
-  margin : 15px 0;
+  margin: 15px 0;
+
   ul {
-    margin : 0;
+    margin: 0;
     padding: 0;
   }
-  li {
-    list-style-type : none;
+  li.submission {
+    list-style-type: none;
     margin-left: 0;
+
+    .toggle-user-rsvp {
+      cursor: pointer;
+      margin-left: -20px;
+      display: inline-block;
+      i {
+        font-size: large;
+        color: @gray;
+        &.fa-star-o {
+          color: @gray-light;
+        }
+      }
+    }
+
+    &.updating {
+      cursor: progress;
+      .toggle-user-rsvp {
+        pointer-events: none;
+      }
+    }
+
   }
+
 }

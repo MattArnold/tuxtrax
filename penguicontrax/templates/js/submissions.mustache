@@ -1,23 +1,29 @@
 <ul>
     {{#submissions}}
-        <li class="submission row bs-callout-default bs-callout {{_followUpState}}">
+        <li class="submission row bs-callout-default bs-callout {{_followUpState}} {{#updating}}updating{{/updating}}">
             <div class="col-md-12">
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-xs btn-inverse">
-                        <input type="checkbox" class="rsvp" data-id="{{id}}">
-                        {{num_rsvp}}<i class="fa fa-star-o rsvp {{user_rsvp}}"></i>
-                    </label>
-                </div>
-                <span class="badge {{#overdue}}overdue{{/overdue}}">{{ followUpDays }} <i class="fa"></i></span>
-                <a href="/eventform?id={{id}}">{{ title }}</a>
-                <span>{{ _duration }}</span>
-                <span><small>Presented by: {{#userPresenters}}{{>user_link}}{{/userPresenters}} {{#personPresenters}}{{>user_link}}{{/personPresenters}}</small></span>
-
+                <span class="toggle-user-rsvp" {{data 'submission'}}><i class="fa {{user_rsvp}}"></i></span>
+                <span class="label label-info">{{num_rsvp}}</span>&nbsp;
+                {{^followUpState}}
+                {{!--overdue tasks get a warning badge--}}
+                    {{#overdue}}
+                        <span class="label label-warning">{{ followUpDays }} <i class="fa fa-warning"></i></span>
+                    {{/overdue}}
+                    {{!--not overdue--}}
+                    {{^overdue}}
+                        <span class="label">{{ followUpDays }} <i class="fa fa-clock-o"></i></span>
+                    {{/overdue}}
+                    &nbsp;
+                {{/followUpState}}
+                <a href="/eventform?id={{id}}">{{ title }}</a>&nbsp;
+                <span>{{ _duration }}</span>&nbsp;
+                <span><small>Presented
+                    by: {{#userPresenters}}{{>user_link}}{{/userPresenters}} {{#personPresenters}}{{>user_link}}{{/personPresenters}}</small>
+                </span>&nbsp;
                 {{#tags}}
-                    <span class="label label-default"><i class="fa fa-tag"></i>&nbsp;{{ . }}</span>
+                    <span class="label label-info"><i class="fa fa-tag"></i>&nbsp;{{ . }}</span>&nbsp;
                 {{/tags}}
-
-                &nbsp;{{ description }}
+               {{ description }}
 
             </div>
         </li>
