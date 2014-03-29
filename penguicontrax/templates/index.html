@@ -38,6 +38,7 @@
                             <button id="createeventbutton" class="btn btn-primary">Suggest an event</button>
                         </div>
                         <div class="col-md-4">
+{#                            TODO implement search via JS#}
                             <input class="form-control" type="search" placeholder="Search"/>
                         </div>
                         <div class="col-md-6 text-right legend">
@@ -66,17 +67,10 @@
                                 </div>
                             </div>
                         </div>
-
-                        {#                            <form action="/rsvp" method=post>#}
-                        {#                                {% for submission in submissions %}#}
-                        {#                                {{ macros.event_summary(submission, user) }}#}
-                        {#                                {% endfor %}#}
-                        {#                            </form>#}
-
-
-                        <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a
-                                href="form.html">create one</a>?
-                        </div>
+                        {#TODO reimplement this#}
+{#                        <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a#}
+{#                                href="form.html">create one</a>?#}
+{#                        </div>#}
                         {% if request.path != "/hidden" %}
                             <div class="row"><a href="/hidden">See hidden events</a></div>
                         {% endif %}
