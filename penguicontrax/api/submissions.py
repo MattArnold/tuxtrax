@@ -92,7 +92,7 @@ class SubmissionsAPI(Resource):
                                          submissions[index].userPresenters]
             element['rsvped_by'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
                                     submissions[index].rsvped_by]
-            element['overdue'] = (datetime.datetime.now() - submissions[index].submitted_dt).days > 1
+            element['overdue'] = (datetime.datetime.now() - submissions[index].submitted_dt).days > 13
             element['followUpDays'] = (datetime.datetime.now() - submissions[index].submitted_dt).days
         expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
         return output, 200, {

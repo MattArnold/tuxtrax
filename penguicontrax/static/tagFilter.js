@@ -184,11 +184,16 @@
 
                 //submissions that match the tag
                 var submissions = data.submissionsByTagName[tag.name] || [];
+
+                can.batch.start();
+
                 can.each(submissions, function (submission) {
                     var visible = _.any(submission.tags, isTagNameIncluded)
                         && !_.any(submission.tags, isTagNameExcluded);
                     submission.attr('hidden', !visible);
                 });
+
+                can.batch.stop();
             },
 
             setInfoText: function (included, excluded, noResults) {
