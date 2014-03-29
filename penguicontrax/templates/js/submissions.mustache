@@ -1,6 +1,6 @@
 <ul>
     {{#submissions}}
-        <li class="submission row bs-callout-default bs-callout {{_followUpState}} {{#updating}}updating{{/updating}}">
+        <li class="submission row bs-callout-default bs-callout {{_followUpState}} {{#updating}}updating{{/updating}} {{#hidden}}hidden{{/hidden}}">
             <div class="col-md-12">
                 <span class="toggle-user-rsvp" {{data 'submission'}}><i class="fa {{user_rsvp}}"></i></span>
                 <span class="label label-info">{{num_rsvp}}</span>&nbsp;
