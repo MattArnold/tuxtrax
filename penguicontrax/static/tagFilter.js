@@ -26,7 +26,6 @@
             init: function () {
 
                 var tagList = [], data, tpl, renderer;
-                var submissions = this.options.submissions;
 
                 can.each(this.options.tags, function (tag) {
                     tagList.push({
@@ -39,13 +38,6 @@
                     _.map(tagList, function () {
                         return []
                     }));
-
-                can.each(submissions, function (submission) {
-                    can.each(submission.attr('tags'), function (tag) {
-                        submissionsByTagName[tag] = submissionsByTagName[tag] || [];
-                        submissionsByTagName[tag].push(submission);
-                    });
-                });
 
                 data = new can.Map({
                     infoText: "",
@@ -76,6 +68,37 @@
 
                 this.on();
                 this.setInfoText();
+            },
+
+            isSubmissionVisible: function (submission) {
+                var data = this.options.viewModel;
+                function isTagNameIncluded(tag) {
+                    return isIncluded(data.tagsByName[tag]);
+                }
+
+                function isTagNameNeutral(tag) {
+                    return isNeutral(data.tagsByName[tag]);
+                }
+
+                function isTagNameExcluded(tag) {
+                    return isExcluded(data.tagsByName[tag]);
+                }
+
+                var visible = _.any(submission.tags, isTagNameIncluded)
+                    && !_.any(submission.tags, isTagNameExcluded);
+                return visible;
+            },
+
+            //submissions list has a new item
+            addSubmission: function(submission) {
+                var data = this.options.viewModel;
+                // register this submission's tags in the map
+                can.each(submission.attr('tags'), function (tag) {
+                    data.submissionsByTagName[tag].push(submission);
+                });
+                // set initial visible state on the submission
+                var visible = this.isSubmissionVisible(submission);
+                submission.attr('hidden', !visible);
             },
 
             //set the tag button state, updates the data object
@@ -164,23 +187,12 @@
 
             //handle taglist changes and update html in page
             "{viewModel.tags} change": function (tagsList, type, attr, action, newVal) {
+                var self = this;
                 var data = this.options.viewModel;
                 var idx = attr.split('.')[0];
                 var tag = tagsList.attr(idx);
 
                 //console.debug(prop, newVal, tag.name);
-
-                function isTagNameIncluded(tag) {
-                    return isIncluded(data.tagsByName[tag]);
-                }
-
-                function isTagNameNeutral(tag) {
-                    return isNeutral(data.tagsByName[tag]);
-                }
-
-                function isTagNameExcluded(tag) {
-                    return isExcluded(data.tagsByName[tag]);
-                }
 
                 //submissions that match the tag
                 var submissions = data.submissionsByTagName[tag.name] || [];
@@ -188,8 +200,7 @@
                 can.batch.start();
 
                 can.each(submissions, function (submission) {
-                    var visible = _.any(submission.tags, isTagNameIncluded)
-                        && !_.any(submission.tags, isTagNameExcluded);
+                    var visible = self.isSubmissionVisible(submission);
                     submission.attr('hidden', !visible);
                 });
 
