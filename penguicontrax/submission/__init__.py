@@ -1,6 +1,8 @@
 from copy import copy
 import string
 import datetime
+import json
+import os
 
 from flask import g, request, session, render_template, redirect, Response, Markup, url_for
 from sqlalchemy.orm import relationship
@@ -301,5 +303,11 @@ def number_total_rsvps(submission):
 
 
 @app.template_filter()
+def get_js_template(name):
+    tpl = app.open_resource("templates/"+name, 'r')
+    return json.dumps(str(tpl.read()))
+
+
+@app.template_filter()
 def days_since_now(dt):
-    return (datetime.datetime.now() - dt).days
+    return

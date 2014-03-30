@@ -52,8 +52,8 @@
 //@brand-warning:         #f0ad4e;
 //@brand-danger:          #d9534f;
 
-@brand-primary:             @midnight-blue;
-@brand-secondary:           @green-sea;
+@brand-primary:             @green-sea;
+@brand-secondary:           @midnight-blue;
 @brand-success:             @nephritis;
 @brand-warning:             @carrot;
 @brand-danger:              @pomegranate;
@@ -186,7 +186,7 @@
 @btn-default-border:             #ccc;
 
 @btn-primary-color:              #fff;
-@btn-primary-bg:                 @brand-secondary;
+@btn-primary-bg:                 @brand-primary;
 @btn-primary-border:             darken(@btn-primary-bg, 5%);
 
 @btn-success-color:              #fff;
@@ -206,7 +206,7 @@
 @btn-danger-border:              darken(@btn-danger-bg, 5%);
 
 @btn-inverse-color:              #fff;
-@btn-inverse-bg:                 @brand-primary;
+@btn-inverse-bg:                 @brand-secondary;
 @btn-inverse-border:             darken(@btn-inverse-bg, 5%);
 
 @btn-link-disabled-color:        @gray-light;
@@ -386,8 +386,8 @@
 @navbar-default-border:            darken(@navbar-default-bg, 6.5%);
 
 // Navbar links
-@navbar-default-link-color:                #777;
-@navbar-default-link-hover-color:          #333;
+@navbar-default-link-color:                @brand-primary;
+@navbar-default-link-hover-color:          @nephritis;
 @navbar-default-link-hover-bg:             transparent;
 @navbar-default-link-active-color:         #555;
 @navbar-default-link-active-bg:            darken(@navbar-default-bg, 6.5%);
@@ -540,7 +540,7 @@
 //** Tooltip text color
 @tooltip-color:               #fff;
 //** Tooltip background color
-@tooltip-bg:                  #000;
+@tooltip-bg:                  @gray-darker;
 @tooltip-opacity:             .9;
 
 //** Tooltip arrow width
@@ -583,13 +583,13 @@
 //##
 
 //** Default label background color
-@label-default-bg:            @gray-light;
+@label-default-bg:            fadeOut(@gray-light,25%);
 //** Primary label background color
-@label-primary-bg:            @brand-primary;
+@label-primary-bg:            fadeOut(@brand-secondary,15%);
 //** Success label background color
 @label-success-bg:            @brand-success;
 //** Info label background color
-@label-info-bg:               @brand-info;
+@label-info-bg:               fadeOut(@brand-info,15%);
 //** Warning label background color
 @label-warning-bg:            @brand-warning;
 //** Danger label background color

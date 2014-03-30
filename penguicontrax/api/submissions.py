@@ -1,7 +1,10 @@
 #flask libs
+import datetime
+
 from flask.ext.restful import Resource, reqparse
 from flask import g
 from sqlalchemy import or_
+
 
 #global libs
 from penguicontrax import dump_table, db
@@ -36,8 +39,6 @@ class SubmissionAPI(Resource):
         #first check that the id exists
         submission = Submission.query.filter_by(id=int(submission_id))
         if g.user is not None and submission.count() > 0:
-            # get the user id
-            id = g.user.id
             g.user.rsvped_to.append(submission.first())
             db.session.add(g.user)
             db.session.commit()
@@ -54,13 +55,11 @@ class SubmissionAPI(Resource):
         return 'Delete Noun not found', 404
 
     def __rsvp_delete(self, submission_id):
-        #first check that the id exists x
+        #first check that the id exists
         submission = Submission.query.filter_by(id=int(submission_id))
         if g.user is not None and submission.count() > 0:
-            # get the user id
-            id = g.user.id
             g.user.rsvped_to.remove(submission.first())
-            db.session.delete(g.user)
+            db.session.add(g.user)
             db.session.commit()
             return None, 200
         return None, 404
@@ -93,4 +92,10 @@ class SubmissionsAPI(Resource):
                                          submissions[index].userPresenters]
             element['rsvped_by'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
                                     submissions[index].rsvped_by]
-        return output
+            element['overdue'] = (datetime.datetime.now() - submissions[index].submitted_dt).days > 13
+            element['followUpDays'] = (datetime.datetime.now() - submissions[index].submitted_dt).days
+        expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
+        return output, 200, {
+            "Expires": expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+            "Cache-Control": "public, max-age=86400"
+        }

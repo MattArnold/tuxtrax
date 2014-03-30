@@ -17,12 +17,10 @@
     {% endblock %}
 </head>
 <body>
-<div class="header col-md-12">
-    <div class="row">
-        <div class="col-md-4">
-        <span class="title">
-            <a href="/" title="Tentative Requested Activity Xperiment">{{ macros.tux_badge(32,32) }}&nbsp;TUX TRAX - Penguicon 2013</a>
-        </span>
+<nav class="navbar navbar-default navbar-fixed-top">
+<div class="container-fluid">
+        <div class="col-md-4 navbar-header">
+            <a class="navbar-brand" href="/" title="Tentative Requested Activity Xperiment">{{ macros.tux_badge(32,32) }}&nbsp;TUX TRAX - Penguicon 2013</a>
         </div>
         <div class="col-md-8">
         <form action="/logout" method=get class="rightheader">
@@ -40,7 +38,7 @@
             </a>
             {% else %}
             <span class="small">
-            {{ macros.user_link(user) }} 
+            {{ macros.user_link(user) }}
             {% if user.staff == 0 %}
             {{ user.points }} RSVP points left
             {% else %}
@@ -51,8 +49,8 @@
             {% endif %}
         </form>
         </div>
-    </div>
 </div>
+</nav>
 <div class="container-fluid">
     {% block body %}
     {% endblock %}
@@ -67,16 +65,36 @@
 <script type="text/javascript">
     window.ptrax = {};
 
+    ptrax.model = {};
+    ptrax.view = {};
+
     ptrax.url = {
         "static" : "{{ url_for('static', filename='') }}"
     };
 
     ptrax.user = {
+        sid : "{{ user.id }}",
         name :  "{{ user }}",
+        email : "{{ user.email }}",
         account_name : "{{ user.account_name }}",
-        image_small : "{{ user.image_small }}"{#,
-        user_link : "{{ macros.user_link(user) }}",
-        user_text : "{{ macros.user_text(user) }}"#}
+        image_small : "{{ user.image_small }}",
+        special_tag : "{{ user.special_tag }}"
+    };
+
+    if(ptrax.user.sid.length){
+        ptrax.user.id = parseInt(ptrax.user.sid,10);
+    }else{
+        ptrax.user.id = 0;
+    }
+
+    ptrax.util = {
+        tplDecode: function (input) {
+            var e = document.createElement('div');
+            var html;
+            e.innerHTML = input;
+            html = e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+            return html.substring(1,html.length -1);
+        }
     };
 
     //style select lists
