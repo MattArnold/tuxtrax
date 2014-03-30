@@ -17,12 +17,10 @@
     {% endblock %}
 </head>
 <body>
-<div class="header col-md-12">
-    <div class="row">
-        <div class="col-md-4">
-        <span class="title">
-            <a href="/" title="Tentative Requested Activity Xperiment" style="text-decoration: none">{{ macros.tux_badge(32,32) }}</a>&nbsp;<a href="/" title="Tentative Requested Activity Xperiment">TUX TRAX - Penguicon 2013</a>
-        </span>
+<nav class="navbar navbar-default navbar-fixed-top">
+<div class="container-fluid">
+        <div class="col-md-4 navbar-header">
+            <a class="navbar-brand" href="/" title="Tentative Requested Activity Xperiment">{{ macros.tux_badge(32,32) }}&nbsp;TUX TRAX - Penguicon 2013</a>
         </div>
         <div class="col-md-8">
         <form action="/logout" method=get class="rightheader">
@@ -51,8 +49,8 @@
             {% endif %}
         </form>
         </div>
-    </div>
 </div>
+</nav>
 <div class="container-fluid">
     {% block body %}
     {% endblock %}

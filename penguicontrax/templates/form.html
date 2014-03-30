@@ -70,11 +70,13 @@
         <div class="col-md-6 dynamic-content">
             <div class="form-group hidden" id="resources">
                 {% for resource in resources %}
-                    <label for="resource_{{ resource.id }}" class="checkbox">
-                        <input type="checkbox" name="resource_{{ resource.id }}" id="resource_{{ resource.id }}"
-                               value="{{ resource.id }}">
-                        {{ resource.name }}
-                    </label>
+                    <div class="checkbox">
+                        <label for="resource_{{ resource.id }}" class="checkbox">
+                            <input type="checkbox" name="resource_{{ resource.id }}" id="resource_{{ resource.id }}"
+                                   value="{{ resource.id }}">
+                            {{ resource.name }}
+                        </label>
+                    </div>
                 {% endfor %}
             </div>
             <div class="form-group hidden" id="players">
@@ -207,7 +209,7 @@
             </h4>
         </div>
         <div class="col-md-10">
-            <div class="row control-group">
+            <div class="row form-group">
                 <p>
                     <small>Suggested by
                         {% if event is none %}
@@ -233,7 +235,8 @@
                     <span id="pluralpptype" style="display:none"></span>
                     <input name=presenter type=text size="24" maxlength="24" class="pp form-control"/>
                 </label>
-                <button id="newperson" class="pp btn"><span class="glyphicon glyphicon-plus"></span> someone else</button>
+                <button id="newperson" class="pp btn"><span class="glyphicon glyphicon-plus"></span> someone else
+                </button>
             </div>
         </div>
     </div>
@@ -259,24 +262,22 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="question col-md-5">
-                            <div class="control-group">
-                                <label>
-                                    Title:
-                                    <textarea id="title" class="form-control" name="title"
-                                              rows="2" cols="40"
-                                              maxlength="80">{{ event.title | default('',true) }}</textarea>
-                                </label>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="title">Title:</label>
+                                <textarea id="title" class="form-control" name="title"
+                                          rows="2" cols="40"
+                                          maxlength="80">{{ event.title | default('',true) }}</textarea>
+
                             </div>
                         </div>
-                        <div class="question col-md-7">
-                            <div class="control-group">
-                                <label>
-                                    Descriptive blurb:
-                                    <textarea name=description id="blurb" rows="8" cols="60"
+                        <div class="col-md-7">
+                            <div class="form-group">
+                                <label for="description">Descriptive blurb:</label>
+                                    <textarea name=description id="description" rows="8" cols="60"
                                               class="form-control"
                                               maxlength="700">{{ event.description | default('',true) }}</textarea>
-                                </label>
+
                             </div>
                         </div>
 
@@ -312,16 +313,18 @@
                 </div>
                 <div class="col-md-6">
                     <p>
-                        Choose the staff person you would like to route this submission to
+                        Choose the staff liason you would like to route this submission to
                     </p>
 
-                    <div class="control-group" data-toggle="buttons" id="tracks">
+                    <div class="control-group" id="tracks">
                         {% for track in tracks %}
-                            <label class="btn btn-xs btn-info" id="track_{{ track }}">
-                                <input type="radio" name=track value="{{ track }}"
-                                       id="tbn_{{ track }}" {{ event | checked_if_tracked(track) }}>
-                                {{ track }}
-                            </label>
+                            <div class="radio">
+                                <label for="track_{{ track }}">
+                                    <input type="radio" name=track value="{{ track }}"
+                                           id="track_{{ track }}" {{ event | checked_if_tracked(track) }}>
+                                    {{ track }}
+                                </label>
+                            </div>
                         {% endfor %}
                     </div>
                 </div>
@@ -336,31 +339,35 @@
         </div>
         <div class="col-md-10">
             <div class="row">
-                <input type=submit value="{% if event is not none %}Update event{% else %}Submit event{% endif %}"
-                       class="btn btn-default btn-primary" name=submitevent id="submitevent"/>
-                <input type=text style="display: none" name=comments id="comments"
-                       {% if event is not none %}value="{{ event.comments }}"{% endif %}/>
-                {% if user is not none and user.staff == 1 %}
-                    {% if event is not none %}
-                        <div class="question">
-                            <span style="color:#7f8c8d;">Submission status:</span>
-                            <select value="" tabindex="2" name=followupstate class="select-block"
-                                    data-style="btn-primary">
-                                <option value="0" {{ event.followUpState | is_selected(0) }}>Suggested</option>
-                                <option value="1" {{ event.followUpState | is_selected(1) }}>Followed up</option>
-                                <option value="2" {{ event.followUpState | is_selected(2) }}>Accepted</option>
-                                <option value="3" {{ event.followUpState | is_selected(3) }}>Rejected</option>
-                            </select>
-                        </div>
-                        {% if event.followUpState == 2 %}
-                            <div class="question">
-                                <span style="color:#7f8c8d;">Create an event from this submission:</span>
-                                <input type=submit value="create" class="buttons" name=submitevent id="createevent"/>
-                            </div>
+                <div class="col-md-3">
+                    <input type=submit value="{% if event is not none %}Update event{% else %}Submit event{% endif %}"
+                           class="btn btn-default btn-primary" name=submitevent id="submitevent"/>
+                    <input type=text style="display: none" name=comments id="comments"
+                           {% if event is not none %}value="{{ event.comments }}"{% endif %}/>
+                </div>
+                <div class="col-md-9">
+                    {% if user is not none and user.staff == 1 %}
+                        {% if event is not none %}
+                            <label for="followupstate">Submission status
+                                <select tabindex="2" id="followupstate" name=followupstate
+                                        data-style="btn-default">
+                                    <option value="0" {{ event.followUpState | is_selected(0) }}>Suggested</option>
+                                    <option value="1" {{ event.followUpState | is_selected(1) }}>Followed up</option>
+                                    <option value="2" {{ event.followUpState | is_selected(2) }}>Accepted</option>
+                                    <option value="3" {{ event.followUpState | is_selected(3) }}>Rejected</option>
+                                </select>
+                            </label>
+                            {% if event.followUpState == 2 %}
+                                <div class="question">
+                                    <span style="color:#7f8c8d;">Create an event from this submission:</span>
+                                    <input type=submit value="create" class="buttons" name=submitevent
+                                           id="createevent"/>
+                                </div>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
 
-                {% endif %}
+                    {% endif %}
+                </div>
             </div>
         </div>
 

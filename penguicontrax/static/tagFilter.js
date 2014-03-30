@@ -198,7 +198,7 @@
 
             setInfoText: function (included, excluded, noResults) {
                 var $info = $('.submissions-list .info');
-                var copy = 'All submissions shown. Filter by tags using the widget on the left.';
+                var copy = $info.data('default');
                 var includePrefix = " Showing ";
                 var includeSuffix = ".";
                 var excludePrefix = " Excluding ";
@@ -218,9 +218,8 @@
 
                     return str;
 
-                };
+                }
 
-//        console.debug('setInfo', arguments);
                 if (noResults) {
                     copy = "Nothing to show."
                 } else {

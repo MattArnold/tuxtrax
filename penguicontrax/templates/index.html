@@ -5,26 +5,31 @@
 {% block body %}
     {{ super() }}
     <div class="row">
-        <div class="col-md-2" id="nav">
-            <div class="tagsinput system" data-container="body" data-placement="right" data-trigger="manual"
-                      data-html="true" data-content="<p>Click some tags if you want to see only events with those topics.</p><p>If you click a tag again, it will exclude all events with that topic.</p><p>If you click a tag a third time, your filter will not care about that topic.</p><p>If you have no topics turned on, it will turn on all the tags.</p>">
-                <h6>
-                    <button id="hidenav" class="btn btn-default btn-xs">
-                        <i class="fa fa-compress"></i>
-                    </button>&nbsp;
-                    Filter by topics&nbsp;
-                    <button class="btn btn-xs btn-info info" data-toggle="button"><i class="glyphicon glyphicon-info-sign"></i></button>
-                </h6>
+        <div id="nav" class="col-md-2 hidden-sm hidden-xs">
+            <div class="floater" data-spy="affix" data-offset-top="60">
+                <div class="tagsinput system" data-container="body" data-placement="right" data-trigger="manual"
+                     data-html="true"
+                     data-content="<p>Click some tags if you want to see only events with those topics.</p><p>If you click a tag again, it will exclude all events with that topic.</p><p>If you click a tag a third time, your filter will not care about that topic.</p><p>If you have no topics turned on, it will turn on all the tags.</p>">
+                    <h6>
+                        <button id="hidenav" class="btn btn-default btn-xs">
+                            <i class="fa fa-compress"></i>
+                        </button>
+                        &nbsp;
+                        Filter by topics&nbsp;
+                        <button class="btn btn-xs btn-info info" data-toggle="button"><i
+                                class="glyphicon glyphicon-info-sign"></i></button>
+                    </h6>
 
-                <div id="tagfilter">
-                    <div class="alert alert-info">
-                        <p>Loading...</p>
+                    <div id="tagfilter">
+                        <div class="alert alert-info">
+                            <p>Loading...</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="tagsinput">
-                <span class="smalllabel">User tags: </span>
-                <span id="usertagfilter"></span>
+                <div class="tagsinput">
+                    <span class="smalllabel">User tags: </span>
+                    <span id="usertagfilter"></span>
+                </div>
             </div>
         </div>
         <div class="col-md-10" id="report">
@@ -41,13 +46,9 @@
                             <button id="createeventbutton" class="btn btn-primary">Suggest an event</button>
                         </div>
                         <div class="col-md-4">
-                            {# TODO implement search via JS#}
-                            <div class="input-group">
+                            <div id="submissionsearch" class="input-group">
                                 <input type="search" class="form-control" placeholder="Search submissions">
-                                  <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button"><i
-                                            class="glyphicon glyphicon-search "></i></button>
-                                  </span>
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-search "></i></span>
                             </div>
                         </div>
                         <div class="col-md-6 text-right legend">
@@ -63,11 +64,19 @@
                     <div class="row submissions-list">
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-md-8 info">{% if hidden==True %}
-                                    {{ 'We regret that for various reasons, we can’t use these event suggestions this year. Maybe next year! Also, some of them may be here in error, in which case bear with us while we fix it.' }}
-                                {% else %}
-                                    {{ 'Try clicking some tags!' }}
-                                {% endif %}
+                                <div class="col-md-8 info"
+                                     data-default="To filter results, use the filter control at left or type a search term above."
+                                     data-rejected="We regret that for various reasons, we can’t use these event suggestions this year. Maybe next year! Also, some of them may be here in error, in which case bear with us while we fix it.">
+                                    {#                                    {% if hidden==True %}#}
+                                    {#                                    {{ 'We regret that for various reasons, we can’t use these event suggestions this year. Maybe next year! Also, some of them may be here in error, in which case bear with us while we fix it.' }}#}
+                                    {#                                {% else %}#}
+                                    {#                                    {{ 'Try clicking some tags!' }}#}
+                                    {#                                {% endif %}#}
+                                </div>
+                                <div class="col-md-4" style="text-align:right">
+                                    <button id="showRejected" class="btn btn-default btn-xs">Show
+                                        Rejected
+                                    </button>
                                 </div>
                             </div>
                             <div id="submissions" class="row">
@@ -76,13 +85,6 @@
                                 </div>
                             </div>
                         </div>
-                        {#TODO reimplement this#}
-                        {#                        <div class="oops hidden">Oops! There are no events with that tag. Maybe you could <a#}
-                        {#                                href="form.html">create one</a>?#}
-                        {#                        </div>#}
-                        {% if request.path != "/hidden" %}
-                            <div class="row"><a href="/hidden">See hidden events</a></div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -97,6 +99,11 @@
     <script type="text/javascript" src="{{ url_for('static', filename='collapsetagnav.js') }}"></script>
     <script type="text/javascript">
 
+        var tags = "{% for tag in tags %}{{tag}},{% endfor%}".split(",");
+        tags = tags.slice(0, tags.length - 1).sort();
+
+        tags = new can.List(tags);
+
         $(document).ready(function () {
             $("[data-toggle=popover]").popover();
             $("[data-toggle=tooltip]").tooltip();
@@ -104,34 +111,149 @@
             $('.tagsinput').popover();
 
             //toggle the popover when clicking the info ball
-            $(".tagsinput.system .info").on('click',function(ev){
+            $(".tagsinput.system .info").on('click', function (ev) {
                 $('.tagsinput.system').popover('toggle');
             });
-        });
 
-        var tags = "{% for tag in tags %}{{tag}},{% endfor%}".split(",");
-        tags = tags.slice(0, tags.length - 1);
-
-        ptrax.model.Submissions.findAll().done(function (submissions) {
-
-            new ptrax.TagFilter("#tagfilter", {
-                tags: tags,
-                tpl: "{{ "js/tagfilter.mustache" | get_js_template }}",
-                submissions: submissions
+            $("#createeventbutton").click(function () {
+                document.location.href = "/eventform"
             });
 
-            new ptrax.SubmissionList("#submissions", {
-                submissionsTpl: "{{ "js/submissions.mustache" | get_js_template }}",
-                userLinkTpl: "{{ "js/user_link.mustache" | get_js_template }}",
-                userTextTpl: "{{ "js/user_text.mustache" | get_js_template }}",
-                submissions: submissions
+            //set the width of the affixed element
+            $(".floater").on('affix.bs.affix', function () {
+                var $el = $(this);
+                $el.width($el.width());
             });
 
+            ptrax.SubmissionSearch = can.Control.extend({
+                "input input": _.debounce(function (el) {
+                    var submissions = this.options.submissions;
+                    var val = el.val();
+                    var matches = 0;
+                    var $info = $('.submissions-list .info');
+
+                    can.batch.start();
+                    if (!_.isEmpty(val) && val.length > 1) {
+                        val = val.toLowerCase();
+                        //get matches
+                        _.forEach(submissions, function (submission) {
+                            var search = submission.attr('search').attr();
+
+                            var match = _.find(search, function (content) {
+                                return content.indexOf(val) !== -1;
+                            });
+
+                            if (match) {
+                                matches++;
+                            }
+
+                            submission.attr('hidden', !match);
+                        });
+                    } else {
+                        _.forEach(submissions, function (submission) {
+                            submission.attr('hidden', false);
+                        });
+                        matches = 0;
+                    }
+                    can.batch.stop();
+
+                    if (matches) {
+                        $info.text(matches + ' search results.');
+                    } else {
+                        $info.text($info.data('default'));
+                    }
+                }, 250)
+            });
+
+            ptrax.model.Submissions.findAll().done(function (submissions) {
+                var rejectedSubmissions;
+
+                //add a search array for lookup with search function
+                _.forEach(submissions, function (submission) {
+                    var search = [];
+
+                    search.push(submission.title.toLowerCase());
+                    search.push(submission.description.toLowerCase());
+                    search.push(submission.tags.join(" ").toLowerCase());
+                    search.push(submission.personPresenters.join(' ').toLowerCase());
+                    search.push(submission.userPresenters.join(' ').toLowerCase());
+
+                    submission.attr('search', search);
+                });
+
+                new ptrax.TagFilter("#tagfilter", {
+                    tags: tags,
+                    tpl: "{{ "js/tagfilter.mustache" | get_js_template }}",
+                    submissions: submissions
+                });
+
+                new ptrax.SubmissionList("#submissions", {
+                    submissionsTpl: "{{ "js/submissions.mustache" | get_js_template }}",
+                    userLinkTpl: "{{ "js/user_link.mustache" | get_js_template }}",
+                    userTextTpl: "{{ "js/user_text.mustache" | get_js_template }}",
+                    submissions: submissions
+                });
+
+                new ptrax.SubmissionSearch("#submissionsearch", {submissions: submissions});
+
+                //in page bindings
+                $('#showRejected').on('click', function () {
+                    var $btn = $(this);
+                    var active = $btn.hasClass('active');
+                    var $info = $('.submissions-list .info');
+                    var remove;
+                    $btn.button('loading');
+
+                    function showRejected() {
+                        $btn.button('reset').button('toggle');
+                        //set info text to rejected messaging
+                        $info.text($info.data('rejected'));
+                        //hide other submissions
+                        can.batch.start();
+                        _.forEach(submissions, function (submission) {
+                            submission.attr('hidden', true);
+                        });
+                        can.batch.stop();
+                        //add rejected submissions
+                        submissions.push.apply(submissions, rejectedSubmissions);
+                    }
+
+                    if (active) {
+                        //remove rejected events and return to normal messages
+                        remove = _.filter(submissions, {"followUpState": 3});
+                        can.batch.start();
+                        _.forEach(remove, function (r) {
+                            var idx = _.findIndex(submissions, {"id": r.id});
+                            submissions.splice(idx, 1);
+                        });
+
+                        //show all submissions again
+                        _.forEach(submissions, function (submission) {
+                            submission.attr('hidden', false);
+                        });
+
+                        can.batch.stop();
+                        $info.text($info.data('default'));
+                        $btn.button('reset').button('toggle');
+
+                    } else {
+                        if (rejectedSubmissions) {
+                            showRejected();
+                        } else {
+                            ptrax.model.RejectedSubmissions.findAll()
+                                    .done(function (rejectedList) {
+                                        rejectedSubmissions = rejectedList;
+                                        showRejected();
+                                    });
+                        }
+                    }
+
+                });
+
+            });
 
         });
 
-        $("#createeventbutton").click(function () {
-            document.location.href = "/eventform"
-        });
+
     </script>
 {% endblock %}

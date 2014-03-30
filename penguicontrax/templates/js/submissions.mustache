@@ -1,6 +1,6 @@
 <ul>
     {{#submissions}}
-        <li class="submission row bs-callout-default bs-callout {{_followUpState}} {{#updating}}updating{{/updating}} {{#hidden}}hidden{{/hidden}}">
+        <li class="submission row bs-callout {{_followUpState}} {{#updating}}updating{{/updating}} {{#hidden}}hidden{{/hidden}}">
             <div class="col-md-12">
                 {{#if user.id}}
                 <span class="toggle-user-rsvp" {{data 'submission'}}><i class="fa {{user_rsvp}}"></i></span>
@@ -20,7 +20,7 @@
                 <a href="/eventform?id={{id}}" class="submission-link">{{ title }}</a>&nbsp;
                 <span>{{ _duration }}</span>&nbsp;
                 <span><small>Presented
-                    by: {{#if userPresenters.length}}{{>user_link}} {{#if personPresenters.length}}and{{/if}} {{/if}} {{#personPresenters}}{{.}}{{/personPresenters}}</small>
+                    by: {{#if userPresenters.length}}{{>user_link}} {{#if personPresenters.length}}and{{/if}} {{/if}} {{_presenters}}</small>
                 </span>&nbsp;
                 {{#tags}}
                     <span class="label label-info"><i class="fa fa-tag"></i>&nbsp;{{ . }}</span>&nbsp;

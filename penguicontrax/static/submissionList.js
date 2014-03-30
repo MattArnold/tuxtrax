@@ -4,6 +4,10 @@
         'findAll': "/api/submissions?state=0,1,2"
     }, {});
 
+    ptrax.model.RejectedSubmissions = can.Model.extend({
+        'findAll': "/api/submissions?state=3"
+    }, {});
+
     ptrax.SubmissionList = can.Control.extend({
         defaults: {
             submissions: [],
@@ -24,9 +28,8 @@
                 submissions: this.options.submissions,
                 user: ptrax.user
             }, {
-
                 _followUpState: function () {
-                    var state = ["submitted", "followed-up", "accepted", "rejected"];
+                    var state = ["submitted", "followedup", "accepted", "rejected"];
                     return state[this.attr('followUpState')];
                 },
                 _duration: function () {
@@ -34,11 +37,26 @@
                     return this.attr('duration') + suffix;
                 },
                 num_rsvp: function () {
-                    return ''+this['rsvped_by'].attr().length;
+                    return '' + this['rsvped_by'].attr().length;
                 },
                 user_rsvp: function () {
                     var rsvps = this['rsvped_by'].attr();
                     return _.find(rsvps, {'id': ptrax.user.id }) ? 'fa-star' : 'fa-star-o';
+                },
+                _presenters: function () {
+                    var presenters = this.attr('personPresenters');
+                    var lastEl;
+                    if (presenters.length > 1) {
+                        lastEl = presenters[presenters.length - 1];
+                        lastEl = "and " + lastEl;
+                        presenters[presenters.length - 1] = lastEl;
+                    }
+
+                    if (presenters.length > 2) {
+                        return presenters.join(", ");
+                    } else {
+                        return presenters.join(" ");
+                    }
                 }
             });
 
@@ -47,7 +65,7 @@
 
         ".toggle-user-rsvp click": function (el) {
             var submission = el.data('submission');
-            var user_rsvp = _.findIndex(submission.attr('rsvped_by'),{'id': ptrax.user.id });
+            var user_rsvp = _.findIndex(submission.attr('rsvped_by'), {'id': ptrax.user.id });
             var apiUrl = '/api/submission/' + submission.attr('id') + '/rsvp';
 
             if (!submission.attr('updating')) {
