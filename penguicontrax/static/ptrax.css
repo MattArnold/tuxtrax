@@ -7495,6 +7495,9 @@ body {
 .legend {
   font-size: small;
 }
+.legend .bs-callout {
+  display: inline-block;
+}
 .submissions-list {
   font-size: small;
 }
@@ -7506,7 +7509,6 @@ body {
   border-color: #e1e1e8;
   padding: .5em;
   margin: .5em;
-  display: inline-block;
 }
 .bs-callout.followedup {
   background-color: rgba(214, 167, 83, 0.25);
@@ -7529,7 +7531,7 @@ body {
 }
 #submissions li.submission {
   list-style-type: none;
-  margin-left: 0;
+  margin: 1em 0;
 }
 #submissions li.submission .submission-link {
   font-weight: bold;

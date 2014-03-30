@@ -73,6 +73,9 @@
 
 .legend {
   font-size: small;
+  .bs-callout {
+    display: inline-block;
+  }
 }
 
 .submissions-list {
@@ -90,7 +93,6 @@
   border-color: #e1e1e8;
   padding: .5em;
   margin: .5em;
-  display: inline-block;
 
   &.followedup {
     .followedup()
@@ -114,7 +116,7 @@
   }
   li.submission {
     list-style-type: none;
-    margin-left: 0;
+    margin: 1em 0;
 
     .submission-link {
       font-weight: bold;
