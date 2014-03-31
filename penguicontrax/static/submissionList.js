@@ -41,7 +41,7 @@
                 },
                 user_rsvp: function () {
                     var rsvps = this['rsvped_by'].attr();
-                    return _.find(rsvps, {'id': ptrax.user.id }) ? 'fa-star' : 'fa-star-o';
+                    return _.find(rsvps, {'id': ptrax.user.id }) ? 'fa-thumbs-up' : 'fa-thumbs-o-up';
                 },
                 _presenters: function () {
                     var presenters = this.attr('personPresenters');

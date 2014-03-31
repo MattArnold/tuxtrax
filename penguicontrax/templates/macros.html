@@ -94,9 +94,9 @@
                         <input type="checkbox" name="{{ submission.id }}rsvp" id="{{ submission.id }}rsvp">
                           0 
                         {% if user is not none and submission in user.rsvped_to %}
-                            <i class="fa fa-star rsvp" style="color:#e3cf7a"></i>
+                            <i class="fa fa-thumbs-up rsvp" style="color:#e3cf7a"></i>
                         {% else %}
-                            <i class="fa fa-star-o rsvp"></i>
+                            <i class="fa fa-thumbs-o-up rsvp"></i>
                         {% endif %}
                       </label>
                     </div> 
