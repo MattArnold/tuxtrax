@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "In post-compile hook"
+
+if [ "$PENGUICONTRAX_MAKE_MODELER" == "1" ]
+then
+	modeler/makemodeler.sh
+	rm `find | grep "\.o$"` -rf
+	rm `find | grep "\.a$"` -rf
+fi
+
+if [ "$PENGUICONTRAX_WORKER" == "1" ]
+then
+	echo "Changing Procfile to worker"
+	echo "worker: python runworker.py" > Procfile
+fi
+

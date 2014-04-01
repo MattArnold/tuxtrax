@@ -412,7 +412,8 @@ def convention_schedule_args():
 
 @app.route('/convention/<convention_url>/')
 def convention_index_url(convention_url):
-   return convention_schedule_url(convention_url)
+   return convention_schedule_url(convention_url)
+
 @app.route('/convention')
 def convention_index_args():
     return convention_schedule_args()
@@ -445,8 +446,18 @@ def convention_list():
 def convention_solve(convention):
     if convention is None:
         return redirect('/')
-    import solve
-    return solve.solve_convention(convention, type = solve.SolveTypes.ECTTD, write_files = False)
+    from penguicontrax import conn
+    from solve import solve_convetion_modeler
+    from rq import Queue
+    import time
+    try:
+        q = Queue(connection = conn)
+        job = q.enqueue(solve_convetion_modeler, str(convention.id))
+    except: # No connection to redis worker, solve inline
+        return solve_convetion_modeler(str(convention.id))
+    while job.result is None:
+        time.sleep(2)
+    return 'Using redis queue<br/>' + job.result
 
 @app.route('/convention/<convention_url>/solve')
 def convention_solve_url(convention_url):

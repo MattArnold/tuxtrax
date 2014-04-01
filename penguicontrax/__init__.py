@@ -2,10 +2,17 @@ from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.cache import Cache
 import xml.etree.ElementTree as ET
-import json
+import json, redis
+from constants import constants
 app = Flask(__name__)
 db =  SQLAlchemy(app)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+try:
+    conn = redis.from_url(constants.REDIS_URL)
+except Exception as e:
+    conn = None
+    print e
+    pass
 
 def dump_table_xml(elements, table, parent_node, collection_name, element_name):
     collection = ET.SubElement(parent_node, collection_name)
@@ -37,10 +44,8 @@ from flask import render_template, g, url_for, redirect, Response
 from submission import Submission, Tag
 from user import Login
 import os, sqlite3, import2013schedule
-from constants import constants
 import datetime, audit
 from event import Events, Rooms, RoomGroups, Convention
-
 import api
 
 def init():
@@ -49,16 +54,15 @@ def init():
     app.config.from_object(__name__)
     try:
         db.create_all()
-        print 'Created database schema'
     except Exception as e:
         print e
         pass
     # GET RID OF THIS LATER
     if len(Submission.query.all()) == 0 and len(Events.query.all()) == 0:
         print 'Importing 2013 schedule into submissions'
-        import2013schedule.import_old(False, submission_limit = 500)
+        import2013schedule.import_old(False, submission_limit = 20)
         print 'Importing 2013 schedule into convention'
-        import2013schedule.import_old(True, random_rsvp_users = 500, submission_limit = 500, timeslot_limit = 500)
+        import2013schedule.import_old(True, random_rsvp_users = 40, submission_limit = 20, timeslot_limit = 4)
 
 @app.route('/')
 def index():

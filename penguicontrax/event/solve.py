@@ -1,13 +1,41 @@
-from pulp import *
-from flask import Markup, Response
-
 class SolveTypes:
     TTD = 1
     CTTD = 2
     ECTTD = 3
     ECTTO = 4
 
-def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
+def solve_convetion_modeler(convention_id_str):
+    import os, subprocess, sys
+    from penguicontrax import constants
+    from penguicontrax.event import generate_schedule, Convention
+    status = ''
+    d = os.path.join(os.getcwd(), 'penguicontrax')
+    model = subprocess.Popen([constants.MODELER_PATH, '-d', constants.DATABASE_URL, '-f', 'output.lp', '-c', convention_id_str, '-m', '0'], stdout = subprocess.PIPE, cwd=d)
+    ret = None
+    while ret is None:
+        status += model.communicate()[0].replace(os.linesep, '<br/>')
+        ret = model.poll()
+    if ret != 0:
+        return status
+    sol = subprocess.Popen([constants.CLP_PATH, 'output.lp', '-solve', '-solu', 'output.sol'], stdout = subprocess.PIPE, cwd=d)
+    ret = None
+    while ret is None:
+        status += sol.communicate()[0].replace(os.linesep, '<br/>')
+        ret = sol.poll()
+    db = subprocess.Popen([constants.MODELER_PATH, '-d', constants.DATABASE_URL, '-f', 'output.sol', '-c', convention_id_str, '-m', '1'], stdout = subprocess.PIPE, cwd=d)
+    ret = None
+    while ret is None:
+        status += db.communicate()[0].replace(os.linesep, '<br/>')
+        ret = db.poll()
+    status += 'Applying schedule to database...<br/>'
+    generate_schedule(Convention.query.filter_by(id=int(convention_id_str)).first())
+    status += 'Finished'
+    return status
+
+'''
+def solve_convention_pulp(convention, type = SolveTypes.TTD, write_files = False):
+    from pulp import *
+    from flask import Markup, Response
     from penguicontrax.user import User, Person
     from penguicontrax.event import Events, Timeslot, Rooms, generate_schedule, Convention
     from penguicontrax import db
@@ -263,3 +291,4 @@ def solve_convention(convention, type = SolveTypes.TTD, write_files = False):
             generate_schedule(Convention.query.filter_by(id=convention.id).first())
         
     return Response(solve())
+'''
