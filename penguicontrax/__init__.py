@@ -31,7 +31,7 @@ def dump_table(elements, table):
     @returns a string of serialized list of dicts
 """
 def dump_table_json(elements, table):
-    return json.dumps(dump_table(elements,table))
+    return json.dumps(dump_table(elements,table))	 
 
 from flask import render_template, g, url_for, redirect, Response
 from submission import Submission, Tag
@@ -77,9 +77,29 @@ def report():
     ET.SubElement(root, 'generated').text = str(datetime.datetime.now())
     dump_table_xml(Submission.query.all(), Submission.__table__, root, 'submissions', 'submission')
     dump_table_xml(Tag.query.all(), Tag.__table__, root, 'tags', 'tag')
-    from submission import tags
-    dump_table_xml(db.session.query(tags).all(), tags, root, 'tag-assignments', 'tag-assignment')
+    from submission import SubmissionToTags
+    dump_table_xml(db.session.query(SubmissionToTags).all(), SubmissionToTags, root, 'SubmissionToTags', 'SubmissionToTag')
     return Response(ET.tostring(root, encoding='utf-8'), mimetype='text/xml')
+	
+@app.route('/report.csv')
+@cache.cached(timeout=900)
+def reportcsv():
+	out = ''.join([u'\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",%s\r\n' % \
+		(s.submitter.name if not s.submitter is None else u'',\
+		 '' if (s.submitter is None or s.submitter.email is None) else s.submitter.email,\
+		 s.title.replace('\"','\'') if not s.title is None else u'',
+		 s.description.replace('\"','\'') if not s.description is None else u'',
+		 s.comments.replace('\"','\'') if not s.comments is None else u'',
+		 s.track.name if not s.track is None else '',
+		 str(s.duration),
+		 str(s.setupTime),
+		 str(s.repetition),
+		 s.timeRequest.replace('\"','\'') if not s.timeRequest is None else u'',
+		 s.facilityRequest.replace('\"','\'') if not s.facilityRequest is None else u'',
+		 u'%s%s' % (''.join([p.name.replace('\"','\'')  + u',' for p in s.personPresenters]), ''.join([p.name.replace('\"','\'') + u',' for u in s.userPresenters]))
+		) for s in Submission.query.all()])
+	out = u'Submitter,Submitter e-mail,Title,Description,Comments,Track,Duration,Setup time,Repetition,Time request,Facility request,Presenters\r\n' + out
+	return Response(out.encode('utf-8'), mimetype='text/csv')
 
 # TODO: this fake URL is used to run unittests. It should be disabled on a deploy
 @app.route('/fakelogin')
