@@ -65,9 +65,7 @@ def index():
     
 @app.route('/hidden')
 def hidden():
-    submissions = Submission.query.filter(Submission.followUpState == 3).order_by('id')
-    tags = [tag.name for tag in Tag.query.all()]
-    return render_template('index.html', tags=tags, submissions=submissions, user=g.user, showhidden=True)
+    return render_template('index.html', user=g.user, showhidden=True)
 
 
 @app.route('/report')
