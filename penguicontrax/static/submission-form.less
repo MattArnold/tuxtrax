@@ -1,0 +1,52 @@
+@where: #e67e22;
+@when: #9b59b6;
+@who : #1abc9c;
+@what : #bdc3c7;
+
+.type(@which) {
+  background-color: fadeout(@which, 50%);
+  border: 3px solid @which;
+}
+
+h4 {
+  padding: 10px;
+  width: 95%;
+  border-radius: 2px;
+}
+
+.where h4 {
+  .type(@where)
+}
+
+.when h4 {
+  .type(@when)
+}
+
+.who h4 {
+  .type(@who)
+}
+
+.what h4 {
+  .type(@what)
+}
+
+form {
+
+  //animate buttons when selected
+  .btn-xs {
+    .transition(padding .25s ease-out);
+    &.active {
+      .transition(padding .25s ease);
+      padding: 2px 7px;
+    }
+  }
+
+  .btn-sm {
+    .transition(padding .25s ease-out);
+    &.active {
+      .transition(padding .25s ease);
+      padding: 7px 14px;
+    }
+  }
+
+}

@@ -67,25 +67,24 @@
 //
 //## Font, line-height for body text, headings, and more.
 
-//@font-family-base:          "Lato", Helvetica, Arial, sans-serif;
-@font-family-base:          "Lato", Helvetica, Arial, sans-serif;
+@font-family-base:          "Open Sans", Helvetica, Arial, sans-serif;
 @font-family-demo:          "Helvetica Neue", Helvetica, Arial, sans-serif;
 @font-family-monospace:     Monaco, Menlo, Consolas, "Courier New", monospace;
 @font-size-base:            18px;
 
-@local-font-path:               "/static/Flat-UI-master/fonts/lato/";
-@local-font-name:               "lato-regular";
-@local-font-svg-id:             "latoregular";
-@local-font-name-light:         "lato-light";
-@local-font-svg-id-light:       "latolight";
-@local-font-name-black:         "lato-black";
-@local-font-svg-id-black:       "latoblack";
-@local-font-name-bold:          "lato-bold";
-@local-font-svg-id-bold:        "latobold";
-@local-font-name-italic:        "lato-italic";
-@local-font-svg-id-italic:      "latoitalic";
-@local-font-name-bold-italic:   "lato-bolditalic";
-@local-font-svg-id-bold-italic: "latobold-italic";
+@local-font-path:               "/static/Flat-UI-master/fonts/open-sans/";
+@local-font-name:               "OpenSans-Regular-webfont";
+@local-font-svg-id:             "open_sansregular";
+@local-font-name-light:         "OpenSans-Light-webfont";
+@local-font-svg-id-light:       "open_sanslight";
+@local-font-name-black:         "OpenSans-ExtraBold-webfont";
+@local-font-svg-id-black:       "open_sansextrabold";
+@local-font-name-bold:          "OpenSans-Bold-webfont";
+@local-font-svg-id-bold:        "open_sansbold";
+@local-font-name-italic:        "OpenSans-Italic-webfont";
+@local-font-svg-id-italic:      "open_sansitalic";
+@local-font-name-bold-italic:   "OpenSans-BoldItalic-webfont";
+@local-font-svg-id-bold-italic: "open_sansbold_italic";
 
 @font-size-h1:              floor(@font-size-base * 3.444); // ~62px
 @font-size-h2:              ceil(@font-size-base * 2.889); // ~52px
@@ -125,9 +124,9 @@
 @component-font-size-base:  ceil(@font-size-base * 0.833); // ~15px
 
 // Border-radius
-@border-radius-base:        4px;
-@border-radius-large:       6px;
-@border-radius-small:       3px;
+@border-radius-base:        3px;
+@border-radius-large:       3px;
+@border-radius-small:       2px;
 
 
 //== Buttons
@@ -153,6 +152,7 @@
 
 @btn-default-color:          @inverse;
 @btn-default-bg:             @gray-light;
+
 @btn-hover-bg:               mix(@gray-light, white, 80%);
 @btn-active-bg:              mix(@gray-light, black, 85%);
 
@@ -172,7 +172,7 @@
 @btn-warning-active-bg:      mix(@brand-warning, black, 85%);
 
 @btn-inverse-hover-bg:       overlay(@brand-primary, darken(white, 37.5%));
-@btn-inverse-active-bg:      mix(@brand-primary, black, 85%);
+@btn-inverse-active-bg:      mix(@brand-primary, black, 50%);
 
 @btn-link-disabled-color:    @gray-light;
 

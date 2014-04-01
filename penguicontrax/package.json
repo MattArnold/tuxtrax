@@ -6,8 +6,7 @@
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-less": "~0.10.0",
-    "grunt-contrib-watch": "~0.5.3",
-    "steal": "git://github.com/bitovi/steal.git#less-node"
+    "grunt-contrib-watch": "~0.5.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

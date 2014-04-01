@@ -1,103 +1,117 @@
-@followeduplight:#fcf8e3;
-@followedupdark:#d6a753;
-@acceptedlight:#bda0cb;
-@accepteddark:#a020f0;
-@rejectedlight:#f2dede;
-@rejecteddark:#c04a48;
-
-@font-face {
-  font-family: 'Droid Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Droid Sans'), local('DroidSans'), url(DroidSans.woff) format('woff');
-}
-
-@font-face {
-  font-family: 'Droid Sans';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Droid Sans Bold'), local('DroidSans-Bold'), url(DroidSansBold.woff) format('woff');
-}
-
-@import (less) "Flat-UI-master/bootstrap/css/bootstrap.css";
-@import (less) "Flat-UI-master/less/flat-ui.less";
+@import (less) "bootstrap-3.1.1/less/bootstrap.less";
+@import (less) "bootstrap-selectpicker/bootstrap-select.css";
 @import (less) "font-awesome-4.0.3/less/font-awesome.less";
-
-//global overrides
-body {
-  font-family: "Droid Sans";
-}
-
+@import "fonts";
 //individual less files for components
 @import "submissions";
+@import "submission-form";
 
-.header {
-  margin-bottom: 15px;
+//mixin
+.transition (@transition) {
+  -webkit-transition: @transition;
+  -moz-transition: @transition;
+  -ms-transition: @transition;
+  -o-transition: @transition;
+}
+
+nav {
+  padding: .5em;
+  color: #999;
+  background-color: #eee;
+  margin-bottom: .5em;
   .title {
-    padding-left: .5em;
+    font-size: large;
+    font-weight: bold;
+    padding-left: 1em;
+  }
+  .rightheader {
+    float: right;
+  }
+  .navbar-brand {
+    padding : 0;
   }
 }
 
-.ptrax-login {
-  font-size: small;
-  .row {
-    margin-right: 10px;
-    margin-top: 15px;
+body {
+  padding-top: 80px;
+  min-width: 1200px;
+}
+
+.icon-google-square, .icon-yahoo-square {
+  position: relative;
+  fill: #16a085;
+  top: .1em;
+}
+
+.google-large, .yahoo-large {
+  fill: #16a085;
+}
+
+
+#nav {
+  position: relative;
+  .floater{
+    .transition(all .25s);
+  }
+  .affix {
+
   }
 }
 
 .person {
-  font-style:italic;
+  font-style: italic;
 }
 
-.bs-callout {
-  margin: 20px 0;
-  padding: 20px;
-  border-left: 3px solid #eee;
-  background-color: #f7f7f9;
+.tag {
+  &.checked {
+    background-color: #cacfd2;
+  }
 }
 
-.legend {
+.smalllabel {
   font-size: small;
+}
 
-  .bs-callout {
-    background-color: #f7f7f9;
-    border-color: #e1e1e8;
-    padding: .5em;
-    margin: .5em;
-    display: inline-block;
+#shownav {
+  margin: 0 10px 0 0;
+  padding: 6px;
+  float: left;
+  display: none;
+}
 
-    &.followedup {
-      background-color: @followeduplight;
-      border-color: @followedupdark;
-    }
+.drawer {
+  padding-left: 0;
+}
 
-    &.accepted {
-      background-color: @acceptedlight;
-      border-color: @accepteddark;
-    }
-
-    &.rejected {
-      background-color: @rejectedlight;
-      border-color: @rejecteddark;
-    }
+#tagfilter, #topics {
+  .btn {
+    margin: 2px 0;
   }
 }
 
-.submissions-list {
-  .info {
-    font-size: small;
-  }
-}
-.submissions {
-
-  .rsvp {
-    &.checked {
-      color : #FDD017;
+//some fun pretty stuff
+.form-group {
+  @-webkit-keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
     }
   }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  -webkit-animation: fadeIn .5s;
+  animation: fadeIn .5s;
 }
 
-.tagsinput {
-    height:auto;
+.dynamic-content {
+  .transition(1s);
 }

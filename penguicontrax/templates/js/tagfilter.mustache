@@ -1,0 +1,5 @@
+     <button class="btn btn-default btn-sm {{#all}}active{{/all}}">all</button><br/>
+    {{#tags}}
+        <button class="btn btn-default btn-xs {{#isIncluded}}active{{/isIncluded}} {{#isExcluded}}btn-danger active excluded{{/isExcluded}}"
+                data-tag="{{name}}">{{name}}</button>
+    {{/tags}}

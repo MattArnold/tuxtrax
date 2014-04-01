@@ -25,6 +25,7 @@ class User(db.Model):
     image_large = db.Column(db.String())
     rsvped_to = db.relationship('Submission', secondary=rsvps, backref=db.backref('rsvped_by', passive_deletes=True))
     event_rsvped_to = db.relationship('Events', secondary=event_rsvps, backref=db.backref('rsvped_by', passive_deletes=True))
+    presentations = db.relationship('Submission', secondary='user_presenting_in', backref=db.backref('presented_by', passive_deletes=True))
     special_tag = db.Column(db.String())
     public_rsvps = db.Column(db.Boolean())
     superuser = db.Column(db.Boolean())

@@ -18,3 +18,5 @@ node_modules
 *.o
 modeler/bin
 modeler/obj
+.project
+*.log
