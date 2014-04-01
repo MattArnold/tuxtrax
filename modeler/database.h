@@ -75,11 +75,11 @@ public:
 
 private:
 
-
+    bool is_postgres;
     std::string path;
     int convention;
     soci::session db;
-    bool is_postgres;
+    
 
 };
 

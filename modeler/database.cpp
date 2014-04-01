@@ -7,7 +7,7 @@
 using namespace std;
 using namespace soci;
 
-database::database(const std::string& dburl, int _convention) : convention(_convention)
+database::database(const std::string& dburl, int _convention) : path(dburl), convention(_convention)
 {
     is_postgres = false;
     if(dburl.find("sqlite3:///") == 0)
