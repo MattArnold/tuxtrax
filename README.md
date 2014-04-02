@@ -59,11 +59,21 @@ Log in to Heroku
 $ heroku login
 ```
 
-Add Heroku as a remote to your repo
+The mainline development Heroku app is `gentle-tor-1515`. Add Heroku as a remote to your repo.
 
 ```sh
-$ heroku git:remote -a gentle-tor-1515
-````
+$ heroku git:remote -a HEROKU_APP
+```
+
+Set the secret environment variables. After each equal sign should be the appropriate values.
+
+```sh
+$ heroku config:set SESSION_SECRET_KEY=
+$ heroku config:set TWITTER_KEY=
+$ heroku config:set TWITTER_SECRET_KEY=
+$ heroku config:set FACEBOOK_APP_ID=
+$ heroku config:set FACEBOOK_SECRET=
+```
 
 To deploy, pull and push to Heroku
 
