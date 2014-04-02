@@ -84,6 +84,8 @@ class SubmissionsAPI(Resource):
             query = query.filter(Submission.followUpState != 3)
         submissions = query.all()
         output = dump_table(submissions, Submission.__table__)
+        import random
+        random.shuffle(output)
         for index, element in enumerate(output):
             element['tags'] = [_.name for _ in submissions[index].tags]
             element['personPresenters'] = [_.name for _ in submissions[index].personPresenters]
