@@ -52,7 +52,6 @@ $(document).ready(function () {
         // to set every element.
         //
         var pluralized = false;
-        var furnitureshow = false;
         var otherfacilityshow = false;
         var playersshow = false;
         var ppshow = false;
@@ -82,7 +81,6 @@ $(document).ready(function () {
                 pptypetext = 'Activity leader:';
                 pluralpptypetext = 'Activity leaders:"';
                 resourcesshow = true;
-                furnitureshow = true;
                 otherfacilityshow = true;
                 ppshow = true;
                 break;
@@ -93,7 +91,6 @@ $(document).ready(function () {
                 pptypetext = 'Game master:';
                 pluralpptypetext = 'Game masters:';
                 playersshow = true;
-                furnitureshow = true;
                 otherfacilityshow = true;
                 break;
             case 'onstage':
@@ -111,10 +108,6 @@ $(document).ready(function () {
         }
 
         // now we have all of the values. set everything.
-        if (furnitureshow)
-            $('#furniture').removeClass('hidden');
-        else
-            $('#furniture').addClass('hidden');
         if (otherfacilityshow)
             $('#otherfacility').removeClass('hidden');
         else

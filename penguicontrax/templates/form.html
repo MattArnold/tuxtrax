@@ -92,31 +92,6 @@
                     </select>
                 </label>
             </div>
-            <div class="form-group hidden" id="furniture">
-                <label for="roundtables">
-                    Round tables
-
-                    <select tabindex="" name=roundtables data-size="false" data-width="100%" data-style="btn-info">
-                        <option value="0" {{ event.roundTables|is_selected(0) }}>0</option>
-                        <option value="1" {{ event.roundTables|is_selected(1) }}>1</option>
-                        <option value="2" {{ event.roundTables|is_selected(2) }}>2</option>
-                        <option value="3" {{ event.roundTables|is_selected(3) }}>3</option>
-                        <option value="5" {{ event.roundTables|is_selected(5) }}>more</option>
-                    </select>
-                </label>
-
-                <label for="longtables">
-                    Long tables
-
-                    <select tabindex="" name=longtables data-size="false" data-width="100%" data-style="btn-info">
-                        <option value="0" {{ event.longTables|is_selected(0) }}>0</option>
-                        <option value="1" {{ event.longTables|is_selected(1) }}>1</option>
-                        <option value="2" {{ event.longTables|is_selected(2) }}>2</option>
-                        <option value="3" {{ event.longTables|is_selected(3) }}>3</option>
-                        <option value="5" {{ event.longTables|is_selected(5) }}>more</option>
-                    </select>
-                </label>
-            </div>
             <div class="form-group hidden" id="otherfacility">
                 <label for="facilityrequest">Additional Requests</label>
                 <textarea name=facilityrequest id="facilityrequest" rows="2" cols="50"
