@@ -32,6 +32,8 @@
 									Special tag: <input name="special_tag" id="special_tag" value="{{ view_user.special_tag | default('',true) }}" />
 								</div>
 							{% endif %}
+							Email: <input name="email" id="email" value="{{ view_user.email | default('',true) }}" />
+							Phone: <input name="phone" id="phone" value="{{ view_user.phone | default('',true) }}" />
 							<input type=submit value="Submit" class="buttons" />
 						</form>
 					{% endif %}

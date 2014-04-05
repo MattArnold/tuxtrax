@@ -25,6 +25,7 @@ class User(db.Model):
     public_rsvps = db.Column(db.Boolean())
     superuser = db.Column(db.Boolean())
     creation_ip = db.Column(db.String())
+    phone = db.Column(db.String())
     
     def __init__(self):
         self.points = 5
@@ -43,6 +44,8 @@ class User(db.Model):
 class Person(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String())
+    email = db.Column(db.String())
+    phone = db.Column(db.String())
     merged_to_user = db.Column(db.Integer, db.ForeignKey('user.id'))
     
     def __init__(self, name):
@@ -97,6 +100,8 @@ def update_user():
         return redirect('/')
     if view_user == g.user or g.user.staff == True or g.user.superuser == True:
         view_user.public_rsvps = 'public_rsvps' in request.form
+        view_user.email = request.form['email']
+        view_user.phone = request.form['phone']
         if g.user.staff == True:
             view_user.special_tag = request.form['special_tag']
         if g.user.superuser == True:

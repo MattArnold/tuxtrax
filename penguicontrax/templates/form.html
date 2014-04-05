@@ -171,7 +171,7 @@
                 <div class="row hidden form-group" id="setupandrepeat">
                     <div class="col-md-6">
                         <label for="setuptime">Setup time
-                            <select tabindex="2" name=setuptime" data-size="false" data-width="100%"
+                            <select tabindex="2" name="setuptime" data-size="false" data-width="100%"
                                     data-style="btn-info">
                                 <option value="0" {{ event.setupTime | is_selected(0) }}>No</option>
                                 <option value="1" {{ event.setupTime | is_selected(1) }}>1 hour</option>
@@ -234,6 +234,7 @@
                     <span id="pptype" style="display:none"></span>
                     <span id="pluralpptype" style="display:none"></span>
                     <input name=presenter type=text size="24" maxlength="24" class="pp form-control"/>
+                    <!-- Add email and phone input here -->
                 </label>
                 <button id="newperson" class="pp btn"><span class="glyphicon glyphicon-plus"></span> someone else
                 </button>
