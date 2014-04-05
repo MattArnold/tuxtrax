@@ -95,6 +95,8 @@ class SubmissionsAPI(Resource):
             element['overdue'] = (datetime.datetime.now() - submissions[index].submitted_dt).days > 13
             element['followUpDays'] = (datetime.datetime.now() - submissions[index].submitted_dt).days
         expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
+        import random
+        random.shuffle(output)
         return output, 200, {
             "Expires": expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
             "Cache-Control": "public, max-age=86400"
