@@ -1,0 +1,83 @@
+{% extends "convention_base.html" %}
+{% block title %}{% if convention is not none %}{{ convention.name }} Schedule{% else %}Convention schedule{% endif %}{% endblock %}
+{% block body %}
+	{{ super() }}
+	{% macro conevent_summary(event, continued) -%}
+		<div class="submission row bs-callout-default bs-callout suggested">
+			<div class="row">
+				{% if continued %}
+					<em>(Continued) </em>
+				{% endif %}
+				{{ event.title }} 
+				{% if user is not none and user.staff and not continued %}
+					<select name=event_{{ event.id }}_room class="select-block">
+						<option value="unassigned" {% if event.rooms | length == 0 %}selected{% endif %}>Unassigned</option>
+						{% for room in convention.rooms %}
+							<option value="{{ room.id }}" {% if event.rooms[0] == room %}selected{% endif %}>{{ room.room_name }}</option>
+						{% endfor %}
+					</select>
+					<input name=event_{{ event.id }}_startdate type="date" value="{{ event.start_dt | get_date }}" />
+					<input name=event_{{ event.id }}_starttime type="time" value="{{ event.start_dt | get_time }}" />
+					<input name=event_{{ event.id }}_fixed id=event_{{ event.id }}_fixed type=checkbox {% if event.fixed %}checked{% endif %}/>
+					<label for=event_{{ event.id }}_fixed>Fixed</label>
+				{% endif %}
+				{% set event_length = event.rsvped_by | length %}
+				{{ event_length }} RSVP{% if event_length != 1 %}s{% endif %}
+			</div>
+		</div>
+	{%- endmacro %}
+	
+	{% if user is not none and user.staff %}
+		<form action="/convention/{{ convention.url }}/updateschedule" method=post>
+	{% endif %}
+	
+	{% for event in unscheduled_events %}
+		{{ conevent_summary(event,False) }}
+	{% endfor %}
+	
+	{% for timeslot in scheduled_events %}
+		<div class="row">
+			<div class="col-md-1">
+				{{ timeslot.name }}
+			</div>
+			{% if timeslot.rsvp_conflicts > 0 or (timeslot.presenter_conflicts | length) > 0 %}
+				<div class="col-md-11">
+					<div class="submission row bs-callout-default bs-callout suggested">
+						{% if (timeslot.presenter_conflicts | length) > 0 %}
+							Presenter conflicts: 
+							{% for conflict in timeslot.presenter_conflicts %}
+								{% if conflict.person_id is not none %}{{ macros.person_link(conflict.person) }} {% endif %}
+								{% if conflict.user_id is not none %}{{ macros.user_link(conflict.user) }} {% endif %}
+							{% endfor %}
+						{% endif %}
+						{% if timeslot.rsvp_conflicts > 0 %}
+							RSVP conflicts: {{ timeslot.rsvp_conflicts }}
+						{% endif %}
+					</div>
+				</div>
+			{% endif %}
+		</div>
+		{% for booking in timeslot.bookings %}
+			<div class="row">
+				<div class="col-md-2 text-right">
+					{% if user is not none and user.staff %}
+						<a href="/convention/{{ convention.url }}/editroom?id={{ booking.room.id }}">{{ booking.room.room_name }}</a>
+					{% else %}
+						{{ booking.room.room_name }}
+					{% endif %}
+				</div>
+			{% for timeslot_entry in booking.timeslot_entries %}
+				{% if not loop.first %}
+					<div class="row"><div class="col-md-2"> </div>
+				{% endif %}
+				<div class="col-md-10">{{ conevent_summary(timeslot_entry.event,timeslot_entry.time_elapsed != empty_timedelta) }}</div>
+				</div>
+			{% endfor %}
+		{% endfor %}
+	{% endfor %}
+	
+	{% if user is not none and user.staff %}
+		</form>
+	{% endif %}
+	
+{% endblock %}

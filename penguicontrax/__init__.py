@@ -2,10 +2,17 @@ from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.cache import Cache
 import xml.etree.ElementTree as ET
-import json
+import json, redis
+from constants import constants
 app = Flask(__name__)
 db =  SQLAlchemy(app)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+try:
+    conn = redis.from_url(constants.REDIS_URL)
+except Exception as e:
+    conn = None
+    print e
+    pass
 
 def dump_table_xml(elements, table, parent_node, collection_name, element_name):
     collection = ET.SubElement(parent_node, collection_name)
@@ -37,10 +44,8 @@ from flask import render_template, g, url_for, redirect, Response
 from submission import Submission, Tag
 from user import Login
 import os, sqlite3, import2013schedule
-from constants import constants
 import datetime, audit
 from event import Events, Rooms, RoomGroups, Convention
-
 import api
 
 def init():
@@ -53,15 +58,16 @@ def init():
         print e
         pass
     # GET RID OF THIS LATER
-    if len(Submission.query.all()) == 0:
-        import2013schedule.import_old()
-
+    if len(Submission.query.all()) == 0 and len(Events.query.all()) == 0:
+        print 'Importing 2013 schedule into submissions'
+        import2013schedule.import_old('schedule2015.html', False, submission_limit = 500)
+        print 'Importing 2013 schedule into convention'
+        import2013schedule.import_old('schedule2013.html', True, random_rsvp_users = 1000, submission_limit = 500, timeslot_limit = 500)
 
 @app.route('/')
 def index():
-    submissions = Submission.query.order_by('id').all() if g.user is not None and g.user.staff == True else Submission.query.filter(Submission.followUpState != 3, Submission.private != True).order_by('id')
     tags = [tag.name for tag in Tag.query.all()]
-    return render_template('index.html', tags=tags, submissions=submissions, user=g.user, showhidden=False)
+    return render_template('index.html', user=g.user, showhidden=False, tags=tags)
     
 @app.route('/hidden')
 def hidden():

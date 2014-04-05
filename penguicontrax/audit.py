@@ -78,6 +78,7 @@ def audit_rsvp(user, submission, add = True):
 def logs():
     from user import User  
     from submission import Submission
+    from event import Convention
     if g.user is None or g.user.staff == False:
         return redirect('/')
     logs = Audit.query.order_by(Audit.time.desc()).all()
@@ -105,6 +106,8 @@ def logs():
                         result += render_template('audit_refs/user.html', user = ref_obj)
                     elif ref_table == Submission.__table__:
                         result += render_template('audit_refs/submission.html', submission = ref_obj)
+                    elif ref_table == Convention.__table__:
+                        result += render_template('audit_refs/convention.html', convention = ref_obj)
                     else:
                         result += render_template('audit_refs/unknown.html', ref_obj = ref_obj)
                     open = close + 1 
