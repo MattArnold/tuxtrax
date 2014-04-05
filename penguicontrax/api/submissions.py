@@ -39,10 +39,14 @@ class SubmissionAPI(Resource):
         #first check that the id exists
         submission = Submission.query.filter_by(id=int(submission_id))
         if g.user is not None and submission.count() > 0:
-            g.user.rsvped_to.append(submission.first())
-            db.session.add(g.user)
-            db.session.commit()
-            return None, 200
+            if g.user.points > 0:
+                if not submission.first() in g.user.rsvped_to:
+                    g.user.rsvped_to.append(submission.first())
+                    g.user.points = g.user.points - 1
+                    db.session.add(g.user)
+                    db.session.commit()
+                    return None, 200
+            return None, 400
         return None, 404
 
     @return_null_if_not_logged_in
@@ -58,10 +62,13 @@ class SubmissionAPI(Resource):
         #first check that the id exists
         submission = Submission.query.filter_by(id=int(submission_id))
         if g.user is not None and submission.count() > 0:
-            g.user.rsvped_to.remove(submission.first())
-            db.session.add(g.user)
-            db.session.commit()
-            return None, 200
+            if submission.first() in g.user.rsvped_to:
+                g.user.rsvped_to.remove(submission.first())
+                g.user.points = g.user.points + 1
+                db.session.add(g.user)
+                db.session.commit()
+                return None, 200
+            return None, 400
         return None, 404
 
 
