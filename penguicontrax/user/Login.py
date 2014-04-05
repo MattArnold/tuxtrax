@@ -50,7 +50,8 @@ def generate_account_name(user):
 @oid.loginhandler
 def login():
     if g.user is not None:
-        return redirect(oid.get_next_url())
+        next_override = request.args.get('next', None)
+        return redirect(next_override if not next_override is None else oid.get_next_url())
     provider = request.args.get('provider', '')
     session['ip'] = request.remote_addr
     if provider == 'google':

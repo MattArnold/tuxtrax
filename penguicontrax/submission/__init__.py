@@ -160,15 +160,14 @@ def getevent():
 
 @app.route('/eventform', methods=['GET', 'POST'])
 def event_form():
+    eventid = request.args.get('id', None)
     if g.user is None:
-        return redirect('/login')
+        return redirect(url_for('login', next=url_for('event_form', id=eventid) if not eventid is None else None))
     # probably need orders
     tags = [tag.name for tag in Tag.query.all()]
     tracks = [track.name for track in Track.query.all()]
     resources = Resource.query.all()
-
     if request.method == 'GET':
-        eventid = request.args.get('id', None)
         event_tags = []
         if eventid is not None:
             event = Submission.query.filter_by(id=eventid).first()
