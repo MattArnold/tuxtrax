@@ -11,8 +11,16 @@ def import_old():
     existing_people = {}
     for person in Person.query.all():
         existing_people[person.name] = person
-    for resource in ['Projector', 'Microphone', 'Sound system', 'Drinking water', 'Quiet (no airwalls)']:
-        penguicontrax.db.session.add(Resource(resource))
+    penguicontrax.db.session.add(
+        Resource('Projector', 'This event CANNOT happen without a projector', True)
+    )
+    penguicontrax.db.session.add(
+        Resource('Microphone/sound system',
+                 'This event CANNOT happen without a microphone and sound system',
+                 True)
+    )
+    penguicontrax.db.session.add(Resource('Drinking water', 'Drinking water', False))
+    penguicontrax.db.session.add(Resource('Quiet (no airwalls)', 'Quiet (no airwalls)', False))
     for track in ['literature', 'tech', 'music', 'food', 'science']:
         penguicontrax.db.session.add(Track(track,None))
     with penguicontrax.app.open_resource('schedule2015.html', mode='r') as f:

@@ -105,9 +105,13 @@ class Resource(db.Model):
     __tablename__ = 'resources'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True)
+    request_form_label = db.Column(db.String(50))
+    displayed_on_requst_form = db.Column(db.Boolean())
 
-    def __init__(self, name):
+    def __init__(self, name, request_form_label, displayed_on_requst_form):
         self.name = name
+        self.request_form_label = request_form_label
+        self.displayed_on_requst_form = displayed_on_requst_form
 
     def __repr__(self):
         return '<name: %s>' % self.name
@@ -166,7 +170,7 @@ def event_form():
     # probably need orders
     tags = [tag.name for tag in Tag.query.all()]
     tracks = [track.name for track in Track.query.all()]
-    resources = Resource.query.all()
+    resources = Resource.query.filter_by(displayed_on_requst_form=True)
     if request.method == 'GET':
         event_tags = []
         if eventid is not None:
