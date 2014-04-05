@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Conventions{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block body %}
+	<div class="row">
+		<a href="/conventionproperties"><i class="fa fa-plus"></i> Add a convention</a>
+	</div>
+	{% for convention in conventions %}
+		<div class="row">
+			<a href="/convention/{{convention.url}}/properties">{{ convention.name }}</a>
+		<div>
+	{% endfor %}
+{% endblock %}
