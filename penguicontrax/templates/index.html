@@ -165,7 +165,12 @@
                 }, 250)
             });
 
-            ptrax.model.Submissions.findAll().done(function (submissions) {
+            var tagFilter = new ptrax.TagFilter("#tagfilter", {
+                tags: tags,
+                tpl: "{{ "js/tagfilter.mustache" | get_js_template }}"
+            });
+
+            ptrax.model.Submissions.findAll().done(function(submissions) {
                 var rejectedSubmissions;
 
                 //add a search array for lookup with search function
@@ -181,11 +186,11 @@
                     submission.attr('search', search);
                 });
 
-                new ptrax.TagFilter("#tagfilter", {
-                    tags: tags,
-                    tpl: "{{ "js/tagfilter.mustache" | get_js_template }}",
-                    submissions: submissions
+                can.each(submissions, function (submission) {
+                    tagFilter.addSubmission(submission);
                 });
+
+                ptrax.model.Submissions.bind('created', tagFilter.addSubmission);
 
                 new ptrax.SubmissionList("#submissions", {
                     submissionsTpl: "{{ "js/submissions.mustache" | get_js_template }}",
