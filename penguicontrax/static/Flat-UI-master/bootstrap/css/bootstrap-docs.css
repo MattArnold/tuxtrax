@@ -13,6 +13,8 @@
 body {
   position: relative;
   padding-top: 40px;
+  background: url('/trax-tux.svg') no-repeat;
+
 }
 
 /* Code in headings */

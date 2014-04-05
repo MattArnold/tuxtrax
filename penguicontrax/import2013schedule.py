@@ -15,7 +15,7 @@ def import_old():
         penguicontrax.db.session.add(Resource(resource))
     for track in ['literature', 'tech', 'music', 'food', 'science']:
         penguicontrax.db.session.add(Track(track,None))
-    with penguicontrax.app.open_resource('schedule2013.html', mode='r') as f:
+    with penguicontrax.app.open_resource('schedule2015.html', mode='r') as f:
         tree = ET.fromstring(f.read())
         events = tree.find('document')
         for section in events:
