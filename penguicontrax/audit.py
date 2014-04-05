@@ -67,6 +67,13 @@ def audit_user_creation(user):
     db.session.add(audit)
     db.session.commit()
 
+def audit_rsvp(user, submission, add = True):
+    audit = Audit()
+    audit.user = user
+    audit.log = u'%s {submissions: id=%s}' % ('RSVPed to' if add == True else 'Un-RSVPed from', unicode(submission.id))
+    db.session.add(audit)
+    db.session.commit()
+
 @app.route('/logs')
 def logs():
     from user import User  

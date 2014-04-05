@@ -7,7 +7,7 @@ from sqlalchemy import or_
 
 
 #global libs
-from penguicontrax import dump_table, db
+from penguicontrax import dump_table, db, audit
 from penguicontrax.submission import Submission
 from functions import return_null_if_not_logged_in
 
@@ -43,6 +43,7 @@ class SubmissionAPI(Resource):
                 if not submission.first() in g.user.rsvped_to:
                     g.user.rsvped_to.append(submission.first())
                     g.user.points = g.user.points - 1
+                    audit.audit_rsvp(g.user, submission.first())
                     db.session.add(g.user)
                     db.session.commit()
                     return None, 200
@@ -65,6 +66,7 @@ class SubmissionAPI(Resource):
             if submission.first() in g.user.rsvped_to:
                 g.user.rsvped_to.remove(submission.first())
                 g.user.points = g.user.points + 1
+                audit.audit_rsvp(g.user, submission.first(), False)
                 db.session.add(g.user)
                 db.session.commit()
                 return None, 200
