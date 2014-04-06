@@ -218,7 +218,7 @@ def submitevent():
     for tag in tags:
         submission.tags.append(get_tag(tag))
 
-    resources = [r[9:] for r, v in request.form.items() if len(r) > 9 and r[:9] == 'resource_' and v]
+    resources = request.form.getlist('resource')
     del submission.resources[:]
     for resource_id in resources:
         matched_resource = get_resource(resource_id)
