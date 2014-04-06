@@ -166,7 +166,11 @@ def getevent():
 def event_form():
     eventid = request.args.get('id', None)
     if g.user is None:
-        return redirect(url_for('login', next=url_for('event_form', id=eventid) if not eventid is None else None))
+        if eventid is None:
+            nextpage = url_for('event_form')
+        else:
+            nextpage = url_for('event_form', id=eventid)
+        return redirect(url_for('login', next=nextpage))
     # probably need orders
     tags = [tag.name for tag in Tag.query.all()]
     tracks = [track.name for track in Track.query.all()]
@@ -214,7 +218,7 @@ def submitevent():
     for tag in tags:
         submission.tags.append(get_tag(tag))
 
-    resources = [r[9:] for r, v in request.form.items() if len(r) > 9 and r[:9] == 'resource_' and v]
+    resources = request.form.getlist('resource')
     del submission.resources[:]
     for resource_id in resources:
         matched_resource = get_resource(resource_id)
