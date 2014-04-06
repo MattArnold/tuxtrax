@@ -166,7 +166,11 @@ def getevent():
 def event_form():
     eventid = request.args.get('id', None)
     if g.user is None:
-        return redirect(url_for('login', next=url_for('event_form', id=eventid) if not eventid is None else None))
+        if eventid is None:
+            nextpage = url_for('event_form')
+        else:
+            nextpage = url_for('event_form', id=eventid)
+        return redirect(url_for('login', next=nextpage))
     # probably need orders
     tags = [tag.name for tag in Tag.query.all()]
     tracks = [track.name for track in Track.query.all()]
