@@ -71,7 +71,7 @@
                     <div class="checkbox">
                         <label for="resource_{{ resource.id }}" class="checkbox">
                             <input type="checkbox" id="resource_{{ resource.id }}" name="resource"
-                                   value="{{ resource.id }}">
+                                   value="{{ resource.id }}" {{ event | checked_if_resourced(resource) }} >
                             {{ resource.request_form_label }}
                         </label>
                     </div>
