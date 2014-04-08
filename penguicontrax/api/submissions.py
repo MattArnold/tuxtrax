@@ -9,7 +9,7 @@ from redis import WatchError
 
 #global libs
 from penguicontrax import dump_table, db, audit, conn
-from penguicontrax.submission import Submission, submission_dataset_ver
+from penguicontrax.submission import Submission, submission_dataset_ver, submission_dataset_changed
 from functions import return_null_if_not_logged_in
 
 
@@ -45,6 +45,7 @@ class SubmissionAPI(Resource):
                     g.user.rsvped_to.append(submission.first())
                     g.user.points = g.user.points - 1
                     audit.audit_rsvp(g.user, submission.first())
+                    submission_dataset_changed()
                     db.session.add(g.user)
                     db.session.commit()
                     return None, 200
@@ -68,6 +69,7 @@ class SubmissionAPI(Resource):
                 g.user.rsvped_to.remove(submission.first())
                 g.user.points = g.user.points + 1
                 audit.audit_rsvp(g.user, submission.first(), False)
+                submission_dataset_changed()
                 db.session.add(g.user)
                 db.session.commit()
                 return None, 200

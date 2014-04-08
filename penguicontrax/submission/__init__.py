@@ -119,6 +119,22 @@ class Resource(db.Model):
 
 from penguicontrax import audit
 
+def submission_dataset_changed():
+    from penguicontrax import conn
+    if not conn is None:
+        try:
+            conn.incr('SUBMISSION_DATASET_VERSION')
+        except:
+            pass
+
+def submission_dataset_ver():
+    from penguicontrax import conn
+    if not conn is None:
+        try:
+            return conn.get('SUBMISSION_DATASET_VERSION')
+        except:
+            pass
+    return 0
 
 def get_tag(name):
     tags = Tag.query.filter(Tag.name == name)
@@ -230,6 +246,7 @@ def submitevent():
     db.session.commit()
     audit.audit_change(Submission.__table__, g.user, old_submission,
                        submission)  #We'd like submission.id to actually be real so commit the creation first
+    submission_dataset_changed()
     return redirect('/')
 
 
@@ -318,20 +335,3 @@ def get_js_template(name):
 @app.template_filter()
 def days_since_now(dt):
     return
-
-def submission_dataset_changed():
-    from penguicontrax import conn
-    if not conn is None:
-        try:
-            conn.incr('SUBMISSION_DATASET_VERSION')
-        except:
-            pass
-
-def submission_dataset_ver():
-    from penguicontrax import conn
-    if not conn is None:
-        try:
-            return conn.get('SUBMISSION_DATASET_VERSION')
-        except:
-            pass
-    return 0
