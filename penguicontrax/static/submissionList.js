@@ -1,11 +1,23 @@
 (function (ptrax) {
 
+    function getCookieOrRandom(cname)
+    {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) 
+          {
+          var c = ca[i].trim();
+          if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+          }
+        return Math.floor(Math.random()*100000);
+    }
+
     ptrax.model.Submissions = can.Model.extend({
-        'findAll': "/api/submissions?state=0,1,2"
+        'findAll': "/api/submissions?state=0,1,2&ver=" + getCookieOrRandom('submission_ver')
     }, {});
 
     ptrax.model.RejectedSubmissions = can.Model.extend({
-        'findAll': "/api/submissions?state=3"
+        'findAll': "/api/submissions?state=3&ver=" + getCookieOrRandom('submission_ver')
     }, {});
 
     ptrax.SubmissionList = can.Control.extend({

@@ -41,8 +41,8 @@ def dump_table(elements, table):
 def dump_table_json(elements, table):
     return json.dumps(dump_table(elements,table))	 
 
-from flask import render_template, g, url_for, redirect, Response
-from submission import Submission, Tag
+from flask import render_template, g, url_for, redirect, Response, make_response
+from submission import Submission, Tag, submission_dataset_ver
 from user import Login
 import os, sqlite3, import2013schedule
 import datetime, audit
@@ -60,15 +60,17 @@ def init():
         pass
     # GET RID OF THIS LATER
     if len(Submission.query.all()) == 0 and len(Events.query.all()) == 0:
-        print 'Importing 2013 schedule into submissions'
-        import2013schedule.import_old('schedule2013.html', False, submission_limit = 500)
+        print 'Importing 2015 schedule into submissions'
+        import2013schedule.import_old('schedule2015.html', False, submission_limit = 500)
         print 'Importing 2013 schedule into convention'
         import2013schedule.import_old('schedule2013.html', True, random_rsvp_users = 1000, submission_limit = 500, timeslot_limit = 500)
 
 @app.route('/')
 def index():
     tags = [tag.name for tag in Tag.query.all()]
-    return render_template('index.html', user=g.user, showhidden=False, tags=tags)
+    resp = make_response(render_template('index.html', user=g.user, showhidden=False, tags=tags))
+    resp.set_cookie('submission_ver', submission_dataset_ver())
+    return resp
     
 @app.route('/hidden')
 def hidden():
