@@ -113,29 +113,29 @@ class SubmissionsAPI(Resource):
         else:
             parts = ['0','1','2']
         
-        #try:
-        with conn.pipeline() as pipe:
-            cache_key = 'SUBMISSION_DATASET_CACHE_' + str(parts)
-            cache_version_key = cache_key + '_VERSION'
-            while 1:
-                try:
-                    pipe.watch(cache_version_key)
-                    current_cache_value = pipe.get(cache_version_key)
-                    current_version = submission_dataset_ver()
-                    if current_cache_value == current_version and not current_cache_value is None:
-                        output = pipe.get(cache_key)
-                    else:
-                        pipe.multi()
-                        output = SubmissionsAPI.query_db(parts)
-                        from penguicontrax.api import DateEncoder
-                        pipe.set(cache_key, json.dumps(output, cls=DateEncoder))
-                        pipe.set(cache_version_key, current_version)
-                        pipe.execute()
-                    break
-                except WatchError:
-                    continue
-        #except Exception as e:
-        #    output = SubmissionsAPI.query_db(parts)
+        try:
+            with conn.pipeline() as pipe:
+                cache_key = 'SUBMISSION_DATASET_CACHE_' + str(parts)
+                cache_version_key = cache_key + '_VERSION'
+                while 1:
+                    try:
+                        pipe.watch(cache_version_key)
+                        current_cache_value = pipe.get(cache_version_key)
+                        current_version = submission_dataset_ver()
+                        if current_cache_value == current_version and not current_cache_value is None:
+                            output = pipe.get(cache_key)
+                        else:
+                            pipe.multi()
+                            output = SubmissionsAPI.query_db(parts)
+                            from penguicontrax.api import DateEncoder
+                            pipe.set(cache_key, json.dumps(output, cls=DateEncoder))
+                            pipe.set(cache_version_key, current_version)
+                            pipe.execute()
+                        break
+                    except WatchError:
+                        continue
+        except Exception as e:
+            output = SubmissionsAPI.query_db(parts)
 
         expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
         return output, 200, {
