@@ -323,7 +323,7 @@ def submission_dataset_changed():
     from penguicontrax import conn
     if not conn is None:
         try:
-            conn.incr('SUBMISSION_DATASET_VER')
+            conn.incr('SUBMISSION_DATASET_VERSION')
         except:
             pass
 
@@ -331,7 +331,7 @@ def submission_dataset_ver():
     from penguicontrax import conn
     if not conn is None:
         try:
-            return conn.get('SUBMISSION_DATASET_VER')
+            return conn.get('SUBMISSION_DATASET_VERSION')
         except:
             pass
     return 0

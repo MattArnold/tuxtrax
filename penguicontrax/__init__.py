@@ -10,7 +10,7 @@ cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 try:
     conn = redis.from_url(constants.REDIS_URL)
     conn.incr('REDIS_CONNECTION_COUNT')
-    conn.set('SUBMISSION_DATASET_VER', 0)
+    conn.set('SUBMISSION_DATASET_VERSION', 0)
 except Exception as e:
     conn = None
     pass

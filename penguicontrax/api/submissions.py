@@ -123,18 +123,18 @@ class SubmissionsAPI(Resource):
                         current_cache_value = pipe.get(cache_version_key)
                         current_version = submission_dataset_ver()
                         if current_cache_value == current_version and not current_cache_value is None:
-                            return pipe.get(cache_key)
-                        pipe.multi()
-                        output = SubmissionsAPI.query_db(parts)
-                        from penguicontrax.api import DateEncoder
-                        pipe.set(cache_key, json.dumps(output, cls=DateEncoder))
-                        pipe.set(cache_version_key, current_version)
-                        pipe.execute()
+                            output = pipe.get(cache_key)
+                        else:
+                            pipe.multi()
+                            output = SubmissionsAPI.query_db(parts)
+                            from penguicontrax.api import DateEncoderquit
+                            pipe.set(cache_key, json.dumps(output, cls=DateEncoder))
+                            pipe.set(cache_version_key, current_version)
+                            pipe.execute()
                         break
                     except WatchError:
                         continue
         except Exception as e:
-            print e
             output = SubmissionsAPI.query_db(parts)
 
         expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
