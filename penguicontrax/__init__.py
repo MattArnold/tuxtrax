@@ -61,7 +61,7 @@ def init():
     # GET RID OF THIS LATER
     if len(Submission.query.all()) == 0 and len(Events.query.all()) == 0:
         print 'Importing 2013 schedule into submissions'
-        import2013schedule.import_old('schedule2015.html', False, submission_limit = 500)
+        import2013schedule.import_old('schedule2013.html', False, submission_limit = 500)
         print 'Importing 2013 schedule into convention'
         import2013schedule.import_old('schedule2013.html', True, random_rsvp_users = 1000, submission_limit = 500, timeslot_limit = 500)
 
