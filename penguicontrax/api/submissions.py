@@ -7,7 +7,7 @@ from sqlalchemy import or_
 
 
 #global libs
-from penguicontrax import dump_table, db, audit
+from penguicontrax import dump_table, db, audit, conn
 from penguicontrax.submission import Submission
 from functions import return_null_if_not_logged_in
 
@@ -75,22 +75,11 @@ class SubmissionAPI(Resource):
 
 
 class SubmissionsAPI(Resource):
-    @staticmethod
-    def get():
-        """ Returns a list of objects to represent users in the database
-            Pass a ?q=query to conduct a search by name and email
-        """
-        parser = reqparse.RequestParser()
-        parser.add_argument('state', type=str)
-        args = parser.parse_args()
 
-        query = Submission.query
-        if args['state']:
-            parts = args['state'].split(',')
-            orbits = [Submission.followUpState == i for i in parts]
-            query = query.filter(or_(*orbits))
-        else:
-            query = query.filter(Submission.followUpState != 3)
+    @staticmethod
+    def query_db(parts):
+        orbits = [Submission.followUpState == i for i in parts]
+        query = Submission.query.filter(or_(*orbits))
         submissions = query.all()
         output = dump_table(submissions, Submission.__table__)
         for index, element in enumerate(output):
@@ -103,9 +92,29 @@ class SubmissionsAPI(Resource):
                                     submissions[index].rsvped_by]
             element['overdue'] = (datetime.datetime.now() - submissions[index].submitted_dt).days > 13
             element['followUpDays'] = (datetime.datetime.now() - submissions[index].submitted_dt).days
-        expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
         import random
         random.shuffle(output)
+        return output
+
+
+    @staticmethod
+    def get():
+        """ Returns a list of objects to represent users in the database
+            Pass a ?q=query to conduct a search by name and email
+        """
+        parser = reqparse.RequestParser()
+        parser.add_argument('state', type=str)
+        args = parser.parse_args()
+
+        
+        if args['state']:
+            parts = args['state'].split(',')
+        else:
+            parts = ['0','1','2']
+
+        
+        output = SubmissionsAPI.query_db(parts)
+        expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
         return output, 200, {
             "Expires": expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
             "Cache-Control": "public, max-age=86400"

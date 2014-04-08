@@ -318,3 +318,14 @@ def get_js_template(name):
 @app.template_filter()
 def days_since_now(dt):
     return
+
+def submission_dataset_changed():
+    from penguicontrax import conn
+    if not conn is None:
+        conn.incr('SUBMISSON_DATASET_VER')
+
+def submission_dataset_ver():
+    from penguicontrax import conn
+    if not conn is None:
+        return conn.get('SUBMISSON_DATASET_VER')
+    return 0
