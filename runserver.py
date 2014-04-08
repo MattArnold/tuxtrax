@@ -4,6 +4,7 @@ import os
 penguicontrax.init()
 
 app = penguicontrax.app
+app.debug = True
 apppath=os.path.abspath(os.path.dirname(__file__))
 
 extra_dirs = [apppath+'/penguicontrax/templates/js']
