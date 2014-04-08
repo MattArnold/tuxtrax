@@ -127,7 +127,7 @@ class SubmissionsAPI(Resource):
                     else:
                         pipe.multi()
                         output = SubmissionsAPI.query_db(parts)
-                        from penguicontrax.api import DateEncoderquit
+                        from penguicontrax.api import DateEncoder
                         pipe.set(cache_key, json.dumps(output, cls=DateEncoder))
                         pipe.set(cache_version_key, current_version)
                         pipe.execute()
