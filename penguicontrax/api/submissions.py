@@ -1,14 +1,15 @@
 #flask libs
-import datetime
+import datetime, json
 
 from flask.ext.restful import Resource, reqparse
 from flask import g
 from sqlalchemy import or_
+from redis import WatchError
 
 
 #global libs
 from penguicontrax import dump_table, db, audit, conn
-from penguicontrax.submission import Submission
+from penguicontrax.submission import Submission, submission_dataset_ver
 from functions import return_null_if_not_logged_in
 
 
@@ -111,9 +112,31 @@ class SubmissionsAPI(Resource):
             parts = args['state'].split(',')
         else:
             parts = ['0','1','2']
-
         
-        output = SubmissionsAPI.query_db(parts)
+        try:
+            with conn.pipeline() as pipe:
+                cache_key = 'SUBMISSION_DATASET_CACHE_' + str(parts)
+                cache_version_key = cache_key + '_VERSION'
+                while 1:
+                    try:
+                        pipe.watch(cache_version_key)
+                        current_cache_value = pipe.get(cache_version_key)
+                        current_version = submission_dataset_ver()
+                        if current_cache_value == current_version and not current_cache_value is None:
+                            return pipe.get(cache_key)
+                        pipe.multi()
+                        output = SubmissionsAPI.query_db(parts)
+                        from penguicontrax.api import DateEncoder
+                        pipe.set(cache_key, json.dumps(output, cls=DateEncoder))
+                        pipe.set(cache_version_key, current_version)
+                        pipe.execute()
+                        break
+                    except WatchError:
+                        continue
+        except Exception as e:
+            print e
+            output = SubmissionsAPI.query_db(parts)
+
         expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
         return output, 200, {
             "Expires": expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),

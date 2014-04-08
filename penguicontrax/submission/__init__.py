@@ -322,10 +322,16 @@ def days_since_now(dt):
 def submission_dataset_changed():
     from penguicontrax import conn
     if not conn is None:
-        conn.incr('SUBMISSON_DATASET_VER')
+        try:
+            conn.incr('SUBMISSION_DATASET_VER')
+        except:
+            pass
 
 def submission_dataset_ver():
     from penguicontrax import conn
     if not conn is None:
-        return conn.get('SUBMISSON_DATASET_VER')
+        try:
+            return conn.get('SUBMISSION_DATASET_VER')
+        except:
+            pass
     return 0
