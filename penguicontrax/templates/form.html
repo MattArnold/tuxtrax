@@ -186,11 +186,13 @@
                 <p>
                     <small>Suggested by
                         {% if event is none %}
-                            <input type=hidden name=submitter_id value={{ user.id }}/>
+                            <input type=hidden name=submitter_id value={{ user.id }} />
                             {{ macros.user_link(user) }}
                         {% else %}
-                            <input type=hidden name=submitter_id value={{ event.submitter.id }}/>
-                            {{ macros.user_link(event.submitter) }}
+                            {% if event.submitter is not none %}
+                            <input type=hidden name=submitter_id value={{ event.submitter.id }} />
+                            {% endif %}
+                                {{ macros.user_link(event.submitter) }}
                         {% endif %}
 
                         {% if event is not none %}
