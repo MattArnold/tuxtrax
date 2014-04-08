@@ -52,7 +52,7 @@ class Submission(db.Model):
     setupTime = db.Column(db.Integer())
     repetition = db.Column(db.Integer())
     timeRequest = db.Column(db.String())
-    eventType = db.Column(db.String(20))
+    eventType = db.Column(db.String())
     resources = db.relationship('Resource', secondary=SubmissionToResources)
     players = db.Column(db.Integer())
     roundTables = db.Column(db.Integer())
@@ -78,7 +78,7 @@ class Submission(db.Model):
 class Tag(db.Model):
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True)
+    name = db.Column(db.String(), unique=True)
 
     def __init__(self, name):
         self.name = name
@@ -90,7 +90,7 @@ class Tag(db.Model):
 class Track(db.Model):
     __tablename__ = 'tracks'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True)
+    name = db.Column(db.String(), unique=True)
     staffId = db.Column(db.Integer())
 
     def __init__(self, name, staffId):
@@ -104,8 +104,8 @@ class Track(db.Model):
 class Resource(db.Model):
     __tablename__ = 'resources'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True)
-    request_form_label = db.Column(db.String(50))
+    name = db.Column(db.String(), unique=True)
+    request_form_label = db.Column(db.String())
     displayed_on_requst_form = db.Column(db.Boolean())
 
     def __init__(self, name, request_form_label, displayed_on_requst_form):
