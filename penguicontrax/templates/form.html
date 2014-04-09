@@ -352,5 +352,7 @@
     </div>
 {% endblock %}
 {% block page_script %}
-    <script src="{{ url_for('static', filename='submissionform.js') }}"></script>
+    {% assets filters="jsmin",output="build/submissionform-%(version)s.js","submissionform.js" %}
+         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
 {% endblock %}

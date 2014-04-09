@@ -1,12 +1,14 @@
 import penguicontrax
 import os
+os.environ["DEBUG"] = "true"
 
+import penguicontrax
 penguicontrax.init()
 
 app = penguicontrax.app
-apppath=os.path.abspath(os.path.dirname(__file__))
+apppath = os.path.abspath(os.path.dirname(__file__))
 
-extra_dirs = [apppath+'/penguicontrax/templates/js']
+extra_dirs = [apppath + '/penguicontrax/templates/js']
 extra_files = extra_dirs[:]
 for extra_dir in extra_dirs:
     for dirname, dirs, files in os.walk(extra_dir):
@@ -16,4 +18,4 @@ for extra_dir in extra_dirs:
                 extra_files.append(filename)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug = True, extra_files=extra_files)
+    app.run(host='localhost', debug=True, extra_files=extra_files)

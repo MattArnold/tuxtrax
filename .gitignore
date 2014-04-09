@@ -28,3 +28,8 @@ tmp/
 modeler/cmake-2.8.12.2
 modeler/sqlite-autoconf-3080401
 modeler/Clp-1.15.6
+
+#static assets
+less.source.map
+.webassets-cache
+**/static/build
