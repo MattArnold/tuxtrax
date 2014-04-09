@@ -1,12 +1,14 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.cache import Cache
+from flask.ext.mail import Mail
 import xml.etree.ElementTree as ET
 import json, redis
 from constants import constants
 app = Flask(__name__)
 db =  SQLAlchemy(app)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+mail = Mail(app)
 try:
     conn = redis.from_url(constants.REDIS_URL)
 except Exception as e:
@@ -51,6 +53,13 @@ import api
 def init():
     app.secret_key = constants.SESSION_SECRET_KEY
     app.config['SQLALCHEMY_DATABASE_URI'] = constants.DATABASE_URL
+    app.config['MAIL_SERVER'] = constants.MAIL_SERVER
+    app.config['MAIL_PORT'] = constants.MAIL_PORT
+    app.config['MAIL_USE_TLS'] = constants.MAIL_USE_TLS
+    app.config['MAIL_USE_SSL'] = constants.MAIL_USE_SSL
+    app.config['MAIL_USERNAME'] = constants.MAIL_USERNAME
+    app.config['MAIL_PASSWORD'] = constants.MAIL_PASSWORD
+    app.config['DEFAULT_MAIL_SENDER'] = constants.DEFAULT_MAIL_SENDER
     app.config.from_object(__name__)
     try:
         db.create_all()

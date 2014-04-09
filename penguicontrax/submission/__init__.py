@@ -74,6 +74,60 @@ class Submission(db.Model):
     def __repr__(self):
         return '<email: %s, title: %s>' % (self.email, self.title)
 
+    def presenter_list_str(self):
+        first = False
+        ret = ''
+        for person in self.personPresenters:
+            if not first:
+                first = True
+            else:
+                ret = ret + ', '
+            ret = ret + person.name
+        for user in self.userPresenters:
+            if not first:
+                first = True
+            else:
+                ret = ret + ', '
+            ret = ret + user.name
+        if ret != '':
+            ret += '.'
+        return ret
+
+    def duration_str(self):
+        if self.duration == 1:
+            return '50 minutes'
+        elif self.duration == 2:
+            return '1 hour and 50 minutes'
+        elif self.duration == 3:
+            return '2 hours and 50 minutes'
+        elif self.duration == 4:
+            return 'More than 2 hours and 50 minutes'
+        elif self.duration == 5:
+            return 'All weekend'
+        return 'Unknown'
+
+    def setupTime_str(self):
+        if self.setupTime == 0:
+            return 'None'
+        elif self.setupTime == 1:
+            return '1 hour'
+        elif self.setupTime == 2:
+            return '2 hours'
+        elif self.setupTime == 3:
+            return 'More than 2 hours'
+        return 'Unknown'
+
+    def repetition_str(self):
+        if self.repetition == 0:
+            return 'No'
+        elif self.repetition == 1:
+            return 'Twice'
+        elif self.repetition == 2:
+            return 'Thrice'
+        elif self.repetition == 3:
+            return  'More than thrice'
+        return 'Unknown'
+
 
 class Tag(db.Model):
     __tablename__ = 'tags'
@@ -226,6 +280,36 @@ def submitevent():
     db.session.commit()
     audit.audit_change(Submission.__table__, g.user, old_submission,
                        submission)  #We'd like submission.id to actually be real so commit the creation first
+    if submission.followUpState != old_submission.followUpState:
+        from penguicontrax import mail, constants
+        from flask.ext.mail import Message
+        if submission.followUpState == 2 and not submission.submitter is None:
+            if not submission.submitter.email is None:
+                msg = Message( )
+                msg.recipients = [submission.submitter.email]
+                msg.body = 'Thank you for submitting an event to %s. %s was approved. '\
+                            '%s was approved. Type: %s. Program participants: %s. Description: '\
+                            '%s. Duration: %s. Setup time: %s. Reptition: %s.' \
+                                % (constants.ORGANIZATION, submission.title, submission.eventType, \
+                                   submission.presenter_list_str(), submission.description, submission.duration_str(), \
+                                   submission.setupTime_str(), submission.repetition_str())
+                msg.subject = 'Your event titled %s has been approved for %s' % (submission.title, constants.ORGANIZATION)
+                missing = ''
+                for person in submission.personPresenters:
+                    if person.email is None or person.phone is None:
+                        if missing != '':
+                            missing += ', '
+                        missing = missing + person.name
+                for user in submission.userPresenters:
+                    if user.email is None or user.phone is None:
+                        if missing != '':
+                            missing += ', '
+                        missing = missing + user.name
+                if missing != '':
+                    msg.body = msg.body + os.linesep + os.linesep + \
+                        'We are missing contact info for %s. Would you help us get '\
+                        'that and email it to %s? Thanks!' % (missing, constants.DEFAULT_MAIL_SENDER)
+                mail.send(msg)
     return redirect('/')
 
 
