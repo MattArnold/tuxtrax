@@ -331,10 +331,7 @@ def submitevent():
                     msg.body = msg.body + os.linesep + os.linesep + \
                         'We are missing contact info for %s. Would you help us get '\
                         'that and email it to %s? Thanks!' % (missing, constants.DEFAULT_MAIL_SENDER)
-                try:
-                    mail.send(msg)
-                except:
-                    pass
+                mail.send(msg)
     return redirect('/')
 
 
