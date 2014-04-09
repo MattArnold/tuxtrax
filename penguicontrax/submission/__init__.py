@@ -188,7 +188,11 @@ def submission_dataset_ver():
             return conn.get('SUBMISSION_DATASET_VERSION')
         except:
             pass
+<<<<<<< HEAD
     return '0'
+=======
+    return 0
+>>>>>>> MattArnold/master
 
 def get_tag(name):
     tags = Tag.query.filter(Tag.name == name)
