@@ -13,7 +13,7 @@ class constants:
     MODELER_PATH = '../modeler/runmodeler.sh'
     CLP_PATH = '../modeler/Clp-1.15.6/build/bin/clp'
     REDIS_URL = 'redis://localhost:6379' if not 'REDISTOGO_URL' in os.environ else os.environ['REDISTOGO_URL']
-    MAIL_SERVER = 'smtp.google.com' if not 'MAIL_SERVER' in os.environ else os.environ['MAIL_SERVER']
+    MAIL_SERVER = 'smtp.gmail.com' if not 'MAIL_SERVER' in os.environ else os.environ['MAIL_SERVER']
     MAIL_PORT = 587 if not 'MAIL_PORT' in os.environ else int(os.environ['MAIL_PORT'])
     MAIL_USE_TLS = True if not 'MAIL_USE_TLS' in os.environ else bool(os.environ['MAIL_USE_TLS'])
     MAIL_USE_SSL = False if not 'MAIL_USE_SSL' in os.environ else bool(os.environ['MAIL_USE_SSL'])
