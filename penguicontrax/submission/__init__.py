@@ -52,7 +52,7 @@ class Submission(db.Model):
     setupTime = db.Column(db.Integer())
     repetition = db.Column(db.Integer())
     timeRequest = db.Column(db.String())
-    eventType = db.Column(db.String(20))
+    eventType = db.Column(db.String())
     resources = db.relationship('Resource', secondary=SubmissionToResources)
     players = db.Column(db.Integer())
     roundTables = db.Column(db.Integer())
@@ -132,7 +132,7 @@ class Submission(db.Model):
 class Tag(db.Model):
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True)
+    name = db.Column(db.String(), unique=True)
 
     def __init__(self, name):
         self.name = name
@@ -144,7 +144,7 @@ class Tag(db.Model):
 class Track(db.Model):
     __tablename__ = 'tracks'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True)
+    name = db.Column(db.String(), unique=True)
     staffId = db.Column(db.Integer())
 
     def __init__(self, name, staffId):
@@ -158,8 +158,8 @@ class Track(db.Model):
 class Resource(db.Model):
     __tablename__ = 'resources'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True)
-    request_form_label = db.Column(db.String(50))
+    name = db.Column(db.String(), unique=True)
+    request_form_label = db.Column(db.String())
     displayed_on_requst_form = db.Column(db.Boolean())
 
     def __init__(self, name, request_form_label, displayed_on_requst_form):
@@ -173,6 +173,22 @@ class Resource(db.Model):
 
 from penguicontrax import audit
 
+def submission_dataset_changed():
+    from penguicontrax import conn
+    if not conn is None:
+        try:
+            conn.incr('SUBMISSION_DATASET_VERSION')
+        except:
+            pass
+
+def submission_dataset_ver():
+    from penguicontrax import conn
+    if not conn is None:
+        try:
+            return conn.get('SUBMISSION_DATASET_VERSION')
+        except:
+            pass
+    return 0
 
 def get_tag(name):
     tags = Tag.query.filter(Tag.name == name)
@@ -220,7 +236,11 @@ def getevent():
 def event_form():
     eventid = request.args.get('id', None)
     if g.user is None:
-        return redirect(url_for('login', next=url_for('event_form', id=eventid) if not eventid is None else None))
+        if eventid is None:
+            nextpage = url_for('event_form')
+        else:
+            nextpage = url_for('event_form', id=eventid)
+        return redirect(url_for('login', next=nextpage))
     # probably need orders
     tags = [tag.name for tag in Tag.query.all()]
     tracks = [track.name for track in Track.query.all()]
@@ -268,7 +288,7 @@ def submitevent():
     for tag in tags:
         submission.tags.append(get_tag(tag))
 
-    resources = [r[9:] for r, v in request.form.items() if len(r) > 9 and r[:9] == 'resource_' and v]
+    resources = request.form.getlist('resource')
     del submission.resources[:]
     for resource_id in resources:
         matched_resource = get_resource(resource_id)
@@ -280,6 +300,7 @@ def submitevent():
     db.session.commit()
     audit.audit_change(Submission.__table__, g.user, old_submission,
                        submission)  #We'd like submission.id to actually be real so commit the creation first
+    submission_dataset_changed()
     if submission.followUpState != old_submission.followUpState:
         from penguicontrax import mail, constants
         from flask.ext.mail import Message

@@ -25,7 +25,8 @@ api = Api(app)
 
 @api.representation('application/json')
 def json_date(data, code, headers=None):
-    resp = app.make_response(json.dumps(data, cls=DateEncoder))
+    #If it's a string, just return it as-is
+    resp = app.make_response(data if type(data) is str else json.dumps(data, cls=DateEncoder))
     resp.headers.extend(headers or {})
     resp.status_code = code
     return resp

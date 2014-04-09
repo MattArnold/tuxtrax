@@ -20,8 +20,6 @@
         </div>
         <div class="col-md-4">
             <div id="typechange" class="control-group">
-                <input type="hidden" name="eventtype" value="noroomtype">
-
                 <div class="radio">
                     <label for="talkbtn">
                         <input type="radio" name=eventtype
@@ -72,8 +70,8 @@
                 {% for resource in resources %}
                     <div class="checkbox">
                         <label for="resource_{{ resource.id }}" class="checkbox">
-                            <input type="checkbox" name="resource_{{ resource.id }}" id="resource_{{ resource.id }}"
-                                   value="{{ resource.id }}">
+                            <input type="checkbox" id="resource_{{ resource.id }}" name="resource"
+                                   value="{{ resource.id }}" {{ event | checked_if_resourced(resource) }} >
                             {{ resource.request_form_label }}
                         </label>
                     </div>
@@ -84,7 +82,7 @@
                     Number of Players
 
                     <select tabindex="" name="players" data-size="false" data-width="100%" data-style="btn-info">
-                        <option value="2 {{ event.players|is_selected(2) }}">2</option>
+                        <option value="2" {{ event.players|is_selected(2) }}>2</option>
                         <option value="3" {{ event.players|is_selected(3) }}>3</option>
                         <option value="5" {{ event.players|is_selected(4) }}>4</option>
                         <option value="5" {{ event.players|is_selected(5) }}>5</option>
@@ -188,11 +186,13 @@
                 <p>
                     <small>Suggested by
                         {% if event is none %}
-                            <input type=hidden name=submitter_id value={{ user.id }}/>
+                            <input type=hidden name=submitter_id value={{ user.id }} />
                             {{ macros.user_link(user) }}
                         {% else %}
-                            <input type=hidden name=submitter_id value={{ event.submitter.id }}/>
-                            {{ macros.user_link(event.submitter) }}
+                            {% if event.submitter is not none %}
+                            <input type=hidden name=submitter_id value={{ event.submitter.id }} />
+                            {% endif %}
+                                {{ macros.user_link(event.submitter) }}
                         {% endif %}
 
                         {% if event is not none %}

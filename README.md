@@ -89,6 +89,14 @@ $ heroku pg:reset DATABASE
 $ heroku restart
 ```
 
+### Optional: Set up a redis cache to improve performance
+
+With large data sets certain pages (like the main submission page) can take several SQL queries to generate (and thus the user may notice significant lag). The app will automatically cache the results of some of these queries if a [redis](http://redis.io/) server is connected. To attach a redis server, set `REDISTOGO_URL` in the environment variables of the server. If deploying to Heroku, a free redis server can be added by running
+
+```sh
+$ heroku addons:add redistogo
+``` 
+
 ### Optional: Use PostgreSQL instead of SQLite
 
 penguicon-trax is deployed on Heroku, a cloud application platform. Heroku uses PostgreSQL as its database engine. By default, penguicon-trax uses SQLite as its database engine when running locally. For the most part this is all well and good but there are some subtle differences between the two engines. If you're having problems when deployed to Heroku, you can run a local PostgreSQL server and have penguicon-trax connect to it to better simulate the production environment.
