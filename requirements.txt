@@ -27,3 +27,4 @@ six==1.6.1
 times==0.6.2
 webassets==0.9
 wsgiref==0.1.2
+Flask-Mail==0.9.0

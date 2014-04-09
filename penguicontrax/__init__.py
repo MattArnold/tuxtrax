@@ -3,7 +3,9 @@ import json
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.cache import Cache
-import redis
+from flask.ext.mail import Mail
+import xml.etree.ElementTree as ET
+import json, redis
 from constants import constants
 from flask.ext.assets import Environment, Bundle
 import os
@@ -12,7 +14,16 @@ import os
 app = Flask(__name__)
 db = SQLAlchemy(app)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
-
+app.config.update(dict(
+    MAIL_SERVER = constants.MAIL_SERVER,
+    MAIL_PORT = constants.MAIL_PORT,
+    MAIL_USE_TLS = constants.MAIL_USE_TLS,
+    MAIL_USE_SSL = constants.MAIL_USE_SSL,
+    MAIL_USERNAME = constants.MAIL_USERNAME,
+    MAIL_PASSWORD = constants.MAIL_PASSWORD,
+    DEFAULT_MAIL_SENDER = constants.DEFAULT_MAIL_SENDER
+))
+mail = Mail(app)
 try:
     conn = redis.from_url(constants.REDIS_URL)
     conn.incr('REDIS_CONNECTION_COUNT')
