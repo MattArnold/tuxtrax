@@ -48,7 +48,8 @@ def dump_table_json(elements, table):
     return json.dumps(dump_table(elements,table))
 
 from flask import render_template, g, url_for, redirect, Response, make_response
-from submission import Submission, Tag, submission_dataset_ver
+from submission import Submission, submission_dataset_ver
+from tag import Tag
 from user import Login
 import import2013schedule
 import datetime, audit
@@ -75,7 +76,7 @@ def init():
 def index():
     tags = [tag.name for tag in Tag.query.all()]
     resp = make_response(render_template('index.html', user=g.user, showhidden=False, tags=tags))
-    resp.set_cookie('submission_ver', submission_dataset_ver())
+    resp.set_cookie('submission_ver', str(submission_dataset_ver()))
     return resp
     
 @app.route('/hidden')
