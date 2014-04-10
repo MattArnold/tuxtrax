@@ -15,6 +15,15 @@ import os
 app = Flask(__name__)
 db = SQLAlchemy(app)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+app.config.update(dict(
+    MAIL_SERVER = constants.MAIL_SERVER,
+    MAIL_PORT = constants.MAIL_PORT,
+    MAIL_USE_TLS = constants.MAIL_USE_TLS,
+    MAIL_USE_SSL = constants.MAIL_USE_SSL,
+    MAIL_USERNAME = constants.MAIL_USERNAME,
+    MAIL_PASSWORD = constants.MAIL_PASSWORD,
+    DEFAULT_MAIL_SENDER = constants.DEFAULT_MAIL_SENDER
+))
 mail = Mail(app)
 try:
     conn = redis.from_url(constants.REDIS_URL)
@@ -62,13 +71,6 @@ import api
 def init():
     app.secret_key = constants.SESSION_SECRET_KEY
     app.config['SQLALCHEMY_DATABASE_URI'] = constants.DATABASE_URL
-    app.config['MAIL_SERVER'] = constants.MAIL_SERVER
-    app.config['MAIL_PORT'] = constants.MAIL_PORT
-    app.config['MAIL_USE_TLS'] = constants.MAIL_USE_TLS
-    app.config['MAIL_USE_SSL'] = constants.MAIL_USE_SSL
-    app.config['MAIL_USERNAME'] = constants.MAIL_USERNAME
-    app.config['MAIL_PASSWORD'] = constants.MAIL_PASSWORD
-    app.config['DEFAULT_MAIL_SENDER'] = constants.DEFAULT_MAIL_SENDER
     app.config.from_object(__name__)
     try:
         db.create_all()

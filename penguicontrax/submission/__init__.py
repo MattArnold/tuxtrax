@@ -177,7 +177,7 @@ def submission_dataset_ver():
             return conn.get('SUBMISSION_DATASET_VERSION')
         except:
             pass
-    return 0
+    return '0'
 
 def get_track(name):
     tracks = Track.query.filter(Track.name == name)
@@ -278,9 +278,10 @@ def submitevent():
         if submission.followUpState == 2 and not submission.submitter is None:
             if not submission.submitter.email is None:
                 msg = Message( )
+                msg.sender = constants.DEFAULT_MAIL_SENDER
                 msg.recipients = [submission.submitter.email]
                 msg.body = 'Thank you for submitting an event to %s. %s was approved. '\
-                            '%s was approved. Type: %s. Program participants: %s. Description: '\
+                            'Type: %s. Program participants: %s. Description: '\
                             '%s. Duration: %s. Setup time: %s. Reptition: %s.' \
                                 % (constants.ORGANIZATION, submission.title, submission.eventType, \
                                    submission.presenter_list_str(), submission.description, submission.duration_str(), \
