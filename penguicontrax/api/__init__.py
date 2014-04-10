@@ -4,6 +4,7 @@ from penguicontrax import app
 
 #api modules
 import submissions
+import tags
 import users
 
 #import json for date encoder
@@ -39,6 +40,14 @@ api.add_resource(submissions.SubmissionAPI,
                  '/api/submission/<string:submission_id>/<string:noun>')
 api.add_resource(submissions.SubmissionsAPI,
                  '/api/submissions')
+
+#tags
+api.add_resource(tags.TagsAPI,
+                 '/api/tags')
+api.add_resource(tags.UserTagsAPI,
+                 '/api/user-tags')
+api.add_resource(tags.UserTagAPI,
+                 '/api/user-tag/<string:name>')
 
 #users
 api.add_resource(users.UsersAPI,
