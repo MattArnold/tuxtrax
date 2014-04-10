@@ -4,6 +4,7 @@ from penguicontrax import app
 
 #api modules
 import submissions
+import tags
 import users
 
 #import json for date encoder
@@ -25,7 +26,8 @@ api = Api(app)
 
 @api.representation('application/json')
 def json_date(data, code, headers=None):
-    resp = app.make_response(json.dumps(data, cls=DateEncoder))
+    #If it's a string, just return it as-is
+    resp = app.make_response(data if type(data) is str else json.dumps(data, cls=DateEncoder))
     resp.headers.extend(headers or {})
     resp.status_code = code
     return resp
@@ -38,6 +40,14 @@ api.add_resource(submissions.SubmissionAPI,
                  '/api/submission/<string:submission_id>/<string:noun>')
 api.add_resource(submissions.SubmissionsAPI,
                  '/api/submissions')
+
+#tags
+api.add_resource(tags.TagsAPI,
+                 '/api/tags')
+api.add_resource(tags.UserTagsAPI,
+                 '/api/user-tags')
+api.add_resource(tags.UserTagAPI,
+                 '/api/user-tag/<string:name>')
 
 #users
 api.add_resource(users.UsersAPI,

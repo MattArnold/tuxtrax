@@ -1,7 +1,8 @@
 import sqlite3, os
 import xml.etree.ElementTree as ET
 import penguicontrax as penguicontrax
-from submission import Submission, Tag, Track, Resource, normalize_tag_name
+from submission import Submission, Track, Resource
+from tag import Tag, normalize_tag_name
 from user import Person, User
 from event import Convention, Rooms, Events
 import datetime, random
@@ -99,7 +100,7 @@ def import_old(path, as_convention, random_rsvp_users = 0, submission_limit = sy
                     tag = normalize_tag_name(tag)
                     db_tag = None
                     if not tag in existing_tags:
-                        db_tag = Tag(tag)
+                        db_tag = Tag(tag, tag, True)
                         penguicontrax.db.session.add(db_tag)
                         existing_tags[tag] = db_tag
                     else:

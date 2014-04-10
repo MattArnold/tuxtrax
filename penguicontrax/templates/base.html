@@ -3,14 +3,17 @@
 <html lang="en">
 <head>
     {% block head %}
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}{% endblock %} Tux Trax</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link href="{{ url_for('static', filename='ptrax.css') }}" rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        {% assets "css_base" %}
+            <link href="{{ ASSET_URL }}" rel='stylesheet' type='text/css'>
+        {% endassets %}
 
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
-    <!--[if lt IE 9]>
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+        <!--[if lt IE 9]>
     <script src="{{ url_for('static', filename='Flat-UI-master/js/html5shiv.js') }}"></script>
     <script src="{{ url_for('static', filename='Flat-UI-master/js/respond.min.js') }}"></script>
     <![endif]-->
@@ -18,61 +21,64 @@
 </head>
 <body>
 <nav class="navbar navbar-default navbar-fixed-top">
-<div class="container-fluid">
+    <div class="container-fluid">
         <div class="col-md-4 navbar-header">
-            <a class="navbar-brand" href="/" title="Tentative Requested Activity Xperiment">{{ macros.tux_badge(32,32) }}&nbsp;TUX TRAX - Penguicon 2015</a>
+            <a class="navbar-brand" href="/"
+               title="Tentative Requested Activity Xperiment">{{ macros.tux_badge(32,32) }}&nbsp;TUX TRAX - Penguicon
+                2015</a>
         </div>
         <div class="col-md-8">
             <div class="col-md-3">
-                            <span class="small">FAQ/Help/Feedback: </span><a href="mailto:matt.mattarn+traxfeedback@gmail.com?Subject=Feedback%20About%20Penguicon-TRAX"><i class="fa fa-question-circle"></i></a>
+                <span class="small">FAQ/Help/Feedback: </span><a
+                    href="mailto:matt.mattarn+traxfeedback@gmail.com?Subject=Feedback%20About%20Penguicon-TRAX"><i
+                    class="fa fa-question-circle"></i></a>
             </div>
             {% if user is none %}
             {% else %}
-            <div class="col-md-3">
-                <span class="small">{{ macros.user_link(user) }}</span>
-            </div>
-            <div class="col-md-3">
-                <span class="small">{{ user.points }} <i class="fa fa-thumbs-up rsvp" style="color:#e3cf7a"></i> "Would-attends" left</span>
-            </div>
-            <div class="col-md-1">
-                <span class="small"><a href="/logs">Logs</a></span>
-            </div>
-            <div class="col-md-1">
-                <span class="small"><a href="/users">Users</a></span>
-            </div>
+                <div class="col-md-3">
+                    <span class="small">{{ macros.user_link(user) }}</span>
+                </div>
+                <div class="col-md-3">
+                    <span class="small">{{ user.points }} <i class="fa fa-thumbs-up rsvp" style="color:#e3cf7a"></i> "Would-attends" left</span>
+                </div>
+                <div class="col-md-1">
+                    <span class="small"><a href="/logs">Logs</a></span>
+                </div>
+                <div class="col-md-1">
+                    <span class="small"><a href="/users">Users</a></span>
+                </div>
             {% endif %}
             {% if user is none %}
-        <div class="col-md-9">
-        <form action="/logout" method=get class="rightheader">
-            <span class="small">Log in using: </span>
-            <a href="/login?provider=facebook"><i class="fa fa-facebook-square"></i></a>
-            <a href="/login?provider=twitter"><i class="fa fa-twitter-square"></i></a>
-            <a href="/login?provider=google">
-                {{ macros.google_icon() }}
-            </a>
-            <a href="/login?provider=yahoo">
-                {{ macros.yahoo_icon() }}
-            </a>
+                <div class="col-md-9">
+                <form action="/logout" method=get class="rightheader">
+                <span class="small">Log in using: </span>
+                <a href="/login?provider=facebook"><i class="fa fa-facebook-square"></i></a>
+                <a href="/login?provider=twitter"><i class="fa fa-twitter-square"></i></a>
+                <a href="/login?provider=google">
+                    {{ macros.google_icon() }}
+                </a>
+                <a href="/login?provider=yahoo">
+                    {{ macros.yahoo_icon() }}
+                </a>
             {% else %}
-        <div class="col-md-1">
-        <form action="/logout" method=get class="rightheader">
-            <input class="btn btn-primary btn-xs" type=submit value="Logout">
+                <div class="col-md-1">
+                <form action="/logout" method=get class="rightheader">
+                <input class="btn btn-primary btn-xs" type=submit value="Logout">
             {% endif %}
-        </form>
+            </form>
+            </div>
             </div>
         </div>
-</div>
+    </div>
 </nav>
 <div class="container-fluid">
     {% block body %}
     {% endblock %}
 </div>
 
-<script src="{{ url_for('static', filename='jquery-1.11.0.min.js') }}"></script>
-<script src="{{ url_for('static', filename='bootstrap-3.1.1/dist/js/bootstrap.min.js') }}"></script>
-<script src="{{ url_for('static', filename='bootstrap-selectpicker/bootstrap-select.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lodash.min.js') }}"></script>
-<script src="{{ url_for('static', filename='can.jquery.js') }}"></script>
+{% assets "js_base" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 
 <script type="text/javascript">
     window.ptrax = {};
@@ -81,21 +87,21 @@
     ptrax.view = {};
 
     ptrax.url = {
-        "static" : "{{ url_for('static', filename='') }}"
+        "static": "{{ url_for('static', filename='') }}"
     };
 
     ptrax.user = {
-        sid : "{{ user.id }}",
-        name :  "{{ user }}",
-        email : "{{ user.email }}",
-        account_name : "{{ user.account_name }}",
-        image_small : "{{ user.image_small }}",
-        special_tag : "{{ user.special_tag }}"
+        sid: "{{ user.id }}",
+        name: "{{ user }}",
+        email: "{{ user.email }}",
+        account_name: "{{ user.account_name }}",
+        image_small: "{{ user.image_small }}",
+        special_tag: "{{ user.special_tag }}"
     };
 
-    if(ptrax.user.sid.length){
-        ptrax.user.id = parseInt(ptrax.user.sid,10);
-    }else{
+    if (ptrax.user.sid.length) {
+        ptrax.user.id = parseInt(ptrax.user.sid, 10);
+    } else {
         ptrax.user.id = 0;
     }
 
@@ -105,7 +111,7 @@
             var html;
             e.innerHTML = input;
             html = e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-            return html.substring(1,html.length -1);
+            return html.substring(1, html.length - 1);
         }
     };
 
@@ -113,19 +119,19 @@
     $("select").selectpicker();
 
     //toggle page buttons correctly
-    $("[data-toggle='buttons'] input").each(function(i, el) {
-      var $input = $(el);
-      var $label = $input.parent();
-      var checked = $input.prop("checked");
-      if (checked) {
-        $label.addClass("active");
-      } else {
-        $label.removeClass("active");
-      }
+    $("[data-toggle='buttons'] input").each(function (i, el) {
+        var $input = $(el);
+        var $label = $input.parent();
+        var checked = $input.prop("checked");
+        if (checked) {
+            $label.addClass("active");
+        } else {
+            $label.removeClass("active");
+        }
     });
 
 
-    $('#hidenav').click(function(){
+    $('#hidenav').click(function () {
         $('.tagsinput').css("display", "none");
     });
 </script>

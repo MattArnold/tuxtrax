@@ -1,14 +1,15 @@
 #flask libs
-import datetime
+import datetime, json
 
 from flask.ext.restful import Resource, reqparse
 from flask import g
 from sqlalchemy import or_
+from redis import WatchError
 
 
 #global libs
-from penguicontrax import dump_table, db, audit
-from penguicontrax.submission import Submission
+from penguicontrax import dump_table, db, audit, conn
+from penguicontrax.submission import Submission, submission_dataset_ver, submission_dataset_changed
 from functions import return_null_if_not_logged_in
 
 
@@ -44,6 +45,7 @@ class SubmissionAPI(Resource):
                     g.user.rsvped_to.append(submission.first())
                     g.user.points = g.user.points - 1
                     audit.audit_rsvp(g.user, submission.first())
+                    submission_dataset_changed()
                     db.session.add(g.user)
                     db.session.commit()
                     return None, 200
@@ -67,6 +69,7 @@ class SubmissionAPI(Resource):
                 g.user.rsvped_to.remove(submission.first())
                 g.user.points = g.user.points + 1
                 audit.audit_rsvp(g.user, submission.first(), False)
+                submission_dataset_changed()
                 db.session.add(g.user)
                 db.session.commit()
                 return None, 200
@@ -75,22 +78,11 @@ class SubmissionAPI(Resource):
 
 
 class SubmissionsAPI(Resource):
-    @staticmethod
-    def get():
-        """ Returns a list of objects to represent users in the database
-            Pass a ?q=query to conduct a search by name and email
-        """
-        parser = reqparse.RequestParser()
-        parser.add_argument('state', type=str)
-        args = parser.parse_args()
 
-        query = Submission.query
-        if args['state']:
-            parts = args['state'].split(',')
-            orbits = [Submission.followUpState == i for i in parts]
-            query = query.filter(or_(*orbits))
-        else:
-            query = query.filter(Submission.followUpState != 3)
+    @staticmethod
+    def query_db(parts):
+        orbits = [Submission.followUpState == i for i in parts]
+        query = Submission.query.filter(or_(*orbits))
         submissions = query.all()
         output = dump_table(submissions, Submission.__table__)
         for index, element in enumerate(output):
@@ -103,9 +95,51 @@ class SubmissionsAPI(Resource):
                                     submissions[index].rsvped_by]
             element['overdue'] = (datetime.datetime.now() - submissions[index].submitted_dt).days > 13
             element['followUpDays'] = (datetime.datetime.now() - submissions[index].submitted_dt).days
-        expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
         import random
         random.shuffle(output)
+        return output
+
+
+    @staticmethod
+    def get():
+        """ Returns a list of objects to represent users in the database
+            Pass a ?q=query to conduct a search by name and email
+        """
+        parser = reqparse.RequestParser()
+        parser.add_argument('state', type=str)
+        args = parser.parse_args()
+
+        
+        if args['state']:
+            parts = args['state'].split(',')
+        else:
+            parts = ['0','1','2']
+        
+        try:
+            with conn.pipeline() as pipe:
+                cache_key = 'SUBMISSION_DATASET_CACHE_' + str(parts)
+                cache_version_key = cache_key + '_VERSION'
+                while 1:
+                    try:
+                        pipe.watch(cache_version_key)
+                        current_cache_value = pipe.get(cache_version_key)
+                        current_version = submission_dataset_ver()
+                        if current_cache_value == current_version and not current_cache_value is None:
+                            output = pipe.get(cache_key)
+                        else:
+                            pipe.multi()
+                            output = SubmissionsAPI.query_db(parts)
+                            from penguicontrax.api import DateEncoder
+                            pipe.set(cache_key, json.dumps(output, cls=DateEncoder))
+                            pipe.set(cache_version_key, current_version)
+                            pipe.execute()
+                        break
+                    except WatchError:
+                        continue
+        except Exception as e:
+            output = SubmissionsAPI.query_db(parts)
+
+        expires = datetime.datetime.utcnow() + datetime.timedelta(days=1)
         return output, 200, {
             "Expires": expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
             "Cache-Control": "public, max-age=86400"

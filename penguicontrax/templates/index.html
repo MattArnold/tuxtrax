@@ -94,9 +94,11 @@
 {% endblock %}
 {% block page_script %}
     {{ super() }}
-    <script type="text/javascript" src="{{ url_for('static', filename='tagFilter.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='submissionList.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='collapsetagnav.js') }}"></script>
+
+    {% assets filters="jsmin",output="build/submissions-%(version)s.js","tagFilter.js","submissionList.js","collapsetagnav.js" %}
+         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
     <script type="text/javascript">
 
         var tags = "{% for tag in tags %}{{tag}},{% endfor%}".split(",");
