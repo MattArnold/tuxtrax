@@ -52,7 +52,7 @@ def normalize_tag_name(name):
     """ Takes a possible name and changes it to only have
         lowercase and - characters
     """
-    removables = re.compile('[^ a-zA-Z0-9]')
+    removables = re.compile('[^ a-zA-Z0-9\-]')
     name = name.lower().strip()
     name = removables.sub('', name)
     name = "-".join(name.split())
