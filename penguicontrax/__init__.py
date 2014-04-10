@@ -75,7 +75,7 @@ def init():
 def index():
     tags = [tag.name for tag in Tag.query.all()]
     resp = make_response(render_template('index.html', user=g.user, showhidden=False, tags=tags))
-    resp.set_cookie('submission_ver', submission_dataset_ver())
+    resp.set_cookie('submission_ver', str(submission_dataset_ver()))
     return resp
     
 @app.route('/hidden')
