@@ -1,5 +1,4 @@
 from copy import copy
-import string
 import datetime
 import json
 import os
@@ -7,6 +6,7 @@ import os
 from flask import g, request, session, render_template, redirect, Response, Markup, url_for
 from sqlalchemy.orm import relationship
 from .. import app, db, dump_table_json
+from penguicontrax.tag import Tag, get_tag, create_tag
 from penguicontrax.user import User
 
 
@@ -75,17 +75,6 @@ class Submission(db.Model):
         return '<email: %s, title: %s>' % (self.email, self.title)
 
 
-class Tag(db.Model):
-    __tablename__ = 'tags'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(), unique=True)
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return self.name
-
 
 class Track(db.Model):
     __tablename__ = 'tracks'
@@ -135,24 +124,6 @@ def submission_dataset_ver():
         except:
             pass
     return 0
-
-def get_tag(name):
-    tags = Tag.query.filter(Tag.name == name)
-    if tags.count() < 1:
-        tag = Tag(name=name)
-        db.session.append(tag)
-        db.session.commit()
-    else:
-        tag = tags[0]
-    return tag
-
-
-def normalize_tag_name(tag):
-    tag = tag.lower().strip()
-    tag = tag.translate(string.maketrans("", ""), string.punctuation)
-    tag = "-".join(tag.split())
-    return tag
-
 
 def get_track(name):
     tracks = Track.query.filter(Track.name == name)
@@ -248,14 +219,6 @@ def submitevent():
                        submission)  #We'd like submission.id to actually be real so commit the creation first
     submission_dataset_changed()
     return redirect('/')
-
-
-@app.route('/createtag', methods=['POST'])
-def createtag():
-    tag = get_tag(request.form['tagname'])
-    db.session.add(tag)
-    db.session.commit()
-    return render_template('index.html')
 
 
 @app.route('/rsvp', methods=['POST'])
