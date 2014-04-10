@@ -6,7 +6,6 @@ from flask.ext.cache import Cache
 from flask.ext.mail import Mail
 import xml.etree.ElementTree as ET
 import json, redis
-import redis
 from constants import constants
 from flask.ext.assets import Environment, Bundle
 import os
