@@ -275,34 +275,39 @@ def submitevent():
     if submission.followUpState != old_submission.followUpState:
         from penguicontrax import mail, constants
         from flask.ext.mail import Message
-        if submission.followUpState == 2 and not submission.submitter is None:
+        if (submission.followUpState == 2 or submission.followUpState == 3) and not submission.submitter is None:
             if not submission.submitter.email is None:
                 msg = Message( )
                 msg.sender = constants.DEFAULT_MAIL_SENDER
                 msg.recipients = [submission.submitter.email]
                 msg.reply_to = constants.MAIL_REPLY_TO
-                msg.body = 'Thank you for submitting an event to %s. %s was approved. '\
-                            'Type: %s. Program participants: %s. Description: '\
-                            '%s. Duration: %s. Setup time: %s. Reptition: %s.' \
-                                % (constants.ORGANIZATION, submission.title, submission.eventType, \
-                                   submission.presenter_list_str(), submission.description, submission.duration_str(), \
-                                   submission.setupTime_str(), submission.repetition_str())
-                msg.subject = 'Your event titled %s has been approved for %s' % (submission.title, constants.ORGANIZATION)
-                missing = ''
-                for person in submission.personPresenters:
-                    if person.email is None or person.phone is None:
-                        if missing != '':
-                            missing += ', '
-                        missing = missing + person.name
-                for user in submission.userPresenters:
-                    if user.email is None or user.phone is None:
-                        if missing != '':
-                            missing += ', '
-                        missing = missing + user.name
-                if missing != '':
-                    msg.body = msg.body + os.linesep + os.linesep + \
-                        'We are missing contact info for %s. Would you help us get '\
-                        'that and email it to %s? Thanks!' % (missing, constants.DEFAULT_MAIL_SENDER)
+                if submission.followUpState == 2:
+                    msg.body = 'Thank you for submitting an event to %s. %s was approved. '\
+                                'Type: %s. Program participants: %s. Description: '\
+                                '%s. Duration: %s. Setup time: %s. Reptition: %s.' \
+                                    % (constants.ORGANIZATION, submission.title, submission.eventType, \
+                                       submission.presenter_list_str(), submission.description, submission.duration_str(), \
+                                       submission.setupTime_str(), submission.repetition_str())
+                    msg.subject = 'Your event titled %s has been approved for %s' % (submission.title, constants.ORGANIZATION)
+                    missing = ''
+                    for person in submission.personPresenters:
+                        if person.email is None or person.phone is None:
+                            if missing != '':
+                                missing += ', '
+                            missing = missing + person.name
+                    for user in submission.userPresenters:
+                        if user.email is None or user.phone is None:
+                            if missing != '':
+                                missing += ', '
+                            missing = missing + user.name
+                    if missing != '':
+                        msg.body = msg.body + os.linesep + os.linesep + \
+                            'We are missing contact info for %s. Would you help us get '\
+                            'that and email it to %s? Thanks!' % (missing, constants.DEFAULT_MAIL_SENDER)
+                else:
+                    msg.body = 'Sorry, but your event titled %s was declined this year. If you think this message is an error, '\
+                                'please contact %s.' % (submission.title, constants.MAIL_REPLY_TO)
+                    msg.subject = 'Your event titled %s was not approved for %s' % (submission.title, constants.ORGANIZATION)
                 mail.send(msg)
     return redirect('/')
 
