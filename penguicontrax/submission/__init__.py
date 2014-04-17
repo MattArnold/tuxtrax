@@ -280,6 +280,7 @@ def submitevent():
                 msg = Message( )
                 msg.sender = constants.DEFAULT_MAIL_SENDER
                 msg.recipients = [submission.submitter.email]
+                msg.reply_to = constants.MAIL_REPLY_TO
                 msg.body = 'Thank you for submitting an event to %s. %s was approved. '\
                             'Type: %s. Program participants: %s. Description: '\
                             '%s. Duration: %s. Setup time: %s. Reptition: %s.' \
