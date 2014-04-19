@@ -79,6 +79,7 @@
             var submission = el.data('submission');
             var user_rsvp = _.findIndex(submission.attr('rsvped_by'), {'id': ptrax.user.id });
             var apiUrl = '/api/submission/' + submission.attr('id') + '/rsvp';
+            var $totalRsvpPointsElement = $('#totalRsvpPoints');
 
             if (!submission.attr('updating')) {
                 submission.attr('updating', true);
@@ -91,6 +92,8 @@
                         success: function () {
                             submission['rsvped_by'].push(ptrax.user);
                             submission.attr('updating', false);
+                            //Take one away from the rsvp points next to  the top thumbsup
+                            $totalRsvpPointsElement.text(parseInt($totalRsvpPointsElement.text(),10)-1);
                         }
                     });
                 } else {
@@ -102,6 +105,8 @@
                             //if its is already there, take it out
                             submission['rsvped_by'].splice(user_rsvp, 1);
                             submission.attr('updating', false);
+                            //add one to the user rsvp points
+                            $totalRsvpPointsElement.text(parseInt($totalRsvpPointsElement.text(),10)+1);
                         }
                     });
                 }
