@@ -5,7 +5,7 @@ $(document).ready(function () {
     //$(':checkbox[class!="button-checkbox"]').checkbox();
 
     //display a message as people type into fields with max length set on them
-    $('form textarea[maxlength],form input[maxlength]').on("input",function () {
+    var characterCounter = function () {
         var el, len, grp, limit, remaining, charnum, title;
 
         len = this.value.length;
@@ -39,9 +39,11 @@ $(document).ready(function () {
         } else if ((limit - len) < 5) {
             grp.addClass('has-warning');
         }
-    }).on('blur', function () {
+    };
+    var blurRemoveWarning = function () {
         $(this).parents('.form-group').removeClass('has-warning').find('.charnum').remove();
-    });
+    };
+    $('form textarea[maxlength],form input[maxlength]').on("input",characterCounter).on('blur', blurRemoveWarning);
 
 
     function updateTypeOptions() {
@@ -180,16 +182,18 @@ $(document).ready(function () {
     });
 
 // Limit the addition of new program participant fields.
-    //TODO refactor this so it works
     var people = 0;
     $("#newperson").click(function () {
         pluralized = true;
         $('#pptype').hide();
         $('#pluralpptype').show();
         if (people < 8) {
-            $("#who").append('<input name="person' + people + '" type="text" size="24" onkeyup="countChar(this, 24)" class="pp" />');
+            var presenterId = 'presenter_'+people;
+            $("#presenterLabel").after('<input name="'+presenterId+'" id="'+presenterId+'" type="text" size="24" maxlength="24" class="pp form-control" style="float:left;width:203px;" />');
             people = people + 1;
+            $('#'+presenterId).on("input",characterCounter).on('blur', blurRemoveWarning);
         }
+        return false;
     });
 
     $('#submitevent').click(function (ev) {

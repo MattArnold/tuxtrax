@@ -8,7 +8,7 @@
 {% block body %}
     {{ super() }}
     <div class="col-md-12">
-    <form action="/submitevent" method=post>
+    <form id="submitEventForm" action="/submitevent" method=post>
     {% if event is not none %}
         <input type=hidden name=eventid value="{{ event.id }}">
     {% endif %}
@@ -208,10 +208,10 @@
                         {% endif %}
                     </small>
                 </p>
-                <label for="presenter">
+                <label for="presenter" id="presenterLabel">
                     <span id="pptype" style="display:none"></span>
                     <span id="pluralpptype" style="display:none"></span>
-                    <input name=presenter type=text size="24" maxlength="24" class="pp form-control"/>
+                    <input name="presenter" type="text" size="24" maxlength="24" class="pp form-control"/>
                     <!-- Add email and phone input here -->
                 </label>
                 <button id="newperson" class="pp btn"><span class="glyphicon glyphicon-plus"></span> someone else
