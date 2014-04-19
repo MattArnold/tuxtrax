@@ -75,6 +75,7 @@ $(document).ready(function () {
             case 'talk':
                 pptypetext = "Speaker:";
                 pluralpptypetext = "Panelists:";
+                furniture = "Four chairs behind a table. It is faced by rows of chairs."
                 resourcesshow = true;
                 otherfacilityshow = true;
                 ppshow = true;
@@ -82,17 +83,25 @@ $(document).ready(function () {
             case 'workshop':
                 pptypetext = 'Activity leader:';
                 pluralpptypetext = 'Activity leaders:"';
+                furniture = "A table surrounded by several chairs."
                 resourcesshow = true;
                 otherfacilityshow = true;
                 ppshow = true;
                 break;
             case 'bof':
                 otherfacilityshow = true;
+                furniture = "Several chairs."
                 break;
+            case 'demo':
+                pptypetext = 'Teacher:';
+                pluralpptypetext = 'Teachers:';
+                furniture = "Rectangular tables with chairs facing the front."
+                otherfacilityshow = true;
             case 'game':
                 pptypetext = 'Game master:';
                 pluralpptypetext = 'Game masters:';
                 playersshow = true;
+                furniture = "A table and four chairs."
                 otherfacilityshow = true;
                 break;
             case 'onstage':
@@ -100,18 +109,23 @@ $(document).ready(function () {
                 pptypetext = 'Performer:';
                 pluralpptypetext = 'Performers:';
                 resourcesshow = true;
+                furniture = "A stage at the front of the room, faced by rows of chairs."
                 otherfacilityshow = true;
                 break;
             case 'roving':
                 pptypetext = 'Activity leader:';
                 pluralpptypetext = 'Activity leaders:';
+                furniture = "No furniture needed."
                 otherfacilityshow = true;
                 break;
         }
 
         // now we have all of the values. set everything.
-        if (otherfacilityshow)
+        if (otherfacilityshow) {
             $('#otherfacility').removeClass('hidden');
+            var updatedplaceholder = furniture + " Other room and furniture setup requests go here (not guaranteed). If you selected \'More\', we\'ll work out the specifics with you later.";
+            $('#facilityrequest').attr('placeholder', updatedplaceholder);
+        }
         else
             $('#otherfacility').addClass('hidden');
         if (playersshow)

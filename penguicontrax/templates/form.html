@@ -12,6 +12,9 @@
     {% if event is not none %}
         <input type=hidden name=eventid value="{{ event.id }}">
     {% endif %}
+    <div class="help-block" id="disclaimer">
+        <small>Thanks for leaving your ideas here! Just FYI, we can't accept all event suggestions, and we might decide to change some events we accept, OK?</small>
+    </div>
     <div class="row well section where">
         <div class="col-md-2">
             <h4 class="row">
@@ -39,6 +42,12 @@
                         <input type="radio" name=eventtype class="typelist where question roomtab"
                                value="bof" id="bofbtn" {{ event.eventType | is_checked('bof') }}>Open discussion with no
                         presenter or organizer.
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="demobtn">
+                        <input type="radio" name=eventtype class="typelist where question roomtab"
+                                value="demo" id="demobtn" {{ event.eventType | is_checked('demo') }}>Tables with a demonstrator up front.
                     </label>
                 </div>
                 <div class="radio">
@@ -92,7 +101,7 @@
             </div>
             <div class="form-group hidden" id="otherfacility">
                 <label for="facilityrequest">Additional Requests</label>
-                <textarea name=facilityrequest id="facilityrequest" rows="2" cols="50"
+                <textarea name=facilityrequest id="facilityrequest" rows="3" cols="50"
                           placeholder="Other room and furniture setup requests go here. If you selected 'More', we'll work out the specifics with you later."
                           class="form-control">{{ event.facilityRequest | default('',true) }}</textarea>
             </div>
@@ -247,7 +256,10 @@
                                 <textarea id="title" class="form-control" name="title"
                                           rows="2" cols="40"
                                           maxlength="80">{{ event.title | default('',true) }}</textarea>
-
+                            </div>
+                            <div class="help-block" id="titleadvice">
+                                <small><em>The title will sometimes be used without the description, so please be informative. 
+                                    Only be cute if it's still easy to understand what to expect.</em></small>
                             </div>
                         </div>
                         <div class="col-md-7">
@@ -256,10 +268,17 @@
                                     <textarea name=description id="description" rows="8" cols="60"
                                               class="form-control"
                                               maxlength="700">{{ event.description | default('',true) }}</textarea>
-
+                            </div>
+                            <div class="help-block" id="descriptionadvice">
+                                <small><em>Tips:
+                                <ul><li>Don't say "I".</li>
+                                <li>Instead of parentheses, try making a new sentence or re-arranging phrases in the sentence.</li>
+                                <li>Many people have never heard of your topic. Help them figure out whether to attend.</li>
+                                <li>Will it be introductory or advanced?</li>
+                                <li>Do the participants need to bring something?</li>
+                                <li>Will they need to sign up in advance at Ops?</li></ul></em></small>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
