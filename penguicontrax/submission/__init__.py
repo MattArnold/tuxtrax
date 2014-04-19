@@ -272,6 +272,10 @@ def submitevent():
     audit.audit_change(Submission.__table__, g.user, old_submission,
                        submission)  #We'd like submission.id to actually be real so commit the creation first
     submission_dataset_changed()
+    sendEmail(submission,old_submission);
+    return redirect('/')
+
+def sendEmail(submission,old_submission):
     if submission.followUpState != old_submission.followUpState:
         from penguicontrax import mail, constants
         from flask.ext.mail import Message
@@ -309,7 +313,6 @@ def submitevent():
                                 'please contact %s.' % (submission.title, constants.MAIL_REPLY_TO)
                     msg.subject = 'Your event titled %s was not approved for %s' % (submission.title, constants.ORGANIZATION)
                 mail.send(msg)
-    return redirect('/')
 
 
 @app.route('/rsvp', methods=['POST'])
