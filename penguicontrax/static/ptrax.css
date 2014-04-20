@@ -7623,22 +7623,25 @@ form #pluralpptype {
 form .suggested-by {
   padding-left: 0;
 }
-form .tt-dropdown-menu {
+form .twitter-typeahead {
+  display: block!important;
+}
+form .twitter-typeahead .tt-dropdown-menu {
   background-color: #fff;
   padding: 5px;
   border: 1px solid #eee;
   border-radius: 3px;
 }
-form .tt-dropdown-menu .tt-suggestions .tt-suggestion {
+form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-suggestion {
   cursor: pointer;
   padding: 0 5px;
   line-height: 2em;
 }
-form .tt-dropdown-menu .tt-suggestions .tt-suggestion:hover {
+form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-suggestion:hover {
   background-color: #16a085;
   color: white;
 }
-form .tt-dropdown-menu .tt-suggestions .tt-suggestion strong {
+form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-suggestion strong {
   font-weight: bold;
 }
 nav {

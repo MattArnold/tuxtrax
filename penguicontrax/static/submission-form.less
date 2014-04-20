@@ -62,27 +62,30 @@ form {
 	padding-left: 0;
   }
 
-  .tt-dropdown-menu {
-	background-color: #fff;
-	padding: 5px;
-	border: 1px solid #eee;
-	border-radius: 3px;
-	.tt-suggestions {
+  .twitter-typeahead {
+	display: block!important;
+	.tt-dropdown-menu {
+	  background-color: #fff;
+	  padding: 5px;
+	  border: 1px solid #eee;
+	  border-radius: 3px;
+	  .tt-suggestions {
 
-	  .tt-suggestion {
-		cursor: pointer;
-		padding: 0 5px;
-		line-height: 2em;
-		&:hover {
-		  background-color: @brand-primary;
-		  color: white;
-		}
-		strong {
-		  font-weight: bold;
+		.tt-suggestion {
+		  cursor: pointer;
+		  padding: 0 5px;
+		  line-height: 2em;
+		  &:hover {
+			background-color: @brand-primary;
+			color: white;
+		  }
+		  strong {
+			font-weight: bold;
+		  }
+
 		}
 
 	  }
-
 	}
   }
 

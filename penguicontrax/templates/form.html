@@ -198,8 +198,11 @@
                     <p class="checkbox small suggested-by">
                         Suggested by
                         {% if event is none %}
-                            <input type=hidden name=submitter_id value={{ user.id }} data-name="{{ user.name }}"
-                                   data-email="{{ user.email }}" data-phone="{{ user.phone }}"/>
+                            <input type=hidden name=submitter_id value={{ user.id }}
+                                   data-id="{{ user.id }}"
+                                   data-name="{{ user.name }}"
+                                   data-email="{{ user.email }}"
+                                   data-phone="{{ user.phone }}"/>
                             {{ macros.user_link(user) }}
                         {% else %}
                             {% if event.submitter is not none %}
@@ -212,12 +215,14 @@
                         {% if event is not none %}
                             {% for user_presenter in event.userPresenters %}
                                 {{ macros.user_link(user_presenter) }}
+                                <input type="hidden" name="presenter_id" value="{{ user_presenter.id }}">
                                 <input name="presenter" type="hidden" value="{{ user_presenter.name }}"/>
                                 <input name="phone" type="hidden" value="{{ user_presenter.phone }}"/>
                                 <input name="email" type="hidden" value="{{ user_presenter.email }}"/>
                             {% endfor %}
                             {% for person_presenter in event.personPresenters %}
                                 {{ macros.person_link(person_presenter) }}
+                                 <input type="hidden" name="presenter_id" value="{{ person_presenter.id }}">
                                 <input name="presenter" type="hidden" value="{{ person_presenter.name }}"/>
                                 <input name="phone" type="hidden" value="{{ person_presenter.phone }}"/>
                                 <input name="email" type="hidden" value="{{ person_presenter.email }}"/>
@@ -247,10 +252,10 @@
                     convention.
                 </p>
                     <p class="form-group presenters">
-
+                        <input type="hidden" name="presenter_id" value="">
                         <label for="presenter" id="presenterLabel">
                             Name
-                            <input name="presenter" autocomplete="off" type="text" size="24" maxlength="24" class="pp form-control presenter-typeahead"/>
+                            <input name="presenter" autocomplete="off" type="text" size="24" class="pp form-control presenter-typeahead"/>
                         </label>
                         &nbsp;
                         <label>

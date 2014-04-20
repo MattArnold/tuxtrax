@@ -206,15 +206,18 @@ $(document).ready(function () {
         }).delegate('#suggesterPresents', 'click', function () {
             var checked = $(this).is(":checked");
             var $field = $('[name=submitter_id]');
+            var submitter_id = $field.data('id');
             var submitter_name = $field.data('name');
             var submitter_email = $field.data('email');
             var submitter_phone = $field.data('phone');
 
             if (checked) {
+                $('[name="presenter_id"]').first().val(submitter_id)
                 $('[name="presenter"]').first().val(submitter_name)
                 $('[name="email"]').first().val(submitter_email)
                 $('[name="phone"]').first().val(submitter_phone)
             } else {
+                $('[name="presenter_id"]').first().val('')
                 $('[name="presenter"]').first().val('')
                 $('[name="email"]').first().val('')
                 $('[name="phone"]').first().val('')
@@ -264,9 +267,11 @@ $(document).ready(function () {
                 })
             }
         }).on('typeahead:selected',function(ev,selection){
-            //add email and phone if present
-            $(this).siblings('[name="email"]').val(selection.email ? selection.email : "");
-            $(this).siblings('[name="phone"]').val(selection.phone ? selection.phone : "");
+            //add id, and email /phone if present
+            var $parent = $(this).parents('.form-group');
+            $parent.find('[name="presenter_id"]').val(selection.id);
+            $parent.find('[name="email"]').val(selection.email ? selection.email : "");
+            $parent.find('[name="phone"]').val(selection.phone ? selection.phone : "");
         });
 
 // Limit the addition of new program participant fields.

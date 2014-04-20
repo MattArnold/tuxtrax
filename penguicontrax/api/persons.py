@@ -17,9 +17,7 @@ class PersonsAPI(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('q', type=str)
         args = parser.parse_args()
-        print(args)
         output = Person.query
-        print(output)
         if args['q']:
             search_string = '%' + args['q'] + '%'
             output = output.filter(
@@ -31,7 +29,7 @@ class PersonsAPI(Resource):
             )
         output = dump_table(output, Person.__table__)
         # fields to show in search results
-        fields = ['name', 'email', 'phone']
+        fields = ['name', 'email', 'phone', 'id']
         return [
             dict([(name, element[name]) for name in fields])
             for element in output
