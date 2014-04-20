@@ -7636,13 +7636,14 @@ form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-suggestion {
   cursor: pointer;
   padding: 0 5px;
   line-height: 2em;
+  font-weight: normal;
 }
 form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-suggestion:hover {
   background-color: #16a085;
   color: white;
 }
 form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-suggestion strong {
-  font-weight: bold;
+  color: #2980b9;
 }
 nav {
   padding: .5em;

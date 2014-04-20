@@ -173,6 +173,36 @@ $(document).ready(function () {
         }
     }
 
+    function attachTypeahead() {
+
+        $('.presenter-typeahead').typeahead(
+            {
+                hint: true,
+                highlight: true,
+                minLength: 2
+            },
+            {
+                name: 'persons',
+                displayKey: 'name',
+                source: function (query, process) {
+                    $.ajax({
+                        url: '/api/persons',
+                        data: {
+                            q: query
+                        }
+                    }).done(function (data) {
+                        process(data)
+                    })
+                }
+            }).on('typeahead:selected', function (ev, selection) {
+                //add id, and email /phone if present
+                var $parent = $(this).parents('.form-group');
+                $parent.find('[name="presenter_id"]').val(selection.id);
+                $parent.find('[name="email"]').val(selection.email ? selection.email : "");
+                $parent.find('[name="phone"]').val(selection.phone ? selection.phone : "");
+            });
+    }
+
     //set up delegated handler for event type and timechange
     $('form')
         .delegate('input[name=eventtype]', 'change',function handleTypeChange() {
@@ -193,11 +223,15 @@ $(document).ready(function () {
             $('#pptype').addClass('hidden');
             $('#pluralpptype').removeClass('hidden');
 
+            $('.presenter-typeahead').typeahead('destroy')
+
             var clone = $formGroup.clone();
 
             clone.find('input').val('');
 
             $formGroup.after(clone);
+
+            attachTypeahead();
 
             if (people == 6) {
                 $(this).hide();
@@ -235,6 +269,9 @@ $(document).ready(function () {
         update_time_options.call(this);
     });
 
+    //attach first typeahead
+    attachTypeahead();
+
 
     $('#moresetuplink').click(function () {
         if ($('#setupandrepeat:visible').length == 0) {
@@ -247,32 +284,6 @@ $(document).ready(function () {
         return false;
     });
 
-    $('.presenter-typeahead').typeahead(
-        {
-            hint: true,
-            highlight: true,
-            minLength: 2
-        },
-        {
-            name : 'persons',
-            displayKey : 'name',
-            source: function (query, process) {
-                $.ajax({
-                    url: '/api/persons',
-                    data: {
-                        q: query
-                    }
-                }).done(function (data) {
-                    process(data)
-                })
-            }
-        }).on('typeahead:selected',function(ev,selection){
-            //add id, and email /phone if present
-            var $parent = $(this).parents('.form-group');
-            $parent.find('[name="presenter_id"]').val(selection.id);
-            $parent.find('[name="email"]').val(selection.email ? selection.email : "");
-            $parent.find('[name="phone"]').val(selection.phone ? selection.phone : "");
-        });
 
 // Limit the addition of new program participant fields.
 
