@@ -254,20 +254,31 @@ def submitevent():
         'followupstate'] is not None else 0
 
     # presenter handling
+    presenters_id = request.form.getlist('presenter_id')
+    presenters_idtype = request.form.getlist('presenter_idtype')
     presenters_name = request.form.getlist('presenter')
     presenters_phone = request.form.getlist('phone')
     presenters_email = request.form.getlist('email')
-    presenters = zip(presenters_name, presenters_phone, presenters_email)
+    presenters = zip(presenters_id, presenters_idtype, presenters_name, presenters_phone, presenters_email)
     del submission.userPresenters[:]
     del submission.personPresenters[:]
     for presenter in presenters:
-        (name, phone, email) = presenter
-        found_user = find_user(name, phone, email)
+        found_user = None
+        found_person = None
+        (id, idtype, name, phone, email) = presenter
+        if id:
+            if idtype == 'user':
+                found_user = User.query.get(id)
+            elif idtype == 'person':
+                found_person = Person.query.get(id)
+        else:
+            found_user = find_user(name, phone, email)
+            if not found_user:
+                found_person = find_person(name, phone, email)
         if found_user:
             if found_user not in submission.userPresenters:
                 submission.userPresenters.append(found_user)
             continue
-        found_person = find_person(name, phone, email)
         if found_person:
             if found_person not in submission.personPresenters:
                 submission.personPresenters.append(found_person)

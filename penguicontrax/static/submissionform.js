@@ -198,6 +198,7 @@ $(document).ready(function () {
                 //add id, and email /phone if present
                 var $parent = $(this).parents('.form-group');
                 $parent.find('[name="presenter_id"]').val(selection.id);
+                $parent.find('[name="presenter_idtype"]').val('person');
                 $parent.find('[name="email"]').val(selection.email ? selection.email : "");
                 $parent.find('[name="phone"]').val(selection.phone ? selection.phone : "");
             });
@@ -247,11 +248,13 @@ $(document).ready(function () {
 
             if (checked) {
                 $('[name="presenter_id"]').first().val(submitter_id)
+                $('[name="presenter_idtype"]').first().val('user')
                 $('[name="presenter"]').first().val(submitter_name)
                 $('[name="email"]').first().val(submitter_email)
                 $('[name="phone"]').first().val(submitter_phone)
             } else {
                 $('[name="presenter_id"]').first().val('')
+                $('[name="presenter_idtype"]').first().val('')
                 $('[name="presenter"]').first().val('')
                 $('[name="email"]').first().val('')
                 $('[name="phone"]').first().val('')

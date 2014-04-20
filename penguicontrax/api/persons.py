@@ -29,7 +29,7 @@ class PersonsAPI(Resource):
             )
         output = dump_table(output, Person.__table__)
         # fields to show in search results
-        fields = ['name', 'email', 'phone', 'id']
+        fields = ['name', 'id']
         return [
             dict([(name, element[name]) for name in fields])
             for element in output
