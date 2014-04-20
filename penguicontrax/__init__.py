@@ -182,7 +182,7 @@ def reportcsv():
         for s in data:
             yield [column(s).encode('utf-8') for column in schema.values()]
     # convert the table to csv
-    rows_iterator = (writer.writerow(row) for row in generate_data_rows(Submission.query.all()))
+    rows_iterator = (writer.writerow(row) for row in generate_data_rows(Submission.query))
     output = list(rows_iterator)  # iterators break the cache middleware
     return Response(output, mimetype='text/csv')
 
