@@ -7,7 +7,7 @@ from flask import g, request, session, render_template, redirect, Response, Mark
 from sqlalchemy.orm import relationship
 from .. import app, db, dump_table_json
 from penguicontrax.tag import Tag, get_tag, create_tag
-from penguicontrax.user import User
+from penguicontrax.user import User, Person, find_user, find_person
 
 
 # Associates multiple tags to a submission
@@ -247,12 +247,36 @@ def submitevent():
     for field, dbfield in fields.items():
         if field in request.form:
             setattr(submission, dbfield, request.form[field])
-    # print request.form.getlist('presenter')
     if 'submitter_id' in request.form:
         submission.submitter = User.query.filter_by(id=request.form['submitter_id']).first()
     submission.private = 'private' in request.form
     submission.followUpState = request.form['followupstate'] if 'followupstate' in request.form and request.form[
         'followupstate'] is not None else 0
+
+    # presenter handling
+    presenters_name = request.form.getlist('presenter')
+    presenters_phone = request.form.getlist('phone')
+    presenters_email = request.form.getlist('email')
+    presenters = zip(presenters_name, presenters_phone, presenters_email)
+    del submission.userPresenters[:]
+    del submission.personPresenters[:]
+    for presenter in presenters:
+        (name, phone, email) = presenter
+        found_user = find_user(name, phone, email)
+        if found_user:
+            if found_user not in submission.userPresenters:
+                submission.userPresenters.append(found_user)
+            continue
+        found_person = find_person(name, phone, email)
+        if found_person:
+            if found_person not in submission.personPresenters:
+                submission.personPresenters.append(found_person)
+            continue
+        new_person = Person(name)
+        new_person.phone = phone
+        new_person.email = email
+        db.session.add(new_person)
+        submission.personPresenters.append(new_person)
 
     tags = request.form.getlist('tag')
     del submission.tags[:]

@@ -142,9 +142,10 @@ def fake_login():
 # static asset versioning and packaging
 assets = Environment(app)
 
-js = Bundle('jquery-1.11.0.min.js',
-            'bootstrap-3.1.1/dist/js/bootstrap.min.js',
-            'bootstrap-selectpicker/bootstrap-select.min.js',
+js = Bundle('jquery-1.11.0.js',
+            'bootstrap-3.1.1/dist/js/bootstrap.js',
+            'bootstrap-selectpicker/bootstrap-select.js',
+            'typeahead.bundle.js',
             'lodash.min.js',
             'can.jquery.js',
             filters='jsmin', output='build/tuxtrax-%(version)s.js')

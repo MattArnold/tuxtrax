@@ -183,12 +183,12 @@ $(document).ready(function () {
             if (this.checked) {
                 update_time_options.call(this);
             }
-        }).delegate('button#newperson', 'click', function (ev) {
+        }).delegate('button#newperson', 'click',function (ev) {
             ev.preventDefault();
             var $formGroup = $('.form-group.presenters').last();
             var people = $('[name="presenter"]').length;
 
-            $('form').data('pluralPresenter',true);
+            $('form').data('pluralPresenter', true);
 
             $('#pptype').addClass('hidden');
             $('#pluralpptype').removeClass('hidden');
@@ -203,18 +203,18 @@ $(document).ready(function () {
                 $(this).hide();
             }
             return false;
-        }).delegate('#suggesterPresents','click',function(){
+        }).delegate('#suggesterPresents', 'click', function () {
             var checked = $(this).is(":checked");
             var $field = $('[name=submitter_id]');
             var submitter_name = $field.data('name');
             var submitter_email = $field.data('email');
             var submitter_phone = $field.data('phone');
 
-            if(checked){
+            if (checked) {
                 $('[name="presenter"]').first().val(submitter_name)
                 $('[name="email"]').first().val(submitter_email)
                 $('[name="phone"]').first().val(submitter_phone)
-            }else{
+            } else {
                 $('[name="presenter"]').first().val('')
                 $('[name="email"]').first().val('')
                 $('[name="phone"]').first().val('')
@@ -243,6 +243,31 @@ $(document).ready(function () {
         }
         return false;
     });
+
+    $('.presenter-typeahead').typeahead(
+        {
+            hint: true,
+            highlight: true,
+            minLength: 2
+        },
+        {
+            name : 'persons',
+            displayKey : 'name',
+            source: function (query, process) {
+                $.ajax({
+                    url: '/api/persons',
+                    data: {
+                        q: query
+                    }
+                }).done(function (data) {
+                    process(data)
+                })
+            }
+        }).on('typeahead:selected',function(ev,selection){
+            //add email and phone if present
+            $(this).siblings('[name="email"]').val(selection.email ? selection.email : "");
+            $(this).siblings('[name="phone"]').val(selection.phone ? selection.phone : "");
+        });
 
 // Limit the addition of new program participant fields.
 

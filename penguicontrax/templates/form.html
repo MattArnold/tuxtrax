@@ -212,9 +212,15 @@
                         {% if event is not none %}
                             {% for user_presenter in event.userPresenters %}
                                 {{ macros.user_link(user_presenter) }}
+                                <input name="presenter" type="hidden" value="{{ user_presenter.name }}"/>
+                                <input name="phone" type="hidden" value="{{ user_presenter.phone }}"/>
+                                <input name="email" type="hidden" value="{{ user_presenter.email }}"/>
                             {% endfor %}
                             {% for person_presenter in event.personPresenters %}
                                 {{ macros.person_link(person_presenter) }}
+                                <input name="presenter" type="hidden" value="{{ person_presenter.name }}"/>
+                                <input name="phone" type="hidden" value="{{ person_presenter.phone }}"/>
+                                <input name="email" type="hidden" value="{{ person_presenter.email }}"/>
                             {% endfor %}
                         {% endif %}
                     </p>
@@ -244,17 +250,17 @@
 
                         <label for="presenter" id="presenterLabel">
                             Name
-                            <input name="presenter" type="text" size="24" maxlength="24" class="pp form-control"/>
+                            <input name="presenter" autocomplete="off" type="text" size="24" maxlength="24" class="pp form-control presenter-typeahead"/>
                         </label>
                         &nbsp;
                         <label>
                             Phone
-                            <input name="phone" type="text" size="24" maxlength="24" class="pp form-control"/>
+                            <input name="phone" type="tel" size="24" maxlength="15" class="pp form-control" placeholder="555-123-456"/>
                         </label>
                         &nbsp;
                         <label>
                             Email
-                            <input name="email" type="text" size="24" maxlength="24" class="pp form-control"/>
+                            <input name="email" type="email" size="24" maxlength="50" class="pp form-control" placeholder="joe@bar.com"/>
                         </label>
                     </p>
                     <button id="newperson" class="pp btn"><span class="glyphicon glyphicon-plus"></span> someone else
