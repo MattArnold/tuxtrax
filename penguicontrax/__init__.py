@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 import json
-from flask import Flask
+from flask import Flask, Response
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.cache import Cache
 from flask.ext.mail import Mail
@@ -10,6 +10,8 @@ from constants import constants
 from flask.ext.assets import Environment, Bundle
 import os
 import functools
+import csv
+import collections
 
 
 app = Flask(__name__)
@@ -140,24 +142,49 @@ def report():
 @uncacheable_response
 @cache.cached(timeout=900)
 def reportcsv():
-    out = ''.join([u'\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",%s\r\n' % \
-                   (s.submitter.name if not s.submitter is None else u'', \
-                    '' if (s.submitter is None or s.submitter.email is None) else s.submitter.email, \
-                    s.title.replace('\"', '\'') if not s.title is None else u'',
-                    s.description.replace('\"', '\'') if not s.description is None else u'',
-                    s.comments.replace('\"', '\'') if not s.comments is None else u'',
-                    s.track.name if not s.track is None else '',
-                    str(s.duration),
-                    str(s.setupTime),
-                    str(s.repetition),
-                    s.timeRequest.replace('\"', '\'') if not s.timeRequest is None else u'',
-                    s.facilityRequest.replace('\"', '\'') if not s.facilityRequest is None else u'',
-                    u'%s%s' % (''.join([p.name.replace('\"', '\'') + u',' for p in s.personPresenters]),
-                               ''.join([p.name.replace('\"', '\'') + u',' for u in s.userPresenters]))
-                   ) for s in Submission.query.all()])
-    out = u'Submitter,Submitter e-mail,Title,Description,Comments,Track,Duration,' \
-          u'Setup time,Repetition,Time request,Facility request,Presenters\r\n' + out
-    return Response(out.encode('utf-8'), mimetype='text/csv')
+    # helper to format csv lines
+    class Echo(object):
+        """ An object that implements a writable file object
+            It returns the data that was written
+            to help implement a streaming csv writer
+        """
+        def write(self, value):
+            return value
+    writer = csv.writer(Echo())   # writer.writerow will now return the formatted line
+
+    # helpers to fetch data from the object
+    def default(data, default=u''):
+        """ Replicates that jinja2 default filter
+            Returns the default object if the data is None
+        """
+        return data if data is not None else default
+    def get_obj(obj, key, default=u''):
+        """ Returns the default object if the obj is None """
+        return getattr(obj, key, default) if obj is not None else default
+    # list of columns, and how to get the data for them
+    schema = collections.OrderedDict()
+    schema['Submitter'] = lambda s: get_obj(s.submitter, 'name')
+    schema['Submitter e-mail'] = lambda s: get_obj(s.submitter, 'email')
+    schema['Title'] = lambda s: default(s.title)
+    schema['Description'] = lambda s: default(s.description)
+    schema['Comments'] = lambda s: default(s.comments)
+    schema['Track'] = lambda s: get_obj(s.track, 'name')
+    schema['Duration'] = lambda s: unicode(s.duration)
+    schema['Setup time'] = lambda s: unicode(s.setupTime)
+    schema['Repetition'] = lambda s: unicode(s.repetition)
+    schema['Time request'] = lambda s: default(s.timeRequest)
+    schema['Facility request'] = lambda s: default(s.facilityRequest)
+    schema['Presenting submitter'] = lambda s: unicode(s.submitter in s.userPresenters)
+    schema['Presenters'] = lambda s: ','.join([p.name for p in s.personPresenters] + [u.name for u in s.userPresenters])
+    # generate the table
+    def generate_data_rows(data):
+        yield list(schema.keys())
+        for s in data:
+            yield [column(s).encode('utf-8') for column in schema.values()]
+    # convert the table to csv
+    rows_iterator = (writer.writerow(row) for row in generate_data_rows(Submission.query))
+    output = list(rows_iterator)  # iterators break the cache middleware
+    return Response(output, mimetype='text/csv')
 
 
 # TODO: this fake URL is used to run unittests. It should be disabled on a deploy
