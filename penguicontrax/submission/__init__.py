@@ -226,9 +226,43 @@ def event_form():
             event = None
     return render_template('form.html', tags=tags, resources=resources, tracks=tracks, event=event, user=g.user)
 
+def validateSubmitEvent(request):
+    returnCode = 200
+    returnStatus = 'success'
+    returnMessages = []
+    tags = request.form.getlist('tag')
+    validationRules = {
+        'tag':{'msg':'One or more tags required','type':'list'},
+        'description':{'msg':'Description Required','type':'str'},
+        'setuptime':{'msg':'Setup time required','type':'str'},
+        'submitter_id':{'msg':'Submitter Required','type':'str'},
+        'presenter':{'msg':'At lease one presenter required','type':'str'},
+        'track':{'msg':'Track is required','type':'str'},
+        'eventtype':{'msg':'Event type is required','type':'str'},
+    }
+    for index in validationRules:
+        if validationRules[index]['type'] == 'list':
+            value = request.form.getlist(index)
+        else:
+            value = request.form.get(index,'');
+        if 0 == len(value):
+            returnCode = 400
+            returnMessages.append(validationRules[index]['msg']);
+
+    if 200 != returnCode:
+        returnStatus='invalid'
+
+    return {
+        'code': returnCode,
+        'status': returnStatus,
+        'messages': returnMessages
+    }
 
 @app.route('/submitevent', methods=['POST'])
 def submitevent():
+    validation = validateSubmitEvent(request)
+    if 'success' != validation['status']:
+        return Response(json.dumps(validation), mimetype='application/json'), validation['code']
     eventid = request.form.get('eventid')
     if eventid is not None:
         submission = Submission.query.get(eventid)
