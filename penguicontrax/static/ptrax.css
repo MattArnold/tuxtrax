@@ -7547,6 +7547,7 @@ body {
 #submissions li.submission .toggle-user-rsvp i {
   font-size: large;
   color: #555555;
+  margin: 0 5px;
 }
 #submissions li.submission .toggle-user-rsvp i.fa-star-o {
   color: #999999;
@@ -7556,6 +7557,9 @@ body {
 }
 #submissions li.submission.updating .toggle-user-rsvp {
   pointer-events: none;
+}
+#submissions .fa {
+  line-height: 1.3em;
 }
 h4 {
   padding: 10px;
@@ -7607,6 +7611,17 @@ form .btn-sm.active {
   -ms-transition: padding 0.25s ease;
   -o-transition: padding 0.25s ease;
   padding: 7px 14px;
+}
+form .help-block {
+  font-size: x-small;
+  font-style: italic;
+}
+form #pptype,
+form #pluralpptype {
+  font-weight: bold;
+}
+form .suggested-by {
+  padding-left: 0;
 }
 nav {
   padding: .5em;
