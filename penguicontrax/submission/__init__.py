@@ -5,7 +5,7 @@ import os
 
 from flask import g, request, session, render_template, redirect, Response, Markup, url_for
 from sqlalchemy.orm import relationship
-from .. import app, db, dump_table_json
+from .. import app, db, dump_table_json, uncacheable_response
 from penguicontrax.tag import Tag, get_tag, create_tag
 from penguicontrax.user import User
 
@@ -204,6 +204,7 @@ def getevent():
 
 
 @app.route('/eventform', methods=['GET', 'POST'])
+@uncacheable_response
 def event_form():
     eventid = request.args.get('id', None)
     if g.user is None:

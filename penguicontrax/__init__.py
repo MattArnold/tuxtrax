@@ -9,6 +9,7 @@ import json, redis
 from constants import constants
 from flask.ext.assets import Environment, Bundle
 import os
+import functools
 
 
 app = Flask(__name__)
@@ -31,6 +32,31 @@ try:
 except Exception as e:
     conn = None
     pass
+
+# decorator to add uncaching headers
+def uncacheable_response(fun):
+    uncache_headers = {
+       'Cache-Control': 'no-cache, no-store, must-revalidate',
+       'Pragma': 'no-cache', 'Expires': '0'
+    }
+    @functools.wraps(fun)
+    def wrapped(*args, **kwargs):
+        ret = fun(*args, **kwargs)
+        # figure out what type of response it was
+        if hasattr(ret, 'headers'):   # is a response object
+            response = ret
+        else:
+            # create real response
+            if hasattr(ret, 'strip') or \
+               not hasattr(ret, '__getitem__'):
+                response = make_response(ret)    # handle string
+            else:
+                response = make_response(*ret)   # handle tuple
+        # adds uncacheable headers to response
+        for key,val in uncache_headers.items():
+            response.headers[key] = val
+        return response
+    return wrapped
 
 def dump_table_xml(elements, table, parent_node, collection_name, element_name):
     collection = ET.SubElement(parent_node, collection_name)
@@ -84,18 +110,21 @@ def init():
         import2013schedule.import_old('schedule2013.html', True, random_rsvp_users = 1000, submission_limit = 500, timeslot_limit = 500)
 
 @app.route('/')
+@uncacheable_response
 def index():
     tags = [tag.name for tag in Tag.query.all()]
     resp = make_response(render_template('index.html', user=g.user, showhidden=False, tags=tags))
     resp.set_cookie('submission_ver', str(submission_dataset_ver()))
     return resp
-    
+
 @app.route('/hidden')
+@uncacheable_response
 def hidden():
     return render_template('index.html', user=g.user, showhidden=True)
 
 
 @app.route('/report')
+@uncacheable_response
 @cache.cached(timeout=900)
 def report():
     root = ET.Element('penguicontrax')
@@ -108,6 +137,7 @@ def report():
 
 
 @app.route('/report.csv')
+@uncacheable_response
 @cache.cached(timeout=900)
 def reportcsv():
     out = ''.join([u'\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",%s\r\n' % \
