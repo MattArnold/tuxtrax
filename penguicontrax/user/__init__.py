@@ -124,3 +124,18 @@ def user_list():
     if g.user is None or not g.user.staff:
         return redirect('/')
     return render_template('user_list.html', user=g.user, users=User.query.all())
+
+def find_user(name, phone=None, email=None):
+    query = User.query.filter_by(name=name)
+    if phone:
+        query = query.filter_by(phone=phone)
+    if email:
+        query = query.filter_by(email=email)
+    return query.first()
+def find_person(name, phone=None, email=None):
+    query = Person.query.filter_by(name=name)
+    if phone:
+        query = query.filter_by(phone=phone)
+    if email:
+        query = query.filter_by(email=email)
+    return query.first()

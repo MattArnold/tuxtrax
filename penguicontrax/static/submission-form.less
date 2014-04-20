@@ -34,19 +34,60 @@ form {
 
   //animate buttons when selected
   .btn-xs {
-    .transition(padding .25s ease-out);
-    &.active {
-      .transition(padding .25s ease);
-      padding: 2px 7px;
-    }
+	.transition(padding .25s ease-out);
+	&.active {
+	  .transition(padding .25s ease);
+	  padding: 2px 7px;
+	}
   }
 
   .btn-sm {
-    .transition(padding .25s ease-out);
-    &.active {
-      .transition(padding .25s ease);
-      padding: 7px 14px;
-    }
+	.transition(padding .25s ease-out);
+	&.active {
+	  .transition(padding .25s ease);
+	  padding: 7px 14px;
+	}
+  }
+
+  .help-block {
+	font-size: x-small;
+	font-style: italic;
+  }
+
+  #pptype, #pluralpptype {
+	font-weight: bold;
+  }
+
+  .suggested-by {
+	padding-left: 0;
+  }
+
+  .twitter-typeahead {
+	display: block!important;
+	.tt-dropdown-menu {
+	  background-color: #fff;
+	  padding: 5px;
+	  border: 1px solid #eee;
+	  border-radius: 3px;
+	  .tt-suggestions {
+
+		.tt-suggestion {
+		  cursor: pointer;
+		  padding: 0 5px;
+		  line-height: 2em;
+		  &:hover {
+			background-color: @brand-primary;
+			color: white;
+		  }
+		  font-weight: normal;
+		  strong {
+			color:@brand-info;
+		  }
+
+		}
+
+	  }
+	}
   }
 
 }

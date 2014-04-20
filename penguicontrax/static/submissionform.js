@@ -43,7 +43,7 @@ $(document).ready(function () {
     var blurRemoveWarning = function () {
         $(this).parents('.form-group').removeClass('has-warning').find('.charnum').remove();
     };
-    $('form textarea[maxlength],form input[maxlength]').on("input",characterCounter).on('blur', blurRemoveWarning);
+    $('form textarea[maxlength],form input[maxlength]').on("input", characterCounter).on('blur', blurRemoveWarning);
 
 
     function updateTypeOptions() {
@@ -52,8 +52,12 @@ $(document).ready(function () {
         // we use flags mark them all hidden, then set those which are
         // not hidden, and then use the flags at the end of the function
         // to set every element.
-        //
-        var pluralized = false;
+
+        var $pptype = $('#pptype');
+        var $formGroup = $('.presenters-input');
+        var furniture = "";
+        var pluralized = $('form').data('pluralPresenter');
+
         var otherfacilityshow = false;
         var playersshow = false;
         var ppshow = false;
@@ -64,9 +68,13 @@ $(document).ready(function () {
         var pptypetext = '';
 
         // overwrite only
-        if (pluralized == false) {
+        if (!pluralized) {
             pptypeshow = true;
         }
+
+        //show the form group
+        $formGroup.removeClass('hidden');
+
 
         switch ($(this).val()) {
 
@@ -75,47 +83,50 @@ $(document).ready(function () {
             case 'talk':
                 pptypetext = "Speaker:";
                 pluralpptypetext = "Panelists:";
-                furniture = "Four chairs behind a table. It is faced by rows of chairs."
+                furniture = "Four chairs behind a table. It is faced by rows of chairs.";
                 resourcesshow = true;
                 otherfacilityshow = true;
                 ppshow = true;
                 break;
             case 'workshop':
                 pptypetext = 'Activity leader:';
-                pluralpptypetext = 'Activity leaders:"';
-                furniture = "A table surrounded by several chairs."
+                pluralpptypetext = 'Activity leaders:';
+                furniture = "A table surrounded by several chairs.";
                 resourcesshow = true;
                 otherfacilityshow = true;
                 ppshow = true;
                 break;
             case 'bof':
                 otherfacilityshow = true;
-                furniture = "Several chairs."
+                furniture = "Several chairs.";
+                //hide the presenters form group
+                $formGroup.addClass('hidden');
                 break;
             case 'demo':
                 pptypetext = 'Teacher:';
                 pluralpptypetext = 'Teachers:';
-                furniture = "Rectangular tables with chairs facing the front."
+                furniture = "Rectangular tables with chairs facing the front.";
                 otherfacilityshow = true;
+                break;
             case 'game':
                 pptypetext = 'Game master:';
                 pluralpptypetext = 'Game masters:';
                 playersshow = true;
-                furniture = "A table and four chairs."
+                furniture = "A table and four chairs.";
                 otherfacilityshow = true;
                 break;
             case 'onstage':
-                $('#pptype').text('Performer:');
+                $pptype.text('Performer:');
                 pptypetext = 'Performer:';
                 pluralpptypetext = 'Performers:';
                 resourcesshow = true;
-                furniture = "A stage at the front of the room, faced by rows of chairs."
+                furniture = "A stage at the front of the room, faced by rows of chairs.";
                 otherfacilityshow = true;
                 break;
             case 'roving':
                 pptypetext = 'Activity leader:';
                 pluralpptypetext = 'Activity leaders:';
-                furniture = "No furniture needed."
+                furniture = "No furniture needed.";
                 otherfacilityshow = true;
                 break;
         }
@@ -137,14 +148,15 @@ $(document).ready(function () {
         else
             $('#pp').addClass('hidden');
         if (pptypeshow)
-            $('#pptype').removeClass('hidden');
+            $pptype.removeClass('hidden');
         else
-            $('#pptype').addClass('hidden');
+            $pptype.addClass('hidden');
         if (resourcesshow)
             $('#resources').removeClass('hidden');
         else
             $('#resources').addClass('hidden');
-        $('#pptype').text(pptypetext);
+
+        $pptype.text(pptypetext);
         $('#pluralpptype').text(pluralpptypetext);
     }
 
@@ -161,17 +173,94 @@ $(document).ready(function () {
         }
     }
 
+    function attachTypeahead() {
+
+        $('.presenter-typeahead').typeahead(
+            {
+                hint: true,
+                highlight: true,
+                minLength: 2
+            },
+            {
+                name: 'persons',
+                displayKey: 'name',
+                source: function (query, process) {
+                    $.ajax({
+                        url: '/api/persons',
+                        data: {
+                            q: query
+                        }
+                    }).done(function (data) {
+                        process(data)
+                    })
+                }
+            }).on('typeahead:selected', function (ev, selection) {
+                //add id, and email /phone if present
+                var $parent = $(this).parents('.form-group');
+                $parent.find('[name="presenter_id"]').val(selection.id);
+                $parent.find('[name="presenter_idtype"]').val('person');
+                $parent.find('[name="email"]').val(selection.email ? selection.email : "");
+                $parent.find('[name="phone"]').val(selection.phone ? selection.phone : "");
+            });
+    }
+
     //set up delegated handler for event type and timechange
     $('form')
         .delegate('input[name=eventtype]', 'change',function handleTypeChange() {
             if (this.checked) {
                 updateTypeOptions.call(this);
             }
-        }).delegate('input[name=duration]', 'change', function handleTimeChange() {
+        }).delegate('input[name=duration]', 'change',function handleTimeChange() {
             if (this.checked) {
                 update_time_options.call(this);
             }
+        }).delegate('button#newperson', 'click',function (ev) {
+            ev.preventDefault();
+            var $formGroup = $('.form-group.presenters').last();
+            var people = $('[name="presenter"]').length;
+
+            $('form').data('pluralPresenter', true);
+
+            $('#pptype').addClass('hidden');
+            $('#pluralpptype').removeClass('hidden');
+
+            $('.presenter-typeahead').typeahead('destroy')
+
+            var clone = $formGroup.clone();
+
+            clone.find('input').val('');
+
+            $formGroup.after(clone);
+
+            attachTypeahead();
+
+            if (people == 6) {
+                $(this).hide();
+            }
+            return false;
+        }).delegate('#suggesterPresents', 'click', function () {
+            var checked = $(this).is(":checked");
+            var $field = $('[name=submitter_id]');
+            var submitter_id = $field.data('id');
+            var submitter_name = $field.data('name');
+            var submitter_email = $field.data('email');
+            var submitter_phone = $field.data('phone');
+
+            if (checked) {
+                $('[name="presenter_id"]').first().val(submitter_id)
+                $('[name="presenter_idtype"]').first().val('user')
+                $('[name="presenter"]').first().val(submitter_name)
+                $('[name="email"]').first().val(submitter_email)
+                $('[name="phone"]').first().val(submitter_phone)
+            } else {
+                $('[name="presenter_id"]').first().val('')
+                $('[name="presenter_idtype"]').first().val('')
+                $('[name="presenter"]').first().val('')
+                $('[name="email"]').first().val('')
+                $('[name="phone"]').first().val('')
+            }
         });
+
 
     //run once to catch initial page state
     $("[name=eventtype]:checked").each(function () {
@@ -182,6 +271,9 @@ $(document).ready(function () {
     $("[name=timechange]:checked").each(function () {
         update_time_options.call(this);
     });
+
+    //attach first typeahead
+    attachTypeahead();
 
 
     $('#moresetuplink').click(function () {
@@ -195,30 +287,14 @@ $(document).ready(function () {
         return false;
     });
 
+
 // Limit the addition of new program participant fields.
-    var people = 0;
-    $("#newperson").click(function () {
-        pluralized = true;
-        $('#pptype').hide();
-        $('#pluralpptype').show();
-        if (people < 8) {
-            var presenterId = 'presenter_'+people;
-            $("#presenterLabel").after('<input name="'+presenterId+'" id="'+presenterId+'" type="text" size="24" maxlength="24" class="pp form-control" style="float:left;width:203px;" />');
-            people = people + 1;
-            $('#'+presenterId).on("input",characterCounter).on('blur', blurRemoveWarning);
-        }
-        return false;
-    });
+
 
     $('#submitevent').click(function (ev) {
         var facilitycomment, timecomment;
-        var $presenter = $('[name="presenter"]');
 
         ev.preventDefault();
-
-        if(!$presenter.val().length){
-            $presenter.val($('[name="submitter_name"]').val());
-        }
 
         // Combine all the comment fields into one comment.
         facilitycomment = $("facilityrequest").val();

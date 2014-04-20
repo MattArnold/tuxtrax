@@ -7547,6 +7547,7 @@ body {
 #submissions li.submission .toggle-user-rsvp i {
   font-size: large;
   color: #555555;
+  margin: 0 5px;
 }
 #submissions li.submission .toggle-user-rsvp i.fa-star-o {
   color: #999999;
@@ -7556,6 +7557,9 @@ body {
 }
 #submissions li.submission.updating .toggle-user-rsvp {
   pointer-events: none;
+}
+#submissions .fa {
+  line-height: 1.3em;
 }
 h4 {
   padding: 10px;
@@ -7607,6 +7611,39 @@ form .btn-sm.active {
   -ms-transition: padding 0.25s ease;
   -o-transition: padding 0.25s ease;
   padding: 7px 14px;
+}
+form .help-block {
+  font-size: x-small;
+  font-style: italic;
+}
+form #pptype,
+form #pluralpptype {
+  font-weight: bold;
+}
+form .suggested-by {
+  padding-left: 0;
+}
+form .twitter-typeahead {
+  display: block!important;
+}
+form .twitter-typeahead .tt-dropdown-menu {
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #eee;
+  border-radius: 3px;
+}
+form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-suggestion {
+  cursor: pointer;
+  padding: 0 5px;
+  line-height: 2em;
+  font-weight: normal;
+}
+form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-suggestion:hover {
+  background-color: #16a085;
+  color: white;
+}
+form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-suggestion strong {
+  color: #2980b9;
 }
 nav {
   padding: .5em;
