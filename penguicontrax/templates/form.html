@@ -13,7 +13,9 @@
         <input type=hidden name=eventid value="{{ event.id }}">
     {% endif %}
     <div class="help-block" id="disclaimer">
-        <small>Thanks for leaving your ideas here! Just FYI, we can't accept all event suggestions, and we might decide to change some events we accept, OK?</small>
+        <small>Thanks for leaving your ideas here! Just FYI, we can't accept all event suggestions, and we might decide
+            to change some events we accept, OK?
+        </small>
     </div>
     <div class="row well section where">
         <div class="col-md-2">
@@ -47,7 +49,8 @@
                 <div class="radio">
                     <label for="demobtn">
                         <input type="radio" name=eventtype class="typelist where question roomtab"
-                                value="demo" id="demobtn" {{ event.eventType | is_checked('demo') }}>Tables with a demonstrator up front.
+                               value="demo" id="demobtn" {{ event.eventType | is_checked('demo') }}>Tables with a
+                        demonstrator up front.
                     </label>
                 </div>
                 <div class="radio">
@@ -191,20 +194,20 @@
             </h4>
         </div>
         <div class="col-md-10">
-            <p class="help-block">
-                <small>Phone numbers will only be used by Penguicon Programming Operations during the convention.</small>
-            </p>
-            <div class="row form-group">
-                <p>
-                    <small>Suggested by
+            <div class="row">
+                <div class="col-md-3">
+                    <p class="checkbox small suggested-by">
+                        Suggested by
                         {% if event is none %}
-                            <input type=hidden name=submitter_id value={{ user.id }} />
+                            <input type=hidden name=submitter_id value={{ user.id }} data-name="{{ user.name }}"
+                                   data-email="{{ user.email }}" data-phone="{{ user.phone }}"/>
                             {{ macros.user_link(user) }}
                         {% else %}
                             {% if event.submitter is not none %}
-                            <input type=hidden name=submitter_id value={{ event.submitter.id }} />
+                                <input type=hidden name=submitter_id
+                                       value={{ event.submitter.id }} data-name="{{ event.submitter }}"/>
                             {% endif %}
-                                {{ macros.user_link(event.submitter) }}
+                            {{ macros.user_link(event.submitter) }}
                         {% endif %}
 
                         {% if event is not none %}
@@ -215,16 +218,49 @@
                                 {{ macros.person_link(person_presenter) }}
                             {% endfor %}
                         {% endif %}
-                    </small>
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <div class="checkbox small">
+                        <label>
+                            <input type="checkbox" id="suggesterPresents"> I will present this panel
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row presenters-input">
+
+                <div class="col-md-2">
+                    <p>
+                        <span id="pptype" class="hidden"></span>
+                        <span id="pluralpptype" class="hidden"></span>
+                    </p>
+                </div>
+                <div class="col-md-10">
+                    <p class="help-block">
+                    Phone numbers / email addresses will only be used by Penguicon Programming Operations during the
+                    convention.
                 </p>
-                <label for="presenter" id="presenterLabel">
-                    <span id="pptype" style="display:none"></span>
-                    <span id="pluralpptype" style="display:none"></span>
-                    <input name="presenter" type="text" size="24" maxlength="24" class="pp form-control"/>
-                    <!-- Add email and phone input here -->
-                </label>
-                <button id="newperson" class="pp btn"><span class="glyphicon glyphicon-plus"></span> someone else
-                </button>
+                    <p class="form-group presenters">
+
+                        <label for="presenter" id="presenterLabel">
+                            Name
+                            <input name="presenter" type="text" size="24" maxlength="24" class="pp form-control"/>
+                        </label>
+                        &nbsp;
+                        <label>
+                            Phone
+                            <input name="phone" type="text" size="24" maxlength="24" class="pp form-control"/>
+                        </label>
+                        &nbsp;
+                        <label>
+                            Email
+                            <input name="email" type="text" size="24" maxlength="24" class="pp form-control"/>
+                        </label>
+                    </p>
+                    <button id="newperson" class="pp btn"><span class="glyphicon glyphicon-plus"></span> someone else
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -258,25 +294,32 @@
                                           maxlength="80">{{ event.title | default('',true) }}</textarea>
                             </div>
                             <div class="help-block" id="titleadvice">
-                                <small><em>The title will sometimes be used without the description, so please be informative. 
+                                <small><em>The title will sometimes be used without the description, so please be
+                                    informative.
                                     Only be cute if it's still easy to understand what to expect.</em></small>
                             </div>
                         </div>
                         <div class="col-md-7">
                             <div class="form-group">
                                 <label for="description">Descriptive blurb:</label>
-                                    <textarea name=description id="description" rows="8" cols="60"
-                                              class="form-control"
-                                              maxlength="700">{{ event.description | default('',true) }}</textarea>
+                                <textarea name=description id="description" rows="8" cols="60"
+                                          class="form-control"
+                                          maxlength="700">{{ event.description | default('',true) }}</textarea>
                             </div>
                             <div class="help-block" id="descriptionadvice">
-                                <small><em>Tips:
-                                <ul><li>Don't say "I".</li>
-                                <li>Instead of parentheses, try making a new sentence or re-arranging phrases in the sentence.</li>
-                                <li>Many people have never heard of your topic. Help them figure out whether to attend.</li>
-                                <li>Will it be introductory or advanced?</li>
-                                <li>Do the participants need to bring something?</li>
-                                <li>Will they need to sign up in advance at Ops?</li></ul></em></small>
+                                <small><em>Tips</em></small>
+                                <ul>
+                                    <li class="small">Don't say "I".</li>
+                                    <li class="small">Instead of parentheses, try making a new sentence or re-arranging
+                                        phrases in the sentence.
+                                    </li>
+                                    <li class="small">Many people have never heard of your topic. Help them figure out
+                                        whether to attend.
+                                    </li>
+                                    <li class="small">Will it be introductory or advanced?</li>
+                                    <li class="small">Do the participants need to bring something?</li>
+                                    <li class="small">Will they need to sign up in advance at Ops?</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -288,13 +331,14 @@
 
                     <div class="control-group" id="topics" data-toggle="buttons">
                         {% for tag in tags %}
-                            <label value="{{ tag }}" class="btn btn-xs btn-info">
+                            <label class="btn btn-xs btn-info">
                                 <input type="checkbox" name="tag"
                                        value="{{ tag }}" {{ event | checked_if_tagged(tag) }}>{{ tag | trim }}
                             </label>
                         {% endfor %}
                     </div>
-                    <!-- <form action="/createtag" method=post > -->
+                    <!-- TODO add user submitted tags
+                    <form action="/createtag" method=post >
                     <div>
                         <label for="tagname">New topic tag:
                             <input type=text name=tagname id="tagname"
@@ -303,11 +347,9 @@
                         <button type=submit value="Submit tag" class="btn btn-default btn-sm" name=createtag
                                 id="createtag"><span class="fui-plus"></span> Submit Tag
                         </button>
-                        <!--
-                                                    TODO: MAKE AJAX CALL
-                       -->
                     </div>
-                    <!-- </form> -->
+                    </form>
+                    -->
                 </div>
                 <div class="col-md-6">
                     <p>
@@ -375,6 +417,6 @@
 {% endblock %}
 {% block page_script %}
     {% assets filters="jsmin",output="build/submissionform-%(version)s.js","submissionform.js" %}
-         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
 {% endblock %}
