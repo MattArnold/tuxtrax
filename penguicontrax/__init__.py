@@ -205,7 +205,7 @@ js = Bundle('jquery-1.11.0.js',
             'typeahead.bundle.js',
             'lodash.min.js',
             'can.jquery.js',
-            filters='jsmin', output='build/tuxtrax-%(version)s.js')
+            filters='rjsmin', output='build/tuxtrax-%(version)s.js')
 
 css = Bundle('ptrax.css', output='build/tuxtrax-%(version)s.css')
 
