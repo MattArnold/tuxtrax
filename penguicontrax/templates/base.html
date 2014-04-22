@@ -20,55 +20,64 @@
     {% endblock %}
 </head>
 <body>
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default">
     <div class="container-fluid">
-        <div class="col-md-4 navbar-header hidden-sm hidden-xs">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#navbarCollapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
             <a class="navbar-brand" href="/"
-               title="Tentative Requested Activity Xperiment">{{ macros.tux_badge(32,32) }}&nbsp;TUX TRAX - Penguicon
+               title="Tentative Requested Activity Xperiment">{{ macros.tux_badge(40,40) }}&nbsp;TUX TRAX - Penguicon
                 2015</a>
+
         </div>
-        <div class="col-md-8">
-            <div class="col-md-3">
-                <span class="small">FAQ/Help/Feedback: </span><a
-                    href="mailto:matt.mattarn+traxfeedback@gmail.com?Subject=Feedback%20About%20Penguicon-TRAX"><i
-                    class="fa fa-question-circle"></i></a>
-            </div>
-            {% if user is none %}
-            {% else %}
-                <div class="col-md-3">
-                    <span class="small">{{ macros.user_link(user) }}</span>
-                </div>
-                <div class="col-md-3">
-                    <span class="small"><span id="totalRsvpPoints">{{ user.points }}</span> <i class="fa fa-thumbs-up rsvp" style="color:#e3cf7a"></i> "Would-attends" left</span>
-                </div>
-                <div class="col-md-1">
-                    <span class="small"><a href="/logs">Logs</a></span>
-                </div>
-                <div class="col-md-1">
-                    <span class="small"><a href="/users">Users</a></span>
-                </div>
-            {% endif %}
-            {% if user is none %}
-                <div class="col-md-9">
-                <form action="/logout" method=get class="rightheader">
-                <span class="small">Log in using: </span>
-                <a href="/login?provider=facebook"><i class="fa fa-facebook-square"></i></a>
-                <a href="/login?provider=twitter"><i class="fa fa-twitter-square"></i></a>
-                <a href="/login?provider=google">
-                    {{ macros.google_icon() }}
-                </a>
-                <a href="/login?provider=yahoo">
-                    {{ macros.yahoo_icon() }}
-                </a>
-            {% else %}
-                <div class="col-md-1">
-                <form action="/logout" method=get class="rightheader">
-                <input class="btn btn-primary btn-xs" type=submit value="Logout">
-            {% endif %}
-            </form>
-            </div>
-            </div>
+
+        <div class="navbar-collapse collapse" id="navbarCollapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="small navbar-link ">
+                    <a href="mailto:matt.mattarn+traxfeedback@gmail.com?Subject=Feedback%20About%20Penguicon-TRAX">FAQ/Help/Feedback
+                        <i class="fa fa-question-circle"></i></a>
+                </li>
+                {% if user is not none %}
+                    <li class="navbar-text">
+                        <span id="totalRsvpPoints">{{ user.points }}</span> <i
+                            class="fa fa-thumbs-up rsvp" style="color:#e3cf7a"></i> "Would-attends" left
+                    </li>
+                    <li class="small"><a href="/logs">Logs</a></li>
+                    <li class="small"><a href="/users">Users</a></li>
+                {% endif %}
+
+                {% if user is none %}
+
+                    <li class="navbar-text small">Log in using:&nbsp;</li>
+                    <li class="provider-link"><a href="/login?provider=facebook"><i
+                            class="fa fa-facebook-square"></i></a></li>
+                    <li class="provider-link"><a href="/login?provider=twitter"><i class="fa fa-twitter-square"></i></a>
+                    </li>
+                    <li class="provider-link"><a href="/login?provider=google">
+                        {{ macros.google_icon() }}
+                    </a>
+                    </li>
+                    <li class="provider-link"><a href="/login?provider=yahoo">
+                        {{ macros.yahoo_icon() }}
+                    </a></li>
+                {% else %}
+                    <form class="navbar-form navbar-right navbar-text small" action="/logout" method=get>
+                        Logged in as {{ macros.user_link(user) }}&nbsp;
+                        <input class="btn btn-primary btn-xs" type=submit value="Logout">
+                    </form>
+                {% endif %}
+
+                </li>
+
+            </ul>
         </div>
+
+
     </div>
 </nav>
 <div class="container-fluid">
