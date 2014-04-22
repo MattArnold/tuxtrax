@@ -14,11 +14,23 @@ module.exports = function (grunt) {
                 files: {
                     "static/ptrax.css": "static/ptrax.less"
                 }
+            },
+            production : {
+                options: {
+                    paths: ["static"],
+                    ieCompat: false,
+                    sourceMap: false,
+                    cssmin : true,
+                    cleancss : true
+                },
+                files: {
+                    "static/ptrax.css": "static/ptrax.less"
+                }
             }
         },
         watch: {
             files: "static/**/*.less",
-            tasks: ["less"],
+            tasks: ["less:development"],
             options: {
                 atBegin: true
             }

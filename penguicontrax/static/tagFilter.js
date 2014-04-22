@@ -15,6 +15,8 @@
         return tag.attr('state') === EXCLUDED;
     }
 
+
+
     ptrax.TagFilter = can.Control.extend(
         {
             defaults: {

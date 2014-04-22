@@ -273,8 +273,8 @@ $(document).ready(function () {
     });
 
     //attach first typeahead
+    //subsequent typeahead is decorated when new presenter fields are added
     attachTypeahead();
-
 
     $('#moresetuplink').click(function () {
         if ($('#setupandrepeat:visible').length == 0) {
@@ -287,9 +287,7 @@ $(document).ready(function () {
         return false;
     });
 
-
 // Limit the addition of new program participant fields.
-
 
     $('#submitevent').click(function (ev) {
         var facilitycomment, timecomment;
