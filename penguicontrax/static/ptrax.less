@@ -20,21 +20,21 @@ nav {
   background-color: #eee;
   margin-bottom: .5em;
   .title {
-    font-size: large;
-    font-weight: bold;
-    padding-left: 1em;
+	font-size: large;
+	font-weight: bold;
+	padding-left: 1em;
   }
   .rightheader {
-    float: right;
+	float: right;
   }
   .navbar-brand {
-    padding : 0;
+	padding: 0;
   }
 }
 
 body {
-  padding-top: 80px;
-  min-width: 1200px;
+  //padding-top: 80px;
+  //min-width: 1200px;
 }
 
 .icon-google-square, .icon-yahoo-square {
@@ -47,15 +47,41 @@ body {
   fill: #16a085;
 }
 
+.navbar {
+  .navbar-text {
+	line-height:20px;
+  }
+  .provider-link {
+	font-size:1.6em;
+  }
+
+  .collapse {
+	.extras {
+	  display:none;
+	}
+	&.in {
+	  .extras {
+		display:block;
+	  }
+	}
+  }
+}
 
 #nav {
-  position: relative;
-  .floater{
-    .transition(all .25s);
-  }
-  .affix {
+  //position: relative;
 
+  .floater {
+
+	&.affix-top {
+	  top: 42px;
+	}
+
+	&.affix {
+	  top: 42px;
+	  width: 16.66666667%;
+	}
   }
+
 }
 
 .person {
@@ -64,7 +90,7 @@ body {
 
 .tag {
   &.checked {
-    background-color: #cacfd2;
+	background-color: #cacfd2;
   }
 }
 
@@ -85,28 +111,28 @@ body {
 
 #tagfilter, #topics {
   .btn {
-    margin: 2px 0;
+	margin: 2px 0;
   }
 }
 
 //some fun pretty stuff
 .form-group {
   @-webkit-keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+	from {
+	  opacity: 0;
+	}
+	to {
+	  opacity: 1;
+	}
   }
 
   @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+	from {
+	  opacity: 0;
+	}
+	to {
+	  opacity: 1;
+	}
   }
   -webkit-animation: fadeIn .5s;
   animation: fadeIn .5s;
