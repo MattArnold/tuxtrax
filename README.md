@@ -73,6 +73,7 @@ $ heroku config:set TWITTER_KEY=
 $ heroku config:set TWITTER_SECRET_KEY=
 $ heroku config:set FACEBOOK_APP_ID=
 $ heroku config:set FACEBOOK_SECRET=
+$ heroku config:set PUBLIC_URL=
 ```
 
 To deploy, pull and push to Heroku
@@ -135,6 +136,23 @@ You will need to replace <password> with the PostgreSQL password you previously 
 ```sh
 $ chmod +x psql_runserver.sh
 $ ./psql_runserver.sh
+```
+
+### Optional: Set up notification e-mails
+
+penguicontrax will automatically e-mail submitters of events as their submissions move through the accept/reject process; for this to work you will need to configure an e-mail account on a SMTP server that the app can use. Set the following environment variables to their appropriate values.
+
+```sh
+$ herkou config:set MAIL_SERVER=
+$ herkou config:set MAIL_PORT=
+$ herkou config:set MAIL_USE_TLS=
+$ herkou config:set MAIL_USE_SSL=
+$ herkou config:set MAIL_USERNAME=
+$ herkou config:set MAIL_PASSWORD=
+$ herkou config:set DEFAULT_MAIL_SENDER=
+$ heroku config:set ORGANIZATION=
+$ heroku config:set DEFAULT_MAIL_SENDER=
+$ heroku config:set MAIL_REPLY_TO=
 ```
 
 ### Optional: Set up auto scheduler
