@@ -69,6 +69,9 @@
                     } else {
                         return presenters.join(" ");
                     }
+                },
+                has_presenters: function() {
+                    return (this.attr('personPreseners').length + this.attr('userPresenters').length) > 0;
                 }
             });
 

@@ -88,7 +88,7 @@ class SubmissionsAPI(Resource):
         for index, element in enumerate(output):
             element['tags'] = [_.name for _ in submissions[index].tags]
             element['personPresenters'] = [_.name for _ in submissions[index].personPresenters]
-            user_map = ['name', 'email', 'id']
+            user_map = ['name', 'email', 'id', 'special_tag', 'account_name', 'image_small']
             element['userPresenters'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
                                          submissions[index].userPresenters]
             element['rsvped_by'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in

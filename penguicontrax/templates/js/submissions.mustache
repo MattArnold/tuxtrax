@@ -19,14 +19,18 @@
                 {{/followUpState}}
                 <a href="/eventform?id={{id}}" class="submission-link">{{ title }}</a>&nbsp;
                 <span>{{ _duration }}</span>&nbsp;
-                <span><small>Suggested 
-                    by {{suggester}}. Suggested presenters: {{#if userPresenters.length}}{{>user_link}} {{#if personPresenters.length}}Suggested presenters:{{/if}} {{#if personPresenters.length}}and{{/if}} {{/if}} {{_presenters}}</small>
+                <span>
+                    <small>
+                        Suggested by {{suggester}}. 
+                        {{#if has_presenters}}Suggested presenters: {{/if}}
+                        {{#userPresenters}}{{>user_link}}{{/userPresenters}}
+                        {{_presenters}}
+                    </small>
                 </span>&nbsp;
                 {{#tags}}
                     <span class="label label-info"><i class="fa fa-tag"></i>&nbsp;{{ . }}</span>&nbsp;
                 {{/tags}}
                {{ description }}
-
             </div>
         </li>
     {{/submissions}}

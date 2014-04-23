@@ -71,9 +71,10 @@
 {% macro user_link(user) -%}
 	{% if user is not none %}
 		<a class="userlink" href="/{{ user.account_name }}">
-			<img src="{{ user.image_small }}" width="20" style="margin-right:5px">
-			{{ user_text(user) }}
+			<img src="{{ user.image_small }}" width="20" style="margin-right:2px">
+			{{ user.name }}
 		</a>
+		{% if user.special_tag is not none %} <span class="label label-primary">{{ user.special_tag }}</span>{% endif %}
 	{% else %}
 		<span class="userlink">Unknown</span>
 	{% endif %}
