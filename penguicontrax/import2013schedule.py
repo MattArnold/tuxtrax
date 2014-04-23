@@ -9,7 +9,7 @@ import datetime, random
 from user.Login import generate_account_name, gravatar_image_update
 import sys
 
-def import_old(path, as_convention, random_rsvp_users = 0, submission_limit = sys.maxint, timeslot_limit = sys.maxint):
+def import_old(path, as_convention = False, random_rsvp_users = 0, submission_limit = sys.maxint, timeslot_limit = sys.maxint):
     
     if as_convention == True:
         convention = Convention()
