@@ -9,6 +9,26 @@ import datetime, random
 from user.Login import generate_account_name, gravatar_image_update
 import sys
 
+def setup_predefined():
+    penguicontrax.db.session.add(
+        Resource('Projector', 'This event CANNOT happen without a projector', True)
+    )
+    penguicontrax.db.session.add(
+        Resource('Microphone/sound system',
+                 'This event CANNOT happen without a microphone and sound system',
+                 True)
+    )
+    penguicontrax.db.session.add(Resource('Drinking water', 'Drinking water', False))
+    penguicontrax.db.session.add(Resource('Quiet (no airwalls)', 'Quiet (no airwalls)', False))
+
+    official_tags_tracks = ['diy','action-adventure','penguicon','costuming','music','tech','eco','after-dark','mayhem','film','food','literature','science','video-gaming','life','gaming']
+
+    for track in official_tags_tracks:
+        penguicontrax.db.session.add(Track(track,None))
+    for tag in official_tags_tracks:
+        penguicontrax.db.session.add(Tag(tag,tag,True))
+    penguicontrax.db.session.commit()
+
 def import_old(path, as_convention = False, random_rsvp_users = 0, submission_limit = sys.maxint, timeslot_limit = sys.maxint):
     
     if as_convention == True:
@@ -22,26 +42,6 @@ def import_old(path, as_convention = False, random_rsvp_users = 0, submission_li
         penguicontrax.db.session.add(convention)
         current_day = convention.start_dt.date()
         current_time = None
-
-    if as_convention == False:
-        penguicontrax.db.session.add(
-            Resource('Projector', 'This event CANNOT happen without a projector', True)
-        )
-        penguicontrax.db.session.add(
-            Resource('Microphone/sound system',
-                     'This event CANNOT happen without a microphone and sound system',
-                     True)
-        )
-        penguicontrax.db.session.add(Resource('Drinking water', 'Drinking water', False))
-        penguicontrax.db.session.add(Resource('Quiet (no airwalls)', 'Quiet (no airwalls)', False))
-
-        official_tags_tracks = ['diy','action-adventure','penguicon','costuming','music','tech','eco','after-dark','mayhem','film','food','literature','science','video-gaming','life','gaming']
-
-        for track in official_tags_tracks:
-            penguicontrax.db.session.add(Track(track,None))
-        for tag in official_tags_tracks:
-            penguicontrax.db.session.add(Tag(tag,tag,True))
-        penguicontrax.db.session.commit()
 
     existing_tags = {}
     for tag in Tag.query.all():

@@ -87,7 +87,7 @@ def dump_table_json(elements, table):
     return json.dumps(dump_table(elements,table))
 
 from flask import render_template, g, url_for, redirect, Response, make_response
-from submission import Submission, submission_dataset_ver
+from submission import Submission, submission_dataset_ver, Track
 from tag import Tag
 from user import Login
 import import2013schedule
@@ -104,12 +104,17 @@ def init():
     except Exception as e:
         print e
         pass
-    # GET RID OF THIS LATER
+
+    if len(Track.query.all()) == 0:
+        import2013schedule.setup_predefined()
+
+    '''
     if len(Submission.query.all()) == 0 and len(Events.query.all()) == 0:
         print 'Importing 2015 schedule into submissions'
         import2013schedule.import_old('schedule2015.html')
-        #print 'Importing 2013 schedule into convention'
-        #import2013schedule.import_old('schedule2013.html', True, random_rsvp_users = 1000, submission_limit = 500, timeslot_limit = 500)
+        print 'Importing 2013 schedule into convention'
+        import2013schedule.import_old('schedule2013.html', True, random_rsvp_users = 1000, submission_limit = 500, timeslot_limit = 500)
+    '''
 
 @app.route('/')
 @uncacheable_response
