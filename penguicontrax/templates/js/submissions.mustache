@@ -21,7 +21,7 @@
                 <span>{{ _duration }}</span>&nbsp;
                 <span>
                     <small>
-                        Suggested by {{suggester}}. 
+                        Suggested by {{#submitter}}{{>user_link}}{{/submitter}}. 
                         {{#if has_presenters}}Suggested presenters: {{/if}}
                         {{#userPresenters}}{{>user_link}}{{/userPresenters}}
                         {{_presenters}}

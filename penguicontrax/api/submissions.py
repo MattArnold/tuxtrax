@@ -95,6 +95,8 @@ class SubmissionsAPI(Resource):
                                     submissions[index].rsvped_by]
             element['overdue'] = (datetime.datetime.now() - submissions[index].submitted_dt).days > 13
             element['followUpDays'] = (datetime.datetime.now() - submissions[index].submitted_dt).days
+            if not submissions[index].submitter is None:
+                element['submitter'] = dict([(field, getattr(submissions[index].submitter, field)) for field in user_map])
         import random
         random.shuffle(output)
         return output
