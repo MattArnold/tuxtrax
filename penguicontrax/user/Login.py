@@ -1,7 +1,7 @@
 from flask import g, redirect, request, session, flash, url_for, render_template
 from flask_openid import OpenID
 from flask_oauth import OAuth
-from penguicontrax import constants
+from penguicontrax import constants, uncacheable_response
 from . import lookup_current_user, User, UserLoginIP
 from .. import app, db
 from ..constants import constants
@@ -47,6 +47,7 @@ def generate_account_name(user):
     user.account_name = proposed
         
 @app.route('/login', methods=['GET'])
+@uncacheable_response
 @oid.loginhandler
 def login():
     if g.user is not None:
@@ -95,6 +96,7 @@ def new_openid_user(resp):
     return redirect(oid.get_next_url())
 
 @app.route('/logout')
+@uncacheable_response
 def logout():
     session.pop('openid', None)
     session.pop('oauth_token', None)
@@ -130,6 +132,7 @@ def update_fb_info(user):
         db.session.commit()
 
 @app.route('/oauth-authorized-facebook')
+@uncacheable_response
 @facebook.authorized_handler
 def oauth_authorized_facebook(resp):
     next_url = request.args.get('next') or url_for('index')
@@ -157,6 +160,7 @@ def oauth_authorized_facebook(resp):
     return redirect(next_url)
 
 @app.route('/oauth-authorized-twitter')
+@uncacheable_response
 @twitter.authorized_handler
 def oauth_authorized_twitter(resp):
     next_url = request.args.get('next') or url_for('index')
