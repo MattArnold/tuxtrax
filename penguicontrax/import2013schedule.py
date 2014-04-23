@@ -22,17 +22,6 @@ def import_old(path, as_convention = False, random_rsvp_users = 0, submission_li
         penguicontrax.db.session.add(convention)
         current_day = convention.start_dt.date()
         current_time = None
-        
-    existing_tags = {}
-    for tag in Tag.query.all():
-        existing_tags[tag.name] = tag
-        
-    existing_people = {}
-    for person in Person.query.all():
-        existing_people[person.name] = person
-
-    existing_rooms = {}
-    existing_submissions = []
 
     if as_convention == False:
         penguicontrax.db.session.add(
@@ -46,8 +35,28 @@ def import_old(path, as_convention = False, random_rsvp_users = 0, submission_li
         penguicontrax.db.session.add(Resource('Drinking water', 'Drinking water', False))
         penguicontrax.db.session.add(Resource('Quiet (no airwalls)', 'Quiet (no airwalls)', False))
 
-        for track in ['literature', 'tech', 'music', 'food', 'science']:
+        official_tags_tracks = ['diy','action-adventure','penguicon','costuming','music','tech','eco','after-dark','mayhem','film','food','literature','science','video-gaming','life','gaming']
+
+        for track in official_tags_tracks:
             penguicontrax.db.session.add(Track(track,None))
+        for tag in official_tags_tracks:
+            penguicontrax.db.session.add(Tag(tag,tag,True))
+        penguicontrax.db.session.commit()
+
+    existing_tags = {}
+    for tag in Tag.query.all():
+        existing_tags[tag.name] = tag
+        
+    existing_people = {}
+    for person in Person.query.all():
+        existing_people[person.name] = person
+
+    existing_tracks = {}
+    for track in Track.query.all():
+        existing_tracks[track.name] = track
+
+    existing_rooms = {}
+    existing_submissions = []
 
     submission_count = 0
     with penguicontrax.app.open_resource(path, mode='r') as f:
@@ -105,6 +114,10 @@ def import_old(path, as_convention = False, random_rsvp_users = 0, submission_li
                         existing_tags[tag] = db_tag
                     else:
                         db_tag = existing_tags[tag]
+                    # Set track -- pick any tag that is also a track
+                    if submission.track is None:
+                        if tag in existing_tracks:
+                            submission.track = existing_tracks[tag]
                     submission.tags.append(db_tag)
                 #Load rooms
                 if as_convention == True:
