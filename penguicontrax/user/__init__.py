@@ -40,7 +40,7 @@ class User(db.Model):
             self.superuser = True
             self.special_tag = "root"
         else:
-            self.staff = True # TODO: Make people not be staff by default
+            self.staff = False
             self.superuser = False
 
     def __repr__(self):
