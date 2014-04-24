@@ -47,8 +47,10 @@
                         <span id="totalRsvpPoints">{{ user.points }}</span> <i
                             class="fa fa-thumbs-up rsvp" style="color:#e3cf7a"></i> "Would-attends" left
                     </li>
-                    <li class="small"><a href="/logs">Logs</a></li>
-                    <li class="small"><a href="/users">Users</a></li>
+                    {% if user.staff %}
+                        <li class="small"><a href="/logs">Logs</a></li>
+                        <li class="small"><a href="/users">Users</a></li>
+                    {% endif %}
                 {% endif %}
 
                 {% if user is none %}
