@@ -30,7 +30,8 @@ mail = Mail(app)
 try:
     conn = redis.from_url(constants.REDIS_URL)
     conn.incr('REDIS_CONNECTION_COUNT')
-    conn.set('SUBMISSION_DATASET_VERSION', 0)
+    if conn.get('SUBMISSION_DATASET_VERSION') is None:
+        conn.set('SUBMISSION_DATASET_VERSION', 0)
 except Exception as e:
     conn = None
     pass
