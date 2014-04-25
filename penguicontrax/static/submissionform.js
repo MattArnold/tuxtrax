@@ -1,5 +1,8 @@
 $(document).ready(function () {
 
+    var titleanddescriptionadvice = "<p>The title and description will appear to attendees on the website and in the schedule book.<br/>Please do not leave comments here for the convention committee.</p>";
+    var titleadvice = "<p>The title will sometimes be used without the description, so please be informative. Only be cute if it's still easy to understand what to expect.</p>";
+    var descriptionadvice = '<p><em>Tips</em><ul><li class="small">Don\'t say "I".</li><li class="small">Instead of parentheses, try making a new sentence or re-arranging phrases in the sentence.</li><li class="small">Many people have never heard of your topic. Help them figure out whether to attend.</li><li class="small">Will it be introductory or advanced?</li><li class="small">Do the participants need to bring something?</li><li class="small">Will they need to sign up in advance at Ops?</li></ul></p>';
 
     //style checkboxes
     //$(':checkbox[class!="button-checkbox"]').checkbox();
@@ -287,6 +290,24 @@ $(document).ready(function () {
         return false;
     });
 
+    $('#title').on({
+        focusin: function () {
+            console.log('in title');
+            $('#advice').html(titleadvice);
+        }, focusout: function () {
+            console.log('left title');
+            $('#advice').html(titleanddescriptionadvice);
+        } 
+    });
+    $('#description').on({
+        focusin: function () {
+            console.log('in description');
+            $('#advice').html(descriptionadvice);
+        }, focusout: function () {
+            console.log('left description');
+            $('#advice').html(titleanddescriptionadvice);
+        } 
+    });
 
     $('#submitevent').click(function (ev) {
 
