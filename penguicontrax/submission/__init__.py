@@ -234,10 +234,9 @@ def validateSubmitEvent(request):
     tags = request.form.getlist('tag')
     validationRules = {
         'tag':{'msg':'One or more tags required','type':'list'},
-        'description':{'msg':'Description Required','type':'str'},
+        'description':{'msg':'Description required','type':'str'},
         'setuptime':{'msg':'Setup time required','type':'str'},
         'submitter_id':{'msg':'Submitter Required','type':'str'},
-        'presenter':{'msg':'At lease one presenter required','type':'str'},
         'track':{'msg':'Track is required','type':'str'},
         'eventtype':{'msg':'Event type is required','type':'str'},
     }
