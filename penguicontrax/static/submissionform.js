@@ -323,10 +323,12 @@ $(document).ready(function () {
 
         if (validated == false) {
             ev.preventDefault();
-            } else {
-            var facilitycomment, timecomment;
+        } else {
+            // Clear all hidden inputs.
+            $("[:input:hidden]").val('');
 
             // Combine all the comment fields into one comment.
+            var facilitycomment, timecomment;
             facilitycomment = $("facilityrequest").val();
             timecomment = $("timerequest").val();
             $("#comments").val(facilitycomment + " | " + timecomment);
