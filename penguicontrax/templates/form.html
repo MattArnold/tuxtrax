@@ -339,13 +339,13 @@
                 </div>
             </div>
             <div class="row" style="margin-top:25px">
-                <div class="col-md-6">
-                    <p>Select all topics that apply</p>
+                <div class="col-md-4">
+                    <p>Select all topics that apply:</p>
 
                     <div class="control-group" id="topics" data-toggle="buttons">
                         {% for tag in tags %}
                             <label class="btn btn-xs btn-info">
-                                <input type="checkbox" name="tag"
+                                <input type="checkbox" name=tag
                                        value="{{ tag }}" {{ event | checked_if_tagged(tag) }}>{{ tag | trim }}
                             </label>
                         {% endfor %}
@@ -364,14 +364,14 @@
                     </form>
                     -->
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <p>
-                        Choose the staff liason you would like to route this submission to
+                        Choose the staff liason you would like to route this submission to:
                     </p>
 
                     <div class="control-group" id="tracks">
                         {% for track in tracks %}
-                            <div class="radio">
+                            <div class="radio col-xs-3">
                                 <label for="track_{{ track }}">
                                     <input type="radio" name=track value="{{ track }}"
                                            id="track_{{ track }}" {{ event | checked_if_tracked(track) }}>
@@ -399,6 +399,12 @@
                            {% if event is not none %}value="{{ event.comments }}"{% endif %}/>
                 </div>
                 <div class="col-md-9">
+        <div class="col-xs-3 alert alert-danger" style="display:none" id="eventtyperequired">Please choose an event type.</div>
+        <div class="col-xs-3 alert alert-danger" style="display:none" id="durationrequired">Please choose how long the event will be.</div>
+        <div class="col-xs-3 alert alert-danger" style="display:none" id="titlerequired">Please title the event.</div>
+        <div class="col-xs-3 alert alert-danger" style="display:none" id="descriptionrequired">Please describe the event for potential attendees.</div>
+        <div class="col-xs-3 alert alert-danger" style="display:none" id="topicrequired">Please choose at least one topic.</div>
+        <div class="col-xs-3 alert alert-danger" style="display:none" id="trackrequired">Please choose which staffer to submit this suggestion to.</div>
                     {% if user is not none and user.staff == 1 %}
                         {% if event is not none %}
                             <label for="followupstate">Submission status
@@ -413,7 +419,7 @@
                             {% if event.followUpState == 2 %}
                                 <div class="question">
                                     <span style="color:#7f8c8d;">Create an event from this submission:</span>
-                                    <input type=submit value="create" class="buttons" name=submitevent
+                                    <input  value="create" class="buttons" name=submitevent
                                            id="createevent"/>
                                 </div>
                             {% endif %}
@@ -428,6 +434,7 @@
     </form>
     </div>
 {% endblock %}
+        <script type="text/javascript" src="">
 {% block page_script %}
     {% assets filters="jsmin",output="build/submissionform-%(version)s.js","submissionform.js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>

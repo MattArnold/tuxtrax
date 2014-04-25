@@ -7740,4 +7740,7 @@ nav .navbar-brand {
   -ms-transition: 1s;
   -o-transition: 1s;
 }
+#tracks .radio {
+  display: inline-block;
+}
 /*# sourceMappingURL=/static/less.source.map */

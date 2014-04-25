@@ -287,18 +287,52 @@ $(document).ready(function () {
         return false;
     });
 
-// Limit the addition of new program participant fields.
 
     $('#submitevent').click(function (ev) {
-        var facilitycomment, timecomment;
 
-        ev.preventDefault();
+        $(".alert").css('display', 'none');
 
-        // Combine all the comment fields into one comment.
-        facilitycomment = $("facilityrequest").val();
-        timecomment = $("timerequest").val();
-        $("#comments").val(facilitycomment + " | " + timecomment);
+        var validated = true;
 
-        $('form').submit();
+        if ($("[name='eventtype']:radio:checked").length == 0) {
+            validated = false;
+            console.log(validated);
+            $("#eventtyperequired").css('display', 'block');
+        }
+        if ($("[name='duration']:radio:checked").length == 0) {
+            validated = false;
+            $("#durationrequired").css('display', 'block');
+        }
+        if ($.trim($("#title").val()) == '') {
+            validated = false;
+            $("#titlerequired").css('display', 'block');
+        }
+        if ($("#description").val() != '') {
+        } else {
+            validated = false;
+            $("#descriptionrequired").css('display', 'block');
+        }
+        if ($("[name='tag']:checkbox:checked").length == 0) {
+            validated = false;
+            $("#topicrequired").css('display', 'block');
+        }
+        if ($("[name='track']:radio:checked").length == 0) {
+            validated = false;
+            $("#trackrequired").css('display', 'block');
+        }
+
+        if (validated == false) {
+            ev.preventDefault();
+            } else {
+            var facilitycomment, timecomment;
+
+            // Combine all the comment fields into one comment.
+            facilitycomment = $("facilityrequest").val();
+            timecomment = $("timerequest").val();
+            $("#comments").val(facilitycomment + " | " + timecomment);
+
+            $('form').submit();
+            
+        }
     });
 });
