@@ -258,17 +258,14 @@
                         <input type="hidden" name="presenter_id" value="">
                         <input type="hidden" name="presenter_idtype" value="">
                         <label for="presenter" id="presenterLabel">
-                            Name
                             <input name="presenter" autocomplete="off" type="text" size="24" class="pp form-control presenter-typeahead"/>
                         </label>
                         &nbsp;
                         <label>
-                            Phone
                             <input name="phone" type="tel" size="24" maxlength="15" class="pp form-control" placeholder="555-123-4567"/>
                         </label>
                         &nbsp;
                         <label>
-                            Email
                             <input name="email" type="email" size="24" maxlength="50" class="pp form-control" placeholder="joe@bar.com"/>
                         </label>
                     </p>
@@ -286,7 +283,7 @@
             <div id="advice">
                 <p><br/>
                 Your text in this section will appear to attendees on the website and in the schedule book.
-                So please only leave comments for staff in the "Where" and "When" sections, above.</p>                                
+                So please only leave comments to staff in the <a id="where">"Where"</a> and <a id="when">"When"</a> sections, above.</p>
             </div>
         </div>
         <div class="col-md-10">
@@ -313,13 +310,30 @@
                 </div>
             </div>
             <div class="row" style="margin-top:25px">
-                <div class="col-md-4">
+                <div class="col-md-8" id="trackselect">
+                    <p>
+                        Choose the staff liason you would like to route this submission to:
+                    </p>
+                    <div class="control-group" id="tracks">
+                        {% for track in tracks %}
+                            <div class="radio col-xs-3">
+                                <label for="track_{{ track }}">
+                                    <input type="radio" name=track value="{{ track }}"
+                                           id="track_{{ track }}" {{ event | checked_if_tracked(track) }}>
+                                    {{ track }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-4" id="tagselect">
                     <p>Select all topics that apply:</p>
                     <div class="control-group" id="topics" data-toggle="buttons">
                         {% for tag in tags %}
-                            <label class="btn btn-xs btn-info">
+                            <label class="btn btn-xs btn-info" id="taglabel_{{ tag }}">
                                 <input type="checkbox" name=tag
-                                       value="{{ tag }}" {{ event | checked_if_tagged(tag) }}>{{ tag | trim }}
+                                       value="{{ tag }}" id="tag_{{ tag }}" data-toggle="button" 
+                                       {{ event | checked_if_tagged(tag) }}>{{ tag | trim }}
                             </label>
                         {% endfor %}
                     </div>
@@ -336,23 +350,6 @@
                     </div>
                     </form>
                     -->
-                </div>
-                <div class="col-md-8">
-                    <p>
-                        Choose the staff liason you would like to route this submission to:
-                    </p>
-
-                    <div class="control-group" id="tracks">
-                        {% for track in tracks %}
-                            <div class="radio col-xs-3">
-                                <label for="track_{{ track }}">
-                                    <input type="radio" name=track value="{{ track }}"
-                                           id="track_{{ track }}" {{ event | checked_if_tracked(track) }}>
-                                    {{ track }}
-                                </label>
-                            </div>
-                        {% endfor %}
-                    </div>
                 </div>
             </div>
         </div>
@@ -372,12 +369,12 @@
                            {% if event is not none %}value="{{ event.comments }}"{% endif %}/>
                 </div>
                 <div class="col-md-9">
-        <div class="col-xs-3 alert alert-danger" style="display:none" id="eventtyperequired"><a href="#where">Click here</a> to choose an event type.</div>
-        <div class="col-xs-3 alert alert-danger" style="display:none" id="durationrequired"><a href="#when">Click here</a> choose how long the event will be.</div>
-        <div class="col-xs-3 alert alert-danger" style="display:none" id="titlerequired"><a href="#what">Click here</a> title the event.</div>
-        <div class="col-xs-3 alert alert-danger" style="display:none" id="descriptionrequired"><a href="#what">Click here</a> describe the event for potential attendees.</div>
-        <div class="col-xs-3 alert alert-danger" style="display:none" id="topicrequired"><a href="#what">Click here</a> choose at least one topic.</div>
-        <div class="col-xs-3 alert alert-danger" style="display:none" id="trackrequired"><a href="#what">Click here</a> choose which staffer to submit this suggestion to.</div>
+        <div class="row alert alert-danger" style="display:none" id="eventtyperequired"><a href="#where">Click here</a> to choose an event type.</div>
+        <div class="row alert alert-danger" style="display:none" id="durationrequired"><a href="#when">Click here</a> to choose how long the event will be.</div>
+        <div class="row alert alert-danger" style="display:none" id="titlerequired"><a href="#what">Click here</a> to title the event.</div>
+        <div class="row alert alert-danger" style="display:none" id="descriptionrequired"><a href="#what">Click here</a> to describe the event for potential attendees.</div>
+        <div class="row alert alert-danger" style="display:none" id="trackrequired"><a href="#trackselect">Click here</a> to choose which staffer to submit this suggestion to.</div>
+        <div class="row alert alert-danger" style="display:none" id="topicrequired"><a href="#tagselect">Click here</a> to choose at least one topic.</div>
                     {% if user is not none and user.staff == 1 %}
                         {% if event is not none %}
                             <label for="followupstate">Submission status

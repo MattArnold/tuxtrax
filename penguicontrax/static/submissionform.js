@@ -207,6 +207,14 @@ $(document).ready(function () {
             });
     }
 
+    // When a track is selected, auto-check a topic checkbox of the same name (if any)
+    function add_topic() {
+        var trackval = $(this).val();
+        if ( $('#taglabel_' + trackval).find(':checkbox').prop('checked') === false) {
+            $('#taglabel_' + trackval).button('toggle').find(':checkbox').prop('checked');
+        }
+    } 
+
     //set up delegated handler for event type and timechange
     $('form')
         .delegate('input[name=eventtype]', 'change',function handleTypeChange() {
@@ -262,8 +270,11 @@ $(document).ready(function () {
                 $('[name="email"]').first().val('')
                 $('[name="phone"]').first().val('')
             }
-        });
-
+        }).delegate('input[name=track]', 'change',function handleTrackChange() {
+            if (this.checked) {
+                add_topic.call(this);
+            };
+        })
 
     //run once to catch initial page state
     $("[name=eventtype]:checked").each(function () {
@@ -307,7 +318,7 @@ $(document).ready(function () {
             console.log('left description');
             $('#advice').html(titleanddescriptionadvice);
         } 
-    });
+    });       
 
     $('#submitevent').click(function (ev) {
 
