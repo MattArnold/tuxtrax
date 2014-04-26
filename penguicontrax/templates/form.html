@@ -191,6 +191,11 @@
             <h4 class="row">
                 WHO
             </h4>
+            <div class="row">
+                <p>If you don't have a recommendation for who should do this, just leave this section blank.</p>
+                <p>Phone numbers / email addresses will only be used by Penguicon Programming Operations during the
+                convention.</p>
+            </div>
         </div>
         <div class="col-md-10">
             <div class="row">
@@ -235,7 +240,7 @@
                 <div class="col-md-3">
                     <div class="checkbox small">
                         <label>
-                            <input type="checkbox" id="suggesterPresents"> I will present this panel
+                            <input type="checkbox" id="suggesterPresents"> I will run this event.
                         </label>
                     </div>
                 </div>
@@ -249,8 +254,6 @@
                     </p>
                 </div>
                 <div class="col-md-10">
-                    <p>Phone numbers / email addresses will only be used by Penguicon Programming Operations during the
-                    convention.</p>
                     <p class="form-group presenters">
                         <input type="hidden" name="presenter_id" value="">
                         <input type="hidden" name="presenter_idtype" value="">
@@ -280,28 +283,28 @@
             <h4 class="row">
                 WHAT
             </h4>
+            <div id="advice">
+                <p><br/>
+                Your text in this section will appear to attendees on the website and in the schedule book.
+                So please only leave comments for staff in the "Where" and "When" sections, above.</p>                                
+            </div>
         </div>
         <div class="col-md-10">
             <div class="row">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="title">Title:</label>
                                 <textarea id="title" class="form-control" name="title"
                                           rows="2" cols="40"
                                           maxlength="80">{{ event.title | default('',true) }}</textarea>
                             </div>
-                            <div id="advice">
-                                <p>The title and description will appear to attendees on the website and in the
-                                schedule book.<br/>
-                                Please do not leave comments here for the convention committee.</p>                                
-                            </div>
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-md-8">
                             <div class="form-group">
                                 <label for="description">Descriptive blurb:</label>
-                                <textarea name=description id="description" rows="8" cols="60"
+                                <textarea name=description id="description" rows="6" cols="60"
                                           class="form-control"
                                           maxlength="700">{{ event.description | default('',true) }}</textarea>
                             </div>
@@ -312,7 +315,6 @@
             <div class="row" style="margin-top:25px">
                 <div class="col-md-4">
                     <p>Select all topics that apply:</p>
-
                     <div class="control-group" id="topics" data-toggle="buttons">
                         {% for tag in tags %}
                             <label class="btn btn-xs btn-info">
@@ -355,7 +357,7 @@
             </div>
         </div>
     </div>
-    <div class="row well submit">
+    <div class="row well whynot submit">
         <div class="col-md-2">
             <h4 class="row">
                 WHY NOT
@@ -370,12 +372,12 @@
                            {% if event is not none %}value="{{ event.comments }}"{% endif %}/>
                 </div>
                 <div class="col-md-9">
-        <div class="col-xs-3 alert alert-danger" style="display:none" id="eventtyperequired">Please choose an event type.</div>
-        <div class="col-xs-3 alert alert-danger" style="display:none" id="durationrequired">Please choose how long the event will be.</div>
-        <div class="col-xs-3 alert alert-danger" style="display:none" id="titlerequired">Please title the event.</div>
-        <div class="col-xs-3 alert alert-danger" style="display:none" id="descriptionrequired">Please describe the event for potential attendees.</div>
-        <div class="col-xs-3 alert alert-danger" style="display:none" id="topicrequired">Please choose at least one topic.</div>
-        <div class="col-xs-3 alert alert-danger" style="display:none" id="trackrequired">Please choose which staffer to submit this suggestion to.</div>
+        <div class="col-xs-3 alert alert-danger" style="display:none" id="eventtyperequired"><a href="#where">Click here</a> to choose an event type.</div>
+        <div class="col-xs-3 alert alert-danger" style="display:none" id="durationrequired"><a href="#when">Click here</a> choose how long the event will be.</div>
+        <div class="col-xs-3 alert alert-danger" style="display:none" id="titlerequired"><a href="#what">Click here</a> title the event.</div>
+        <div class="col-xs-3 alert alert-danger" style="display:none" id="descriptionrequired"><a href="#what">Click here</a> describe the event for potential attendees.</div>
+        <div class="col-xs-3 alert alert-danger" style="display:none" id="topicrequired"><a href="#what">Click here</a> choose at least one topic.</div>
+        <div class="col-xs-3 alert alert-danger" style="display:none" id="trackrequired"><a href="#what">Click here</a> choose which staffer to submit this suggestion to.</div>
                     {% if user is not none and user.staff == 1 %}
                         {% if event is not none %}
                             <label for="followupstate">Submission status
