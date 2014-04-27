@@ -4,9 +4,9 @@
 {% endblock %}
 {% block body %}
     {{ super() }}
-    <div id="nav" class="col-lg-2 col-md-2 col-sm-3 hidden-xs">
+    <div id="nav" class="col-lg-2 col-md-2 col-sm-3 hidden-xs tagsinput">
         <div class="floater" data-spy="affix" data-offset-top="44">
-            <div class="tagsinput system" data-container="body" data-placement="right" data-trigger="manual"
+            <div class="system" data-container="body" data-placement="right" data-trigger="manual"
                  data-html="true"
                  data-content="<p>Click some tags if you want to see only events with those topics.</p><p>If you click a tag again, it will exclude all events with that topic.</p><p>If you click a tag a third time, your filter will not care about that topic.</p><p>If you have no topics turned on, it will turn on all the tags.</p>">
                 <h6>
@@ -24,11 +24,11 @@
                     </div>
                 </div>
             </div>
-            <!--                 <div class="tagsinput">
+<!--                             <div class="tagsinput">
                                 <span class="smalllabel">User tags: </span>
                                 <span id="usertagfilter"></span>
                             </div>
-             -->            </div>
+ -->        </div>
     </div>
     <div class="col-lg-10 col-md-10 col-sm-9 col-xs-12" id="report">
         <div class="row">
