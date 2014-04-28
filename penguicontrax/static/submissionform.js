@@ -108,7 +108,7 @@ $(function () {
                 pptypetext = 'Game master:';
                 pluralpptypetext = 'Game masters:';
                 playersshow = true;
-                furniture = "A table and four chairs.";
+                furniture = "A table and five chairs.";
                 otherfacilityshow = true;
                 break;
             case 'onstage':
