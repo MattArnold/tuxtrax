@@ -111,8 +111,9 @@ def update_user():
             view_user.special_tag = request.form['special_tag']
         if g.user.superuser == True:
             view_user.staff = 'staff' in request.form
-        if view_user.special_tag.strip() == '':
-            view_user.special_tag = None
+        if not view_user.special_tag is None:
+            if view_user.special_tag.strip() == '':
+                view_user.special_tag = None
         db.session.add(view_user)
         db.session.commit()
         audit.audit_change(User.__table__, g.user, old_view_user, view_user)
