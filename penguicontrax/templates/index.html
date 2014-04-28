@@ -18,7 +18,6 @@
                     <button class="btn btn-xs btn-info info" data-toggle="button"><i
                             class="glyphicon glyphicon-info-sign"></i></button>
                 </h6>
-
                 <div id="tagfilter">
                     <div class="alert alert-info">
                         <p>Loading...</p>
@@ -61,17 +60,12 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                         <p id="submission-info"
                            data-default="To filter results, use the filter control at left or type a search term above."
                            data-rejected="We regret that for various reasons, we can’t use these event suggestions this year. Maybe next year! Also, some of them may be here in error, in which case bear with us while we fix it."
                                 >
                         </p>
-                    </div>
-                    <div class="col-md-4" style="text-align:right">
-                        <button id="showRejected" class="btn btn-default btn-xs">Show
-                            Rejected
-                        </button>
                     </div>
                 </div>
                 <div class="row submissions-list">
@@ -83,11 +77,15 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="col-md-12" style="text-align:right">
+                    <button id="showRejected" class="btn btn-default btn-xs">
+                        Show Rejected
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-{% endblock %}
+{% endblock %}html
 {% block page_script %}
     {{ super() }}
 
