@@ -213,7 +213,7 @@ def event_form():
         else:
             nextpage = url_for('event_form', id=eventid)
         return redirect(url_for('login', next=nextpage))
-    if g.user.staff == False:
+    if g.user.staff == False and eventid is not None:
         return redirect('/')
     # probably need orders
     tags = [tag.name for tag in Tag.query.all()]
@@ -264,13 +264,13 @@ def validateSubmitEvent(request):
 def submitevent():
     if g.user is None:
         return redirect('/')
-    if g.user.staff == False:
-        return redirect('/')
     validation = validateSubmitEvent(request)
     if 'success' != validation['status']:
         return Response(json.dumps(validation), mimetype='application/json'), validation['code']
     eventid = request.form.get('eventid')
     if eventid is not None:
+        if g.user.staff == False:
+            return redirect('/')
         submission = Submission.query.get(eventid)
         old_submission = copy(submission)
     else:
