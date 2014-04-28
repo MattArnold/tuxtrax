@@ -143,6 +143,7 @@ $ ./psql_runserver.sh
 penguicontrax will automatically e-mail submitters of events as their submissions move through the accept/reject process; for this to work you will need to configure an e-mail account on a SMTP server that the app can use. Set the following environment variables to their appropriate values.
 
 ```sh
+$ heroku config:set MAIL_ENABLE=True
 $ herkou config:set MAIL_SERVER=
 $ herkou config:set MAIL_PORT=
 $ herkou config:set MAIL_USE_TLS=

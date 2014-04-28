@@ -351,8 +351,10 @@ def submitevent():
     return redirect('/')
 
 def sendEmail(submission,old_submission):
+    from penguicontrax import mail, constants
+    if constants.MAIL_ENABLE != True:
+        return
     if submission.followUpState != old_submission.followUpState:
-        from penguicontrax import mail, constants
         from flask.ext.mail import Message
         if (submission.followUpState == 2 or submission.followUpState == 3) and not submission.submitter is None:
             if not submission.submitter.email is None:
