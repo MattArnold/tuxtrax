@@ -17,7 +17,12 @@
                     {{/overdue}}
                     &nbsp;
                 {{/followUpState}}
-                <a href="/eventform?id={{id}}" class="submission-link">{{ title }}</a>&nbsp;
+                {{#if user.staff}}
+                    <a href="/eventform?id={{id}}" class="submission-link">{{ title }}</a>
+                {{else}}
+                    {{ title }}
+                {{/if}}
+                &nbsp;
                 <span>{{ _duration }}</span>&nbsp;
                 <span>
                     <small>

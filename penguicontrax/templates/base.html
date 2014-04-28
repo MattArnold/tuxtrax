@@ -107,7 +107,8 @@
         email: "{{ user.email }}",
         account_name: "{{ user.account_name }}",
         image_small: "{{ user.image_small }}",
-        special_tag: "{{ user.special_tag }}"
+        special_tag: "{{ user.special_tag }}",
+        staff: "{{ user.staff }}" == "True"
     };
 
     if (ptrax.user.sid.length) {
