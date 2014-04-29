@@ -207,61 +207,81 @@
                 <div class="suggested-by small">
                     Suggested by&nbsp;
                     {% if event is none %}
-                        <input type=hidden name=submitter_id value={{ user.id }}
-                                data-id="{{ user.id }}"
+                        <input type=hidden name="submitter_id" value="{{ user.id }}"
+                               data-id="{{ user.id }}"
                                data-name="{{ user.name }}"
                                data-email="{{ user.email }}"
                                data-phone="{{ user.phone }}"/>
                         {{ macros.user_link(user) }}
                     {% else %}
-                        {% if event.submitter is not none %}
-                            <input type=hidden name=submitter_id
-                                   value={{ event.submitter.id }} data-name="{{ event.submitter }}"/>
-                        {% endif %}
+                        <input type="hidden" name="submitter_id"
+                               value="{{ event.submitter.id }}"
+                               data-name="{{ event.submitter }}"
+                               data-email="{{ event.submitter.email }}"
+                               data-phone="{{ event.submitter.phone }}"
+                                />
                         {{ macros.user_link(event.submitter) }}
-                    {% endif %}
-
-                    {% if event is not none %}
-                        {% for presenter in event.presenters %}
-                            {{ macros.presenter_link(presenter) }}
-                             <input type="hidden" name="presenter_id" value="{{ presenter.id }}">
-                            <input name="presenter" type="hidden" value="{{ presenter.name }}"/>
-                            <input name="phone" type="hidden" value="{{ presenter.phone }}"/>
-                            <input name="email" type="hidden" value="{{ presenter.email }}"/>
-                        {% endfor %}
                     {% endif %}
 
                 </div>
                 <div class="checkbox small">
                     <label>
-                        <input type="checkbox" id="suggesterPresents"> I will run this event.
+                        <input type="checkbox" id="suggesterPresents" {% if event.presenters|selectattr('id','equalto','user.id') %}checked="checked"{% endif %}> I will run this event.
                     </label>
                 </div>
             </div>
             <div class="row presenters-input panel-body">
 
-                <div class="col-md-2">
-                    <p>
+                <div class="col-md-1">
+                    <p class="small">
                         <span id="pptype" class="hidden"></span>
                         <span id="pluralpptype" class="hidden"></span>
                     </p>
                 </div>
-                <div class="col-md-10">
-                    <p class="form-group presenters">
-                        <input type="hidden" name="presenter_id" value="">
-                        <label for="presenter" id="presenterLabel">
-                            <input name="presenter" autocomplete="off" type="text" size="24" class="pp form-control presenter-typeahead" placeholder="Name"/>
-                        </label>
-                        &nbsp;
-                        <label>
-                            <input name="phone" type="tel" size="24" maxlength="15" class="pp form-control" placeholder="555-123-4567"/>
-                        </label>
-                        &nbsp;
-                        <label>
-                            <input name="email" type="email" size="24" maxlength="50" class="pp form-control" placeholder="joe@bar.com"/>
-                        </label>
-                    </p>
-                    <button id="newperson" class="pp btn"><span class="glyphicon glyphicon-plus"></span> someone else
+                <div class="col-md-11">
+                    {% if event is not none %}
+                        {% for presenter in event.presenters %}
+                            <p class="form-group presenters">
+                                <input type="hidden" name="presenter_id" value="{{ presenter.id }}">
+                                <label for="presenter" id="presenterLabel">
+                                    <input name="presenter" autocomplete="off" type="text" size="24"
+                                           class="pp form-control presenter-typeahead" placeholder="Name"
+                                           value="{{ presenter.name }}"/>
+                                </label>
+                                &nbsp;
+                                <label>
+                                    <input name="phone" type="tel" size="24" maxlength="15" class="pp form-control"
+                                           placeholder="555-123-4567" value="{{ presenter.phone }}"/>
+                                </label>
+                                &nbsp;
+                                <label>
+                                    <input name="email" type="email" size="24" maxlength="50" class="pp form-control"
+                                           placeholder="joe@bar.com" value="{{ presenter.email }}"/>
+                                </label>
+                                 &nbsp;
+                                <button type="button" class="btn btn-danger btn-sm remove-presenter"><span class="glyphicon glyphicon-remove"></span></button>
+                            </p>
+                        {% endfor %}
+                    {% else %}
+                        <p class="form-group presenters">
+                            <input type="hidden" name="presenter_id">
+                            <label for="presenter" id="presenterLabel">
+                                <input name="presenter" autocomplete="off" type="text" size="24"
+                                       class="pp form-control presenter-typeahead" placeholder="Name"/>
+                            </label>
+                            &nbsp;
+                            <label>
+                                <input name="phone" type="tel" size="24" maxlength="15" class="pp form-control"
+                                       placeholder="555-123-4567"/>
+                            </label>
+                            &nbsp;
+                            <label>
+                                <input name="email" type="email" size="24" maxlength="50" class="pp form-control"
+                                       placeholder="joe@bar.com"/>
+                            </label>
+                        </p>
+                    {% endif %}
+                    <button type="button" id="newperson" class="pp btn"><span class="glyphicon glyphicon-plus"></span> someone else
                     </button>
                 </div>
             </div>
@@ -367,7 +387,7 @@
                     </div>
 
                     <div class="col-md-9">
-                        <span class="validation hidden alert alert-danger small">Please fix all errors and resubmit.</span>
+                        <span class="validation validation-server hidden alert alert-danger small">Please fix all errors and resubmit.</span>
                         {% if user is not none and user.staff == 1 %}
                             {% if event is not none %}
                                 <label for="followupstate">Submission status

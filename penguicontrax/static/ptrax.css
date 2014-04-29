@@ -7649,6 +7649,13 @@ form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-suggestion:hover {
 form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-suggestion strong {
   color: #2980b9;
 }
+form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-cursor {
+  background-color: #2980b9;
+  color: #eeeeee;
+}
+form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-cursor strong {
+  color: #fff;
+}
 form .advice p {
   color: #999999;
   font-size: 90%;

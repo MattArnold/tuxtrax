@@ -57,6 +57,15 @@
                     var rsvps = this['rsvped_by'].attr();
                     return _.find(rsvps, {'id': ptrax.user.id }) ? 'fa-thumbs-up' : 'fa-thumbs-o-up';
                 },
+                submission_link : function(){
+                    var text = this.title;
+                    if(this.submitter){
+                        if(ptrax.user.staff || (ptrax.user.id == this.submitter.id)){
+                            text = '<a href="/eventform?id='+this.id+'" class="submission-link">'+this.title+'</a>'
+                        }
+                    }
+                    return text;
+                },
                 _presenters: function () {
                     var presenters = this.attr('presenters');
                     console.debug(presenters);

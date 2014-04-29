@@ -29,7 +29,7 @@ class PresentersAPI(Resource):
             )
         output = dump_table(output, Presenter.__table__)
         # fields to show in search results
-        fields = ['name', 'id']
+        fields = ['name', 'id', 'email', 'phone']
         return [
             dict([(name, element[name]) for name in fields])
             for element in output

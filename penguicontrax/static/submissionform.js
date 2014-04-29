@@ -182,7 +182,7 @@ $(function () {
                 displayKey: 'name',
                 source: function (query, process) {
                     $.ajax({
-                        url: '/api/persons',
+                        url: '/api/presenters',
                         data: {
                             q: query
                         }
@@ -195,8 +195,8 @@ $(function () {
                 var $parent = $(this).parents('.form-group');
                 $parent.find('[name="presenter_id"]').val(selection.id);
                 $parent.find('[name="presenter_idtype"]').val('person');
-                $parent.find('[name="email"]').val(selection.email ? selection.email : "");
-                $parent.find('[name="phone"]').val(selection.phone ? selection.phone : "");
+                $parent.find('[name="email"]').val(selection.email && selection.email !== "None" ? selection.email : "");
+                $parent.find('[name="phone"]').val(selection.phone && selection.phone !== "None" ? selection.phone : "");
             });
     }
 
@@ -320,14 +320,13 @@ $(function () {
 
         }, false);
 
-        if(!validated){
+        if (!validated) {
             $validationEls.removeClass('hidden');
         }
 
         return validated;
     }
 
-    //set up delegated handler for event type and timechange
     //set up delegated handlers for various form events
     $('form')
         .delegate('input[name=eventtype]', 'change', function handleTypeChange() {
@@ -381,13 +380,11 @@ $(function () {
 
             if (checked) {
                 $('[name="presenter_id"]').first().val(submitter_id)
-                $('[name="presenter_idtype"]').first().val('user')
                 $('[name="presenter"]').first().val(submitter_name)
                 $('[name="email"]').first().val(submitter_email)
                 $('[name="phone"]').first().val(submitter_phone)
             } else {
                 $('[name="presenter_id"]').first().val('')
-                $('[name="presenter_idtype"]').first().val('')
                 $('[name="presenter"]').first().val('')
                 $('[name="email"]').first().val('')
                 $('[name="phone"]').first().val('')
@@ -408,16 +405,25 @@ $(function () {
         })
         .delegate('textarea[maxlength], form input[maxlength]', 'input', characterCounter)
         .delegate('textarea[maxlength], form input[maxlength]', 'blur', removeWarning)
+        .delegate('.remove-presenter', 'click', function(ev){
+            ev.preventDefault();
+            console.debug('remove presenter?')
+            if($('.presenters').length > 1){
+                $(this).parent().remove();
+            }else{
+                $(this).parent().find('input').val('');
+            }
+
+        })
         .delegate('input[type=submit]', 'click', function (ev) {
             //prevent default submit behavior
             ev.preventDefault();
 
+            var $form = $('#submitEventForm');
+
             var validated = validateForm();
 
             if (validated) {
-                // Clear all hidden inputs.
-                //FIXME why are we doing this?
-                $("input[type=hidden]").val('');
 
                 // Combine all the comment fields into one comment.
                 var facilitycomment, timecomment;
@@ -425,9 +431,30 @@ $(function () {
                 timecomment = $("timerequest").val();
                 $("#comments").val(facilitycomment + " | " + timecomment);
 
-                $('form').submit();
+                var action = $form.attr('action');
+
+                $.ajax({
+                    type: "POST",
+                    url: $form.attr('action'),
+                    data: $form.serialize()
+                }).done(function(data,status,jqXhr){
+                        document.location.href = jqXhr.getResponseHeader("Location");
+
+                }).fail(function(jqXhr){
+                    var response = JSON.parse(jqXhr.responseText);
+                    $('.validation-server')
+                        .removeClass('hidden')
+                        .html("Server Error: &nbsp;" + response.messages.join('&nbsp;,'));
+                    console.error(arguments)
+                });
             }
-        });
+        })
+        .delegate('input','keydown',function(ev){
+            if(ev.which === 13){
+                return false;
+            }
+        })
+        .delegate('');
 
     //TODO prevent enter key from submitting form
 
