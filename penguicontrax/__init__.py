@@ -27,14 +27,20 @@ app.config.update(dict(
     DEFAULT_MAIL_SENDER = constants.DEFAULT_MAIL_SENDER
 ))
 mail = Mail(app)
-try:
-    conn = redis.from_url(constants.REDIS_URL)
-    conn.incr('REDIS_CONNECTION_COUNT')
-    if conn.get('SUBMISSION_DATASET_VERSION') is None:
-        conn.set('SUBMISSION_DATASET_VERSION', 0)
-except Exception as e:
+debug = os.environ.get("DEBUG")
+
+if not debug:
+
+    try:
+        conn = redis.from_url(constants.REDIS_URL)
+        conn.incr('REDIS_CONNECTION_COUNT')
+        if conn.get('SUBMISSION_DATASET_VERSION') is None:
+            conn.set('SUBMISSION_DATASET_VERSION', 0)
+    except Exception as e:
+        conn = None
+        pass
+else:
     conn = None
-    pass
 
 # decorator to add uncaching headers
 def uncacheable_response(fun):
