@@ -36,7 +36,7 @@ if constants.DEBUG != True:
         conn.flushall()
         if dataset_ver is None:
             conn.set('SUBMISSION_DATASET_VERSION', 0)
-        else
+        else:
             conn.set('SUBMISSION_DATASET_VERSION', int(dataset_ver) + 1)
     except Exception as e:
         conn = None
