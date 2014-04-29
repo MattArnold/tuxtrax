@@ -124,6 +124,13 @@
                 submission.attr('hidden', !visible);
             },
 
+            "{submissions} add" : function(list,ev,newItems){
+                var self = this;
+                _.each(newItems,function(submission){
+                   self.addSubmission(submission);
+                });
+            },
+
             //set the tag button state, updates the data object
             ".btn click": function (el) {
                 var data = this.options.viewModel;

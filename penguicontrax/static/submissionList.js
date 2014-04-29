@@ -68,7 +68,6 @@
                 },
                 _presenters: function () {
                     var presenters = this.attr('presenters');
-                    console.debug(presenters);
                     var lastEl;
                     var names = _.pluck(presenters, 'name');
                     if (names.length > 1) {

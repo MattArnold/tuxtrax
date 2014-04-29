@@ -155,7 +155,8 @@
             });
 
             var tagFilter = new ptrax.TagFilter("#tagfilter", {
-                tpl: "{{ "js/tagfilter.mustache" | get_js_template }}"
+                tpl: "{{ "js/tagfilter.mustache" | get_js_template }}",
+                submissions : new can.List()
             });
 
             ptrax.model.Submissions.findAll().done(function (submissions) {
@@ -173,11 +174,8 @@
                     submission.attr('search', search);
                 });
 
-                can.each(submissions, function (submission) {
-                    tagFilter.addSubmission(submission);
-                });
-
-                ptrax.model.Submissions.bind('created', tagFilter.addSubmission);
+                //add submissions
+                tagFilter.options.submissions.replace(submissions);
 
                 new ptrax.SubmissionList("#submissions", {
                     submissionsTpl: "{{ "js/submissions.mustache" | get_js_template }}",
