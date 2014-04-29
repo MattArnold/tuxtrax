@@ -222,19 +222,12 @@
                     {% endif %}
 
                     {% if event is not none %}
-                        {% for user_presenter in event.userPresenters %}
-                            <input type="hidden" name="presenter_id" value="{{ user_presenter.id }}">
-                            <input type="hidden" name="presenter_idtype" value="user">
-                            <input name="presenter" type="hidden" value="{{ user_presenter.name }}"/>
-                            <input name="phone" type="hidden" value="{{ user_presenter.phone }}"/>
-                            <input name="email" type="hidden" value="{{ user_presenter.email }}"/>
-                        {% endfor %}
-                        {% for person_presenter in event.personPresenters %}
-                            <input type="hidden" name="presenter_id" value="{{ person_presenter.id }}">
-                            <input type="hidden" name="presenter_idtype" value="person">
-                            <input name="presenter" type="hidden" value="{{ person_presenter.name }}"/>
-                            <input name="phone" type="hidden" value="{{ person_presenter.phone }}"/>
-                            <input name="email" type="hidden" value="{{ person_presenter.email }}"/>
+                        {% for presenter in event.presenters %}
+                            {{ macros.person_link(presenter) }}
+                            <input type="hidden" name="presenter_id" value="{{ presenter.id }}">
+                            <input name="presenter" type="hidden" value="{{ presenter.name }}"/>
+                            <input name="phone" type="hidden" value="{{ presenter.phone }}"/>
+                            <input name="email" type="hidden" value="{{ presenter.email }}"/>
                         {% endfor %}
                     {% endif %}
 
@@ -256,7 +249,6 @@
                 <div class="col-md-10">
                     <p class="form-group presenters">
                         <input type="hidden" name="presenter_id" value="">
-                        <input type="hidden" name="presenter_idtype" value="">
                         <label for="presenter" id="presenterLabel">
                             <input name="presenter" autocomplete="off" type="text" size="24" class="pp form-control presenter-typeahead" placeholder="Name"/>
                         </label>
