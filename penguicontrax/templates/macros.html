@@ -119,10 +119,7 @@
                     <span class="label">{{ submission.duration }} hrs</span>
                     {% endif %}
                     <span class="person">
-                        {% for user_presenter in submission.userPresenters %}
-                            {{ user_link(user_presenter) }}{% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                        {% for person_presenter in submission.personPresenters %}
+                        {% for person_presenter in submission.presenters %}
                             {{ person_link(person_presenter) }}{% if not loop.last %}, {% endif %}
                         {% endfor %}
                      </span>

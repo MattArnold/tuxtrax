@@ -36,7 +36,7 @@ def solve_convetion_modeler(convention_id_str):
 def solve_convention_pulp(convention, type = SolveTypes.TTD, write_files = False):
     from pulp import *
     from flask import Markup, Response
-    from penguicontrax.user import User, Person
+    from penguicontrax.user import User, Presenter
     from penguicontrax.event import Events, Timeslot, Rooms, generate_schedule, Convention
     from penguicontrax import db
     def solve():
@@ -65,22 +65,19 @@ def solve_convention_pulp(convention, type = SolveTypes.TTD, write_files = False
         presenters_upperbound = 0
         events_to_remove = []
         for event in total_events:
-            user_ids = [user.id for user in event.userPresenters]
-            person_ids = [person.id for person in event.personPresenters]
-            total_presenters = len(user_ids) + len(person_ids)
+            presenter_ids = [presenter.id for presenter in event.presenterPresenters]
+            total_presenters = len(presenter_ids)
             presenters_upperbound += total_presenters
             #if total_presenters > 0:
-            event_presenters.append((user_ids, person_ids))
+            event_presenters.append((user_ids, presenter_ids))
             #else:
             #    events_to_remove.append(event)
         for event in events_to_remove:
             total_events.remove(event)
         combined_presenters_set = set()
         for event_presenter_lists in event_presenters:
-            for user in event_presenter_lists[0]:
-                combined_presenters_set.add((0, user))
-            for person in event_presenter_lists[1]:
-                combined_presenters_set.add((1, person))
+            for presenter in event_presenter_lists[1]:
+                combined_presenters_set.add((1, presenter))
         
         yield 'Creating hour, presenter, and presentation sets<br/>'
         #a finite set H of hours

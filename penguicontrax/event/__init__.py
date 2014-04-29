@@ -21,15 +21,10 @@ event_resources = db.Table('event_resources', db.Model.metadata,
     db.Column('resource_id', db.Integer(), db.ForeignKey('resources.id', ondelete='CASCADE', onupdate='CASCADE'))
 )
 
-# Associates multiple users to multiple events.
-user_event = db.Table('user_event',
-    db.Column('event_id', db.Integer, db.ForeignKey('events.id', ondelete='CASCADE', onupdate='CASCADE')),
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE')))
-
 # Associates multiple persons to multiple events.
-person_event = db.Table('person_event',
+presenter_event = db.Table('presenter_event',
     db.Column('events_id', db.Integer, db.ForeignKey('events.id', ondelete='CASCADE', onupdate='CASCADE')),
-    db.Column('person_id', db.Integer, db.ForeignKey('person.id', ondelete='CASCADE', onupdate='CASCADE')))
+    db.Column('presenter_id', db.Integer, db.ForeignKey('presenter.id', ondelete='CASCADE', onupdate='CASCADE')))
 
 room_suitability = db.Table('room_suitability',
     db.Column('event_id', db.Integer, db.ForeignKey('events.id', ondelete='CASCADE', onupdate='CASCADE')),
@@ -59,8 +54,7 @@ class Events(db.Model):
     roundTables = db.Column(db.Integer())
     longTables = db.Column(db.Integer())
     facilityRequest = db.Column(db.String())
-    userPresenters = db.relationship('User', secondary=user_event, backref=db.backref('at_event'), passive_deletes=True)
-    personPresenters = db.relationship('Person', secondary=person_event, backref=db.backref('at_event'), passive_deletes=True)
+    presenters = db.relationship('Presenter', secondary=presenter_event, backref=db.backref('at_event'), passive_deletes=True)
     start_dt = db.Column(db.DateTime)
     duration = db.Column(db.Integer)    # The number of intervals.
     convention_id = db.Column(db.Integer, db.ForeignKey('convention.id'))
@@ -128,10 +122,8 @@ class Presenterconflict(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     timeslot_id = db.Column(db.Integer(), db.ForeignKey('timeslot.id', ondelete='CASCADE', onupdate='CASCADE'))
     timeslot = db.relationship('Timeslot', backref=db.backref('presenter_conflicts'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
-    user = db.relationship('User')
-    person_id = db.Column(db.Integer, db.ForeignKey('person.id', ondelete='CASCADE', onupdate='CASCADE'))
-    person = db.relationship('Person')
+    presenter_id = db.Column(db.Integer, db.ForeignKey('presenter.id', ondelete='CASCADE', onupdate='CASCADE'))
+    presenter = db.relationship('Presenter')
     convention_id = db.Column(db.Integer(), db.ForeignKey('convention.id', ondelete='CASCADE', onupdate='CASCADE'))
     convention = db.relationship('Convention', backref=db.backref('presenter_conflicts'))
 
@@ -330,14 +322,10 @@ def generate_schedule(convention):
         for room, event_list in hour['rooms'].iteritems():
             for event_dict in event_list:
                 event = event_dict['event']
-                for userPresenter in event.userPresenters:
-                    if not userPresenter in presenters:
-                        presenters[userPresenter] = 0
-                    presenters[userPresenter] += 1
-                for personPresenter in event.personPresenters:
-                    if not personPresenter in presenters:
-                        presenters[personPresenter] = 0
-                    presenters[personPresenter] += 1
+                for presenter in event.presenters:
+                    if not presenter in presenters:
+                        presenters[presenter] = 0
+                    presenters[presenter] += 1
                 for user in event.rsvped_by:
                     if not user in rsvps:
                         rsvps[user] = 0
@@ -370,11 +358,7 @@ def generate_schedule(convention):
         for presenter in hour['presenter_conflicts']:
             presenter_conflict = Presenterconflict()
             presenter_conflict.timeslot = timeslot
-            from penguicontrax.user import Person, User
-            if type(presenter) is Person:
-                presenter_conflict.person = presenter
-            elif type(presenter) is User:
-                presenter_conflict.user = presenter
+            presenter_conflict.person = presenter
             db.session.add(presenter_conflict)
         for room, event_list in hour['rooms'].iteritems():
             booking = Timeslotbooking()
