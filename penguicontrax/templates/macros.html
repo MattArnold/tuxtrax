@@ -80,8 +80,8 @@
 	{% endif %}
 {%- endmacro %}
 
-{% macro person_link(person) -%}
-	<span class="userlink">{% if person is not none %}{{ person }}{% else %}Unknown{% endif %}</span>
+{% macro presenter_link(presenter) -%}
+	<span class="userlink">{% if presenter is not none %}{{ presenter }}{% else %}Unknown{% endif %}</span>
 {%- endmacro %}
 
 {% macro event_summary(submission, user) -%}

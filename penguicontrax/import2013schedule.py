@@ -136,10 +136,10 @@ def import_old(path, as_convention = False, random_rsvp_users = 0, submission_li
                         submission.start_dt = datetime.datetime(year=current_day.year, month=current_day.month, day=current_day.day,\
                             hour = current_time.hour, minute=current_time.minute)
                         submission.duration = 4 #1 hour
-                print "New submission"
                 existing_submissions.append(submission)
                 penguicontrax.db.session.add(submission)
                 submission_count = submission_count + 1
+        print "New submission"
         penguicontrax.db.session.commit()
 
     if random_rsvp_users > 0:
