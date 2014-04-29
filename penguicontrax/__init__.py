@@ -112,12 +112,13 @@ def init():
 
     if len(Track.query.all()) == 0:
         import2013schedule.setup_predefined()
-
+'''
     if len(Submission.query.all()) == 0 and len(Events.query.all()) == 0:
         print 'Importing 2015 schedule into submissions'
         import2013schedule.import_old('schedule2015.html')
         print 'Importing 2013 schedule into convention'
         import2013schedule.import_old('schedule2013.html', True, random_rsvp_users = 1000, submission_limit = 500, timeslot_limit = 500)
+'''
 
 @app.route('/')
 @uncacheable_response
