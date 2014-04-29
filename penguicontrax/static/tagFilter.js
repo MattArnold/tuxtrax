@@ -37,55 +37,63 @@
             init: function () {
 
                 var tagList = [], tpl, renderer;
+                var self = this;
+                var tagData = $.get('/api/tags?ver=' + getCookieOrRandom('submission_ver'));
 
                 this.options.viewModel = new can.Map({
-                            infoText: "",
-                            all: true,
-                            tags: [],
-                            tagsByName: {},
-                            submissionsByTagName: {}
-                        });
+                    infoText: "",
+                    all: true,
+                    tags: [],
+                    tagsByName: {},
+                    submissionsByTagName: {}
+                });
 
-                $.get('/api/tags?ver=' + getCookieOrRandom('submission_ver'))
+                $.when(tagData, this.options.submissions).done(function (tagXhr, submissions) {
 
-                    .done(can.proxy(function (tags) {
+                    var tags = tagXhr[0];
 
-                        this.options.tags = new can.List(tags);
+                    tagList = _.map(tags,function(tag){
+                        return {
+                            name: tag.id,
+                            state: INCLUDED,
+                            desc: tag.desc
+                        }
+                    });
 
-                        can.each(this.options.tags, function (tag) {
-                            tagList.push({
-                                name: tag.id,
-                                state: INCLUDED,
-                                desc : tag.desc
-                            });
-                        });
+                    self.options.viewModel.attr({
+                        tags: tagList,
+                        tagsByName: _.zipObject(_.pluck(tagList, 'name'), tagList),
+                        submissionsByTagName : _.zipObject(_.pluck(tagList, 'name'),
+                            _.map(tagList, function () {
+                                return []
+                            }))
+                    });
 
-                        this.options.viewModel.attr({
-                            tags: tagList,
-                            tagsByName: _.zipObject(_.pluck(tagList, 'name'), tagList)
-                        });
+                    tpl = ptrax.util.tplDecode(self.options.tpl);
+                    renderer = can.view.mustache(tpl);
 
-                        tpl = ptrax.util.tplDecode(this.options.tpl);
-                        renderer = can.view.mustache(tpl);
+                    _.each(submissions, function (submission) {
+                        self.addSubmission(submission);
+                    });
 
-                        this.element.html(renderer(this.options.viewModel, {
-                            isIncluded: function (options) {
-                                if (isIncluded(this)) {
+                    self.on();
+                    self.setInfoText();
 
-                                    return options.fn(this)
-                                }
-                            },
-                            isExcluded: function (options) {
-                                if (isExcluded(this)) {
-                                    return options.fn(this)
-                                }
+                    self.element.html(renderer(self.options.viewModel, {
+                        isIncluded: function (options) {
+                            if (isIncluded(this)) {
+
+                                return options.fn(this)
                             }
-                        }));
+                        },
+                        isExcluded: function (options) {
+                            if (isExcluded(this)) {
+                                return options.fn(this)
+                            }
+                        }
+                    }));
 
-                        this.on();
-                        this.setInfoText();
-
-                    }, this));
+                });
 
 
             },
@@ -115,9 +123,6 @@
                 var data = this.options.viewModel;
                 // register this submission's tags in the map
                 can.each(submission.attr('tags'), function (tag) {
-                    if(!data.submissionsByTagName[tag.id]){
-                        data.submissionsByTagName[tag.id] = [];
-                    }
                     data.submissionsByTagName[tag.id].push(submission);
                 });
                 // set initial visible state on the submission
@@ -125,10 +130,10 @@
                 submission.attr('hidden', !visible);
             },
 
-            "{submissions} add" : function(list,ev,newItems){
+            "{submissions} add": function (list, ev, newItems) {
                 var self = this;
-                _.each(newItems,function(submission){
-                   self.addSubmission(submission);
+                _.each(newItems, function (submission) {
+                    self.addSubmission(submission);
                 });
             },
 

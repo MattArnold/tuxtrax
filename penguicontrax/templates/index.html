@@ -156,7 +156,7 @@
 
             var tagFilter = new ptrax.TagFilter("#tagfilter", {
                 tpl: "{{ "js/tagfilter.mustache" | get_js_template }}",
-                submissions : new can.List()
+                submissions : $.Deferred()
             });
 
             ptrax.model.Submissions.findAll().done(function (submissions) {
@@ -175,7 +175,7 @@
                 });
 
                 //add submissions
-                tagFilter.options.submissions.replace(submissions);
+                tagFilter.options.submissions.resolve(submissions);
 
                 new ptrax.SubmissionList("#submissions", {
                     submissionsTpl: "{{ "js/submissions.mustache" | get_js_template }}",
