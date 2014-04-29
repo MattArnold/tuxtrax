@@ -241,7 +241,7 @@ $(function () {
         $errorEl.empty();
         $validationEls.addClass('hidden');
 
-        var validated = true;
+        var validated;
 
         var errorMsgTpl = '<li class="alert alert-danger small"><%= copy %></li>';
 
@@ -296,16 +296,6 @@ $(function () {
             }
         ];
 
-        function showMessage(selector) {
-            $(selector).show();
-        }
-
-        function validate(test, selector) {
-            if (!test) {
-                showMessage(selector);
-                validated = false;
-            }
-        }
 
         validated = _.reduce(validations, function (isValid, validation) {
             var result = validation.test();
@@ -316,9 +306,9 @@ $(function () {
             } else {
                 $(validation.group).removeClass('has-error');
             }
-            return result;
+            return result ? isValid : false;
 
-        }, false);
+        }, true);
 
         if (!validated) {
             $validationEls.removeClass('hidden');
