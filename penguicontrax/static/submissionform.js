@@ -407,7 +407,6 @@ $(function () {
         .delegate('textarea[maxlength], form input[maxlength]', 'blur', removeWarning)
         .delegate('.remove-presenter', 'click', function(ev){
             ev.preventDefault();
-            console.debug('remove presenter?')
             if($('.presenters').length > 1){
                 $(this).parent().remove();
             }else{
@@ -453,10 +452,7 @@ $(function () {
             if(ev.which === 13){
                 return false;
             }
-        })
-        .delegate('');
-
-    //TODO prevent enter key from submitting form
+        });
 
     //run once to catch initial page state
     $("[name=eventtype]:checked").each(function () {
