@@ -189,30 +189,32 @@ def getevent():
     return Response(dump_table_json(Submission.query.all(), Submission.__table__), mimetype='application/json')
 
 
-@app.route('/eventform', methods=['GET', 'POST'])
+@app.route('/eventform', methods=['GET'])
 @uncacheable_response
 def event_form():
     eventid = request.args.get('id', None)
+
+    # if user is none, redirect to login, then back to event form, passing id if it was passed originally
     if g.user is None:
         if eventid is None:
             nextpage = url_for('event_form')
         else:
             nextpage = url_for('event_form', id=eventid)
         return redirect(url_for('login', next=nextpage))
-    if not g.user.staff and eventid:
-        return redirect('/')
+
+    if eventid is not None:
+        event = Submission.query.filter_by(id=eventid).first()
+        if not g.user.staff:
+            if event.submitter != g.user:
+                return redirect('/')
+    else:
+        event = None
+
     # probably need orders
     tags = [tag.name for tag in Tag.query.all()]
     tracks = [track.name for track in Track.query.all()]
     resources = Resource.query.filter_by(displayed_on_requst_form=True)
-    if request.method == 'GET':
-        event_tags = []
-        if eventid is not None:
-            event = Submission.query.filter_by(id=eventid).first()
-            if (not event is None) and (event.private) and (not g.user.staff):
-                return redirect('/')
-        else:
-            event = None
+
     return render_template('form.html', tags=tags, resources=resources, tracks=tracks, event=event, user=g.user)
 
 def validateSubmitEvent(request):
@@ -249,9 +251,7 @@ def validateSubmitEvent(request):
 @app.route('/submitevent', methods=['POST'])
 def submitevent():
     if g.user is None:
-        return redirect('/')
-    if g.user.staff == False:
-        return redirect('/')
+        return '{"messages : ["Unauthenticated"]}', 401
     validation = validateSubmitEvent(request)
     if 'success' != validation['status']:
         return Response(json.dumps(validation), mimetype='application/json'), validation['code']
@@ -259,6 +259,8 @@ def submitevent():
     if eventid is not None:
         submission = Submission.query.get(eventid)
         old_submission = copy(submission)
+        if not g.user.staff and g.user != submission.submitter:
+            return '{"messages : ["Unauthorized"]}', 403
     else:
         submission = Submission()
         old_submission = Submission()
@@ -292,8 +294,8 @@ def submitevent():
         if id:
             found_presenter = Presenter.query.get(id)
         if found_presenter:
-            if found_person not in submission.presenters:
-                submission.presenters.append(found_person)
+            if found_presenter not in submission.presenters:
+                submission.presenters.append(found_presenter)
             continue
         new_presenter = Presenter(name)
         new_presenter.phone = phone
@@ -317,10 +319,12 @@ def submitevent():
     db.session.add(submission)
     db.session.commit()
     audit.audit_change(Submission.__table__, g.user, old_submission,
-                       submission)  #We'd like submission.id to actually be real so commit the creation first
+                       submission)  # We'd like submission.id to actually be real so commit the creation first
     submission_dataset_changed()
-    sendEmail(submission,old_submission);
-    return redirect('/')
+    sendEmail(submission,old_submission)
+    return "", 200, {
+        "Location": "/"
+    }
 
 def sendEmail(submission,old_submission):
     from penguicontrax import mail, constants
