@@ -95,11 +95,6 @@
 
     <script type="text/javascript">
 
-        var tags = "{% for tag in tags %}{{tag}},{% endfor%}".split(",");
-        tags = tags.slice(0, tags.length - 1).sort();
-
-        tags = new can.List(tags);
-
         $(document).ready(function () {
             var $info = $('#submission-info');
 
@@ -118,7 +113,7 @@
             });
 
             //set default info text
-            $info.text($info.data('default'))
+            $info.text($info.data('default'));
 
             ptrax.SubmissionSearch = can.Control.extend({
                 "input input": _.debounce(function (el) {
@@ -160,7 +155,6 @@
             });
 
             var tagFilter = new ptrax.TagFilter("#tagfilter", {
-                tags: tags,
                 tpl: "{{ "js/tagfilter.mustache" | get_js_template }}"
             });
 
@@ -174,8 +168,7 @@
                     search.push(submission.title.toLowerCase());
                     search.push(submission.description.toLowerCase());
                     search.push(submission.tags.join(" ").toLowerCase());
-                    search.push(submission.personPresenters.join(' ').toLowerCase());
-                    search.push(submission.userPresenters.join(' ').toLowerCase());
+                    search.push(submission.presenters.join(' ').toLowerCase());
 
                     submission.attr('search', search);
                 });
@@ -189,6 +182,7 @@
                 new ptrax.SubmissionList("#submissions", {
                     submissionsTpl: "{{ "js/submissions.mustache" | get_js_template }}",
                     userLinkTpl: "{{ "js/user_link.mustache" | get_js_template }}",
+                    presenterLinkTpl: "{{ "js/presenter_link.mustache" | get_js_template }}",
                     userTextTpl: "{{ "js/user_text.mustache" | get_js_template }}",
                     submissions: submissions
                 });

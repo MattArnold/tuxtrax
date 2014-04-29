@@ -7,7 +7,7 @@ from flask import g, request, session, render_template, redirect, Response, Mark
 from sqlalchemy.orm import relationship
 from .. import app, db, dump_table_json, uncacheable_response
 from penguicontrax.tag import Tag, get_tag, create_tag
-from penguicontrax.user import User, Person, find_user, find_person
+from penguicontrax.user import User, Presenter, find_user, find_presenter
 
 
 # Associates multiple tags to a submission
@@ -24,17 +24,11 @@ SubmissionToResources = db.Table('submission_resources', db.Model.metadata,
                                            db.ForeignKey('resources.id', ondelete='CASCADE', onupdate='CASCADE'))
 )
 
-user_presenting_in = db.Table('user_presenting_in',
+presenter_presenting_in = db.Table('presenter_presenting_in',
                               db.Column('submission_id', db.Integer,
                                         db.ForeignKey('submissions.id', ondelete='CASCADE', onupdate='CASCADE')),
-                              db.Column('user_id', db.Integer,
-                                        db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE')))
-
-person_presenting_in = db.Table('person_presenting_in',
-                                db.Column('submission_id', db.Integer,
-                                          db.ForeignKey('submissions.id', ondelete='CASCADE', onupdate='CASCADE')),
-                                db.Column('person_id', db.Integer,
-                                          db.ForeignKey('person.id', ondelete='CASCADE', onupdate='CASCADE')))
+                              db.Column('presenter_id', db.Integer,
+                                        db.ForeignKey('presenter.id', ondelete='CASCADE', onupdate='CASCADE')))
 
 
 class Submission(db.Model):
@@ -59,10 +53,8 @@ class Submission(db.Model):
     longTables = db.Column(db.Integer())
     facilityRequest = db.Column(db.String())
     followUpState = db.Column(db.Integer())  # 0 = submitted, 1 = followed up, 2 = accepted, 3 = rejected
-    userPresenters = db.relationship('User', secondary=user_presenting_in, backref=db.backref('presenting_in'),
+    presenters = db.relationship('Presenter', secondary=presenter_presenting_in, backref=db.backref('presenting_in'),
                                      passive_deletes=True)
-    personPresenters = db.relationship('Person', secondary=person_presenting_in, backref=db.backref('presenting_in'),
-                                       passive_deletes=True)
     private = db.Column(db.Boolean())
     event_created = db.Column(db.Boolean())
     submitted_dt = db.Column(db.DateTime())
@@ -77,18 +69,12 @@ class Submission(db.Model):
     def presenter_list_str(self):
         first = False
         ret = ''
-        for person in self.personPresenters:
+        for person in self.presenters:
             if not first:
                 first = True
             else:
                 ret = ret + ', '
             ret = ret + person.name
-        for user in self.userPresenters:
-            if not first:
-                first = True
-            else:
-                ret = ret + ', '
-            ret = ret + user.name
         if ret != '':
             ret += '.'
         return ret
@@ -203,30 +189,32 @@ def getevent():
     return Response(dump_table_json(Submission.query.all(), Submission.__table__), mimetype='application/json')
 
 
-@app.route('/eventform', methods=['GET', 'POST'])
+@app.route('/eventform', methods=['GET'])
 @uncacheable_response
 def event_form():
     eventid = request.args.get('id', None)
+
+    # if user is none, redirect to login, then back to event form, passing id if it was passed originally
     if g.user is None:
         if eventid is None:
             nextpage = url_for('event_form')
         else:
             nextpage = url_for('event_form', id=eventid)
         return redirect(url_for('login', next=nextpage))
-    if g.user.staff == False and eventid is not None:
-        return redirect('/')
+
+    if eventid is not None:
+        event = Submission.query.filter_by(id=eventid).first()
+        if not g.user.staff:
+            if event.submitter != g.user:
+                return redirect('/')
+    else:
+        event = None
+
     # probably need orders
     tags = [tag.name for tag in Tag.query.all()]
     tracks = [track.name for track in Track.query.all()]
     resources = Resource.query.filter_by(displayed_on_requst_form=True)
-    if request.method == 'GET':
-        event_tags = []
-        if eventid is not None:
-            event = Submission.query.filter_by(id=eventid).first()
-            if (not event is None) and (event.private) and (not g.user.staff):
-                return redirect('/')
-        else:
-            event = None
+
     return render_template('form.html', tags=tags, resources=resources, tracks=tracks, event=event, user=g.user)
 
 def validateSubmitEvent(request):
@@ -263,16 +251,16 @@ def validateSubmitEvent(request):
 @app.route('/submitevent', methods=['POST'])
 def submitevent():
     if g.user is None:
-        return redirect('/')
+        return '{"messages : ["Unauthenticated"]}', 401
     validation = validateSubmitEvent(request)
     if 'success' != validation['status']:
         return Response(json.dumps(validation), mimetype='application/json'), validation['code']
     eventid = request.form.get('eventid')
     if eventid is not None:
-        if g.user.staff == False:
-            return redirect('/')
         submission = Submission.query.get(eventid)
         old_submission = copy(submission)
+        if not g.user.staff and g.user != submission.submitter:
+            return '{"messages : ["Unauthorized"]}', 403
     else:
         submission = Submission()
         old_submission = Submission()
@@ -295,39 +283,25 @@ def submitevent():
 
     # presenter handling
     presenters_id = request.form.getlist('presenter_id')
-    presenters_idtype = request.form.getlist('presenter_idtype')
     presenters_name = request.form.getlist('presenter')
     presenters_phone = request.form.getlist('phone')
     presenters_email = request.form.getlist('email')
-    presenters = zip(presenters_id, presenters_idtype, presenters_name, presenters_phone, presenters_email)
-    del submission.userPresenters[:]
-    del submission.personPresenters[:]
+    presenters = zip(presenters_id, presenters_name, presenters_phone, presenters_email)
+    del submission.presenters[:]
     for presenter in presenters:
-        found_user = None
-        found_person = None
-        (id, idtype, name, phone, email) = presenter
+        found_presenter = None
+        (id, name, phone, email) = presenter
         if id:
-            if idtype == 'user':
-                found_user = User.query.get(id)
-            elif idtype == 'person':
-                found_person = Person.query.get(id)
-        else:
-            found_user = find_user(name, phone, email)
-            if not found_user:
-                found_person = find_person(name, phone, email)
-        if found_user:
-            if found_user not in submission.userPresenters:
-                submission.userPresenters.append(found_user)
+            found_presenter = Presenter.query.get(id)
+        if found_presenter:
+            if found_presenter not in submission.presenters:
+                submission.presenters.append(found_presenter)
             continue
-        if found_person:
-            if found_person not in submission.personPresenters:
-                submission.personPresenters.append(found_person)
-            continue
-        new_person = Person(name)
-        new_person.phone = phone
-        new_person.email = email
-        db.session.add(new_person)
-        submission.personPresenters.append(new_person)
+        new_presenter = Presenter(name)
+        new_presenter.phone = phone
+        new_presenter.email = email
+        db.session.add(new_presenter)
+        submission.presenters.append(new_presenter)
 
     tags = request.form.getlist('tag')
     del submission.tags[:]
@@ -345,10 +319,12 @@ def submitevent():
     db.session.add(submission)
     db.session.commit()
     audit.audit_change(Submission.__table__, g.user, old_submission,
-                       submission)  #We'd like submission.id to actually be real so commit the creation first
+                       submission)  # We'd like submission.id to actually be real so commit the creation first
     submission_dataset_changed()
-    sendEmail(submission,old_submission);
-    return redirect('/')
+    sendEmail(submission,old_submission)
+    return "", 200, {
+        "Location": "/"
+    }
 
 def sendEmail(submission,old_submission):
     from penguicontrax import mail, constants
@@ -371,16 +347,11 @@ def sendEmail(submission,old_submission):
                                        submission.setupTime_str(), submission.repetition_str())
                     msg.subject = 'Your event titled %s has been approved for %s' % (submission.title, constants.ORGANIZATION)
                     missing = ''
-                    for person in submission.personPresenters:
-                        if person.email is None or person.phone is None:
+                    for presenter in submission.presenters:
+                        if presenter.email is None or presenter.phone is None:
                             if missing != '':
                                 missing += ', '
-                            missing = missing + person.name
-                    for user in submission.userPresenters:
-                        if user.email is None or user.phone is None:
-                            if missing != '':
-                                missing += ', '
-                            missing = missing + user.name
+                            missing = missing + presenter.name
                     if missing != '':
                         msg.body = msg.body + os.linesep + os.linesep + \
                             'We are missing contact info for %s. Would you help us get '\

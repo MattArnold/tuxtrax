@@ -15,6 +15,15 @@
         return tag.attr('state') === EXCLUDED;
     }
 
+    function getCookieOrRandom(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i].trim();
+            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return Math.floor(Math.random() * 100000);
+    }
 
 
     ptrax.TagFilter = can.Control.extend(
@@ -29,61 +38,73 @@
 
                 var tagList = [], data, tpl, renderer;
 
-                can.each(this.options.tags, function (tag) {
-                    tagList.push({
-                        name: tag,
-                        state: INCLUDED
-                    });
-                });
+                $.get('/api/tags?ver=' + getCookieOrRandom('submission_ver'))
 
-                var submissionsByTagName = _.zipObject(_.pluck(tagList, 'name'),
-                    _.map(tagList, function () {
-                        return []
-                    }));
+                    .done(can.proxy(function (tags) {
 
-                data = new can.Map({
-                    infoText: "",
-                    all: true,
-                    tags: tagList,
-                    tagsByName: _.zipObject(_.pluck(tagList, 'name'), tagList),
-                    submissionsByTagName: submissionsByTagName
-                });
+                        this.options.tags = new can.List(tags);
 
-                this.options.viewModel = data;
+                        can.each(this.options.tags, function (tag) {
+                            tagList.push({
+                                name: tag.id,
+                                state: INCLUDED,
+                                desc : tag.desc
+                            });
+                        });
 
-                tpl = ptrax.util.tplDecode(this.options.tpl);
-                renderer = can.view.mustache(tpl);
+                        var submissionsByTagName = _.zipObject(_.pluck(tagList, 'name'),
+                            _.map(tagList, function () {
+                                return []
+                            }));
 
-                this.element.html(renderer(data, {
-                    isIncluded: function (options) {
-                        if (isIncluded(this)) {
+                        data = new can.Map({
+                            infoText: "",
+                            all: true,
+                            tags: tagList,
+                            tagsByName: _.zipObject(_.pluck(tagList, 'name'), tagList),
+                            submissionsByTagName: submissionsByTagName
+                        });
 
-                            return options.fn(this)
-                        }
-                    },
-                    isExcluded: function (options) {
-                        if (isExcluded(this)) {
-                            return options.fn(this)
-                        }
-                    }
-                }));
+                        this.options.viewModel = data;
 
-                this.on();
-                this.setInfoText();
+                        tpl = ptrax.util.tplDecode(this.options.tpl);
+                        renderer = can.view.mustache(tpl);
+
+                        this.element.html(renderer(data, {
+                            isIncluded: function (options) {
+                                if (isIncluded(this)) {
+
+                                    return options.fn(this)
+                                }
+                            },
+                            isExcluded: function (options) {
+                                if (isExcluded(this)) {
+                                    return options.fn(this)
+                                }
+                            }
+                        }));
+
+                        this.on();
+                        this.setInfoText();
+
+                    }, this));
+
+
             },
 
             isSubmissionVisible: function (submission) {
                 var data = this.options.viewModel;
+
                 function isTagNameIncluded(tag) {
-                    return isIncluded(data.tagsByName[tag]);
+                    return isIncluded(data.tagsByName[tag.id]);
                 }
 
                 function isTagNameNeutral(tag) {
-                    return isNeutral(data.tagsByName[tag]);
+                    return isNeutral(data.tagsByName[tag.id]);
                 }
 
                 function isTagNameExcluded(tag) {
-                    return isExcluded(data.tagsByName[tag]);
+                    return isExcluded(data.tagsByName[tag.id]);
                 }
 
                 var visible = _.any(submission.tags, isTagNameIncluded)
@@ -92,11 +113,11 @@
             },
 
             //submissions list has a new item
-            addSubmission: function(submission) {
+            addSubmission: function (submission) {
                 var data = this.options.viewModel;
                 // register this submission's tags in the map
                 can.each(submission.attr('tags'), function (tag) {
-                    data.submissionsByTagName[tag].push(submission);
+                    data.submissionsByTagName[tag.id].push(submission);
                 });
                 // set initial visible state on the submission
                 var visible = this.isSubmissionVisible(submission);

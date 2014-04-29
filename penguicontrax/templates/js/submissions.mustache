@@ -17,23 +17,18 @@
                     {{/overdue}}
                     &nbsp;
                 {{/followUpState}}
-                {{#if user.staff}}
-                    <a href="/eventform?id={{id}}" class="submission-link">{{ title }}</a>
-                {{else}}
-                    {{ title }}
-                {{/if}}
+                {{{submission_link}}}
                 &nbsp;
                 <span>{{ _duration }}</span>&nbsp;
                 <span>
                     <small>
                         Suggested by {{#submitter}}{{>user_link}}{{/submitter}}. 
                         {{#if has_presenters}}Suggested presenters: {{/if}}
-                        {{#userPresenters}}{{>user_link}}{{/userPresenters}}
-                        {{_presenters}}
+                        {{#presenters}}{{>presenter_link}}{{/presenters}}
                     </small>
                 </span>&nbsp;
                 {{#tags}}
-                    <span class="label label-info"><i class="fa fa-tag"></i>&nbsp;{{ . }}</span>&nbsp;
+                    <span class="label label-info" title="{{desc}}"><i class="fa fa-tag"></i>&nbsp;{{ id }}</span>&nbsp;
                 {{/tags}}
                {{ description }}
             </div>

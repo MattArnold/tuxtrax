@@ -25,7 +25,6 @@ class User(db.Model):
     image_large = db.Column(db.String())
     rsvped_to = db.relationship('Submission', secondary=rsvps, backref=db.backref('rsvped_by', passive_deletes=True))
     event_rsvped_to = db.relationship('Events', secondary=event_rsvps, backref=db.backref('rsvped_by', passive_deletes=True))
-    presentations = db.relationship('Submission', secondary='user_presenting_in', backref=db.backref('presented_by', passive_deletes=True))
     special_tag = db.Column(db.String())
     public_rsvps = db.Column(db.Boolean())
     superuser = db.Column(db.Boolean())
@@ -46,12 +45,14 @@ class User(db.Model):
     def __repr__(self):
         return self.name
     
-class Person(db.Model):
+class Presenter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String())
     email = db.Column(db.String())
     phone = db.Column(db.String())
-    merged_to_user = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User')
+    presentations = db.relationship('Submission', secondary='presenter_presenting_in', backref=db.backref('presented_by', passive_deletes=True))
     
     def __init__(self, name):
         self.name = name
@@ -133,8 +134,8 @@ def find_user(name, phone=None, email=None):
     if email:
         query = query.filter_by(email=email)
     return query.first()
-def find_person(name, phone=None, email=None):
-    query = Person.query.filter_by(name=name)
+def find_presenter(name, phone=None, email=None):
+    query = Presenter.query.filter_by(name=name)
     if phone:
         query = query.filter_by(phone=phone)
     if email:
