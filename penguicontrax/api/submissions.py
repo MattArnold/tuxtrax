@@ -19,10 +19,10 @@ class SubmissionAPI(Resource):
         ## Output only one element
         output = dump_table(submission, Submission.__table__).pop()
         output['tags'] = [{'id': t.name, 'desc': t.desc} for t in submission[0].tags]
-        output['personPresenters'] = [_.name for _ in submission[0].personPresenters]
         user_map = ['name', 'email', 'id']
-        output['userPresenters'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
-                                    submission[0].userPresenters]
+        output['submitter'] = dict([(field, getattr(submission[0].submitter, field)) for field in user_map])
+        output['presenters'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
+                                    submission[0].presenters]
         output['rsvped_by'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
                                submission[0].rsvped_by]
         return output, 200
@@ -87,10 +87,9 @@ class SubmissionsAPI(Resource):
         output = dump_table(submissions, Submission.__table__)
         for index, element in enumerate(output):
             element['tags'] = [{'id': t.name, 'desc': t.desc} for t in submissions[index].tags]
-            element['personPresenters'] = [_.name for _ in submissions[index].personPresenters]
             user_map = ['name', 'email', 'id', 'special_tag', 'account_name', 'image_small']
-            element['userPresenters'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
-                                         submissions[index].userPresenters]
+            element['presenters'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
+                                         submissions[index].presenters]
             element['rsvped_by'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
                                     submissions[index].rsvped_by]
             element['overdue'] = (datetime.datetime.now() - submissions[index].submitted_dt).days > 13

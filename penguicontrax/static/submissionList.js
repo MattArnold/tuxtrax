@@ -56,7 +56,7 @@
                     return _.find(rsvps, {'id': ptrax.user.id }) ? 'fa-thumbs-up' : 'fa-thumbs-o-up';
                 },
                 _presenters: function () {
-                    var presenters = this.attr('personPresenters');
+                    var presenters = this.attr('presenters');
                     var lastEl;
                     if (presenters.length > 1) {
                         lastEl = presenters[presenters.length - 1];
@@ -71,7 +71,7 @@
                     }
                 },
                 has_presenters: function() {
-                    return (this.attr('personPreseners').length + this.attr('userPresenters').length) > 0;
+                    return this.attr('presenters').length > 0;
                 }
             });
 
