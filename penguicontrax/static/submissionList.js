@@ -25,6 +25,7 @@
             submissions: [],
             submissionsTpl: "",
             userLinkTpl: "",
+            presenterLinkTpl: "",
             userTextTpl: ""
         }
     }, {
@@ -32,6 +33,7 @@
         init: function () {
             //register child views
             can.view.registerView('user_link', ptrax.util.tplDecode(this.options.userLinkTpl));
+            can.view.registerView('presenter_link', ptrax.util.tplDecode(this.options.presenterLinkTpl));
             can.view.registerView('user_text', ptrax.util.tplDecode(this.options.userTextTpl));
 
             var renderer = can.view.mustache(ptrax.util.tplDecode(this.options.submissionsTpl));
@@ -56,22 +58,24 @@
                     return _.find(rsvps, {'id': ptrax.user.id }) ? 'fa-thumbs-up' : 'fa-thumbs-o-up';
                 },
                 _presenters: function () {
-                    var presenters = this.attr('personPresenters');
+                    var presenters = this.attr('presenters');
+                    console.debug(presenters);
                     var lastEl;
-                    if (presenters.length > 1) {
-                        lastEl = presenters[presenters.length - 1];
+                    var names = _.pluck(presenters, 'name');
+                    if (names.length > 1) {
+                        lastEl = names[names.length - 1];
                         lastEl = "and " + lastEl;
-                        presenters[presenters.length - 1] = lastEl;
+                        names[names.length - 1] = lastEl;
                     }
 
-                    if (presenters.length > 2) {
-                        return presenters.join(", ");
+                    if (names.length > 2) {
+                        return names.join(", ");
                     } else {
-                        return presenters.join(" ");
+                        return names.join(" ");
                     }
                 },
                 has_presenters: function() {
-                    return (this.attr('personPreseners').length + this.attr('userPresenters').length) > 0;
+                    return this.attr('presenters').length > 0;
                 }
             });
 

@@ -19,11 +19,10 @@ class SubmissionAPI(Resource):
         ## Output only one element
         output = dump_table(submission, Submission.__table__).pop()
         output['tags'] = [_.name for _ in submission[0].tags]
-        output['personPresenters'] = [_.name for _ in submission[0].personPresenters]
         user_map = ['name', 'email', 'id']
         output['submitter'] = dict([(field, getattr(submission[0].submitter, field)) for field in user_map])
-        output['userPresenters'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
-                                    submission[0].userPresenters]
+        output['presenters'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
+                                    submission[0].presenters]
         output['rsvped_by'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
                                submission[0].rsvped_by]
         return output, 200
@@ -81,6 +80,20 @@ class SubmissionAPI(Resource):
 class SubmissionsAPI(Resource):
 
     @staticmethod
+    def expand_presenter(presenter):
+        presenter_map = ['name', 'email', 'id', 'special_tag', 'account_name', 'image_small']
+        ret = {}
+        for key in presenter_map:
+            if hasattr(presenter, key):
+                ret[key] = getattr(presenter, key)
+            elif presenter.user is not None and \
+                 hasattr(presenter.user, key):
+                ret[key] = getattr(presenter.user, key)
+            else:
+                ret[key] = None
+        return ret
+
+    @staticmethod
     def query_db(parts):
         orbits = [Submission.followUpState == i for i in parts]
         query = Submission.query.filter(or_(*orbits))
@@ -88,10 +101,9 @@ class SubmissionsAPI(Resource):
         output = dump_table(submissions, Submission.__table__)
         for index, element in enumerate(output):
             element['tags'] = [_.name for _ in submissions[index].tags]
-            element['personPresenters'] = [_.name for _ in submissions[index].personPresenters]
             user_map = ['name', 'email', 'id', 'special_tag', 'account_name', 'image_small']
-            element['userPresenters'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
-                                         submissions[index].userPresenters]
+            element['presenters'] = [SubmissionsAPI.expand_presenter(_) for _ in
+                                         submissions[index].presenters]
             element['rsvped_by'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
                                     submissions[index].rsvped_by]
             element['overdue'] = (datetime.datetime.now() - submissions[index].submitted_dt).days > 13
