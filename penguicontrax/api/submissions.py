@@ -80,6 +80,20 @@ class SubmissionAPI(Resource):
 class SubmissionsAPI(Resource):
 
     @staticmethod
+    def expand_presenter(presenter):
+        presenter_map = ['name', 'email', 'id', 'special_tag', 'account_name', 'image_small']
+        ret = {}
+        for key in presenter_map:
+            if hasattr(presenter, key):
+                ret[key] = getattr(presenter, key)
+            elif presenter.user is not None and \
+                 hasattr(presenter.user, key):
+                ret[key] = getattr(presenter.user, key)
+            else:
+                ret[key] = None
+        return ret
+
+    @staticmethod
     def query_db(parts):
         orbits = [Submission.followUpState == i for i in parts]
         query = Submission.query.filter(or_(*orbits))
@@ -88,7 +102,7 @@ class SubmissionsAPI(Resource):
         for index, element in enumerate(output):
             element['tags'] = [{'id': t.name, 'desc': t.desc} for t in submissions[index].tags]
             user_map = ['name', 'email', 'id', 'special_tag', 'account_name', 'image_small']
-            element['presenters'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
+            element['presenters'] = [SubmissionsAPI.expand_presenter(_) for _ in
                                          submissions[index].presenters]
             element['rsvped_by'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
                                     submissions[index].rsvped_by]
