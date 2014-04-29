@@ -28,8 +28,7 @@
                     <small>
                         Suggested by {{#submitter}}{{>user_link}}{{/submitter}}. 
                         {{#if has_presenters}}Suggested presenters: {{/if}}
-                        {{#userPresenters}}{{>user_link}}{{/userPresenters}}
-                        {{_presenters}}
+                        {{#presenters}}{{>presenter_link}}{{/presenters}}
                     </small>
                 </span>&nbsp;
                 {{#tags}}
