@@ -115,13 +115,11 @@ def init():
     if len(Track.query.all()) == 0:
         import2013schedule.setup_predefined()
 
-    '''
     if len(Submission.query.all()) == 0 and len(Events.query.all()) == 0:
         print 'Importing 2015 schedule into submissions'
         import2013schedule.import_old('schedule2015.html')
         print 'Importing 2013 schedule into convention'
         import2013schedule.import_old('schedule2013.html', True, random_rsvp_users = 1000, submission_limit = 500, timeslot_limit = 500)
-    '''
 
 @app.route('/')
 @uncacheable_response
@@ -186,8 +184,8 @@ def reportcsv():
     schema['Repetition'] = lambda s: unicode(s.repetition)
     schema['Time request'] = lambda s: default(s.timeRequest)
     schema['Facility request'] = lambda s: default(s.facilityRequest)
-    schema['Presenting submitter'] = lambda s: unicode(s.submitter in s.userPresenters)
-    schema['Presenters'] = lambda s: ','.join([p.name for p in s.personPresenters] + [u.name for u in s.userPresenters])
+    schema['Presenting submitter'] = lambda s: unicode(s.submitter in [p.user for p in s.presenters])
+    schema['Presenters'] = lambda s: ','.join([p.name for p in s.presenters])
     # generate the table
     def generate_data_rows(data):
         yield list(schema.keys())

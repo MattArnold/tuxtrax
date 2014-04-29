@@ -6,7 +6,7 @@ from penguicontrax import app
 import submissions
 import tags
 import users
-import persons
+import presenters
 
 #import json for date encoder
 import json
@@ -61,5 +61,5 @@ api.add_resource(users.UserPresentationsAPI,
                  '/api/user/<int:id>/presentations')
 
 #persons
-api.add_resource(persons.PersonsAPI,
-                 '/api/persons')
+api.add_resource(presenters.PresentersAPI,
+                 '/api/presenters')

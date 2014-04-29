@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import penguicontrax as penguicontrax
 from submission import Submission, Track, Resource
 from tag import Tag, normalize_tag_name
-from user import Person, User
+from user import Presenter, User
 from event import Convention, Rooms, Events
 import datetime, random
 from user.Login import generate_account_name, gravatar_image_update
@@ -48,7 +48,7 @@ def import_old(path, as_convention = False, random_rsvp_users = 0, submission_li
         existing_tags[tag.name] = tag
         
     existing_people = {}
-    for person in Person.query.all():
+    for person in Presenter.query.all():
         existing_people[person.name] = person
 
     existing_tracks = {}
@@ -80,7 +80,7 @@ def import_old(path, as_convention = False, random_rsvp_users = 0, submission_li
                 name = section[0].text
                 tag_list = section[1].text # Tag doesn't seem to be in the DB yet
                 room = section[2].text
-                person = section[3][0].text
+                presenters = section[3][0].text
                 description = section[3][0].tail
                 submission = Submission() if as_convention == False else Events()
                 submission.title = name
@@ -91,18 +91,18 @@ def import_old(path, as_convention = False, random_rsvp_users = 0, submission_li
                 submission.followUpState = 0
                 submission.eventType = 'talk'
                 #Load presenters
-                submission.personPresenters= []
-                for presenter in [presenter.strip() for presenter in person.split(',')]:
+                submission.presenters = []
+                for presentername in [presenter.strip() for presenter in presenters.split(',')]:
                     if presenter == 'Open':
                         continue #"Open" person will cause the schedule to become infesible
-                    person = None
-                    if not presenter in existing_people:
-                        person = Person(presenter)
-                        penguicontrax.db.session.add(person)
-                        existing_people[presenter] = person
+                    presenter = None
+                    if not presentername in existing_people:
+                        presenter = Presenter(presentername)
+                        penguicontrax.db.session.add(presenter)
+                        existing_people[presentername] = presenter
                     else:
-                        person = existing_people[presenter]
-                    submission.personPresenters.append(person)
+                        presenter = existing_people[presentername]
+                    submission.presenters.append(presenter)
                 #Load Tags
                 submission.tags = []
                 for tag in tag_list.split(','):
@@ -139,6 +139,7 @@ def import_old(path, as_convention = False, random_rsvp_users = 0, submission_li
                 existing_submissions.append(submission)
                 penguicontrax.db.session.add(submission)
                 submission_count = submission_count + 1
+        print "New submission"
         penguicontrax.db.session.commit()
 
     if random_rsvp_users > 0:
