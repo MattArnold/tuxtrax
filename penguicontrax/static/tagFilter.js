@@ -36,7 +36,15 @@
         {
             init: function () {
 
-                var tagList = [], data, tpl, renderer;
+                var tagList = [], tpl, renderer;
+
+                this.options.viewModel = new can.Map({
+                            infoText: "",
+                            all: true,
+                            tags: [],
+                            tagsByName: {},
+                            submissionsByTagName: {}
+                        });
 
                 $.get('/api/tags?ver=' + getCookieOrRandom('submission_ver'))
 
@@ -52,25 +60,15 @@
                             });
                         });
 
-                        var submissionsByTagName = _.zipObject(_.pluck(tagList, 'name'),
-                            _.map(tagList, function () {
-                                return []
-                            }));
-
-                        data = new can.Map({
-                            infoText: "",
-                            all: true,
+                        this.options.viewModel.attr({
                             tags: tagList,
-                            tagsByName: _.zipObject(_.pluck(tagList, 'name'), tagList),
-                            submissionsByTagName: submissionsByTagName
+                            tagsByName: _.zipObject(_.pluck(tagList, 'name'), tagList)
                         });
-
-                        this.options.viewModel = data;
 
                         tpl = ptrax.util.tplDecode(this.options.tpl);
                         renderer = can.view.mustache(tpl);
 
-                        this.element.html(renderer(data, {
+                        this.element.html(renderer(this.options.viewModel, {
                             isIncluded: function (options) {
                                 if (isIncluded(this)) {
 
@@ -117,6 +115,9 @@
                 var data = this.options.viewModel;
                 // register this submission's tags in the map
                 can.each(submission.attr('tags'), function (tag) {
+                    if(!data.submissionsByTagName[tag.id]){
+                        data.submissionsByTagName[tag.id] = [];
+                    }
                     data.submissionsByTagName[tag.id].push(submission);
                 });
                 // set initial visible state on the submission
