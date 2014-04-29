@@ -218,15 +218,7 @@ js = Bundle('jquery-1.11.0.js',
             filters='rjsmin', output='build/tuxtrax-%(version)s.js')
 
 css = Bundle('ptrax.css', output='build/tuxtrax-%(version)s.css')
-
-try:
-    os.environ["DEBUG"]
-except KeyError:
-    debug = False
-else:
-    debug = True
-
-assets.debug = debug
+assets.debug = bool(debug)
 
 assets.versions = "hash"
 assets.register('js_base', js)
