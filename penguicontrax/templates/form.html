@@ -7,23 +7,27 @@
 {% endblock %}
 {% block body %}
     {{ super() }}
+    <a name="errors"></a>
+    <div class="validation validation-float hidden" data-spy="affix" data-offset-top="60">
+        <ul class="validation-errors"></ul>
+    </div>
     <div class="col-md-12">
     <form id="submitEventForm" action="/submitevent" method=post>
     {% if event is not none %}
         <input type=hidden name=eventid value="{{ event.id }}">
     {% endif %}
-    <div id="disclaimer">
-        Thanks for leaving your ideas here! Just FYI, we can't accept all event suggestions, and we might decide
-            to change some events we accept, OK?
-    </div>
+    <p class="lead small">
+        Thanks for leaving your ideas here! Please note that we can't accept all event suggestions, and we may edit events that are accepted.
+    </p>
     <div class="row well section where">
         <div class="col-md-2">
+            <a name="where"></a>
             <h4 class="row">
                 WHERE
             </h4>
         </div>
         <div class="col-md-4">
-            <div id="typechange" class="control-group">
+            <div id="typechange" class="form-group">
                 <div class="radio">
                     <label for="talkbtn">
                         <input type="radio" name=eventtype
@@ -112,13 +116,14 @@
     </div>
     <div class="row well section when">
         <div class="col-md-2">
+            <a name="when"></a>
             <h4 class="row">
                 WHEN
             </h4>
         </div>
         <div class="col-md-10">
             <div class="col-md-2">
-                <div class="row" id="duration">
+                <div class="row form-group" id="duration">
                     <div class="radio">
                         <label>
                             <input type="radio" class="timechange" name="duration" value="1"
@@ -191,61 +196,56 @@
             <h4 class="row">
                 WHO
             </h4>
-            <div class="row">
-                <p>If you don't have a recommendation for who should do this, just leave this section blank.</p>
-                <p>Phone numbers / email addresses will only be used by Penguicon Programming Operations during the
+            <div class="row advice">
+                <p class="text-left">If you don't have a recommendation for who should do this, just leave this section blank.</p>
+                <p class="text-left">Phone numbers / email addresses will only be used by Penguicon Programming Operations during the
                 convention.</p>
             </div>
         </div>
-        <div class="col-md-10">
-            <div class="row">
-                <div class="col-md-3">
-                    <p class="checkbox small suggested-by">
-                        Suggested by
-                        {% if event is none %}
-                            <input type=hidden name=submitter_id value={{ user.id }}
-                                   data-id="{{ user.id }}"
-                                   data-name="{{ user.name }}"
-                                   data-email="{{ user.email }}"
-                                   data-phone="{{ user.phone }}"/>
-                            {{ macros.user_link(user) }}
-                        {% else %}
-                            {% if event.submitter is not none %}
-                                <input type=hidden name=submitter_id
-                                       value={{ event.submitter.id }} data-name="{{ event.submitter }}"/>
-                            {% endif %}
-                            {{ macros.user_link(event.submitter) }}
+        <div class="col-md-10 panel panel-default">
+            <div class="row panel-heading suggester form-inline">
+                <div class="suggested-by small">
+                    Suggested by&nbsp;
+                    {% if event is none %}
+                        <input type=hidden name=submitter_id value={{ user.id }}
+                                data-id="{{ user.id }}"
+                               data-name="{{ user.name }}"
+                               data-email="{{ user.email }}"
+                               data-phone="{{ user.phone }}"/>
+                        {{ macros.user_link(user) }}
+                    {% else %}
+                        {% if event.submitter is not none %}
+                            <input type=hidden name=submitter_id
+                                   value={{ event.submitter.id }} data-name="{{ event.submitter }}"/>
                         {% endif %}
+                        {{ macros.user_link(event.submitter) }}
+                    {% endif %}
 
-                        {% if event is not none %}
-                            {% for user_presenter in event.userPresenters %}
-                                {{ macros.user_link(user_presenter) }}
-                                <input type="hidden" name="presenter_id" value="{{ user_presenter.id }}">
-                                <input type="hidden" name="presenter_idtype" value="user">
-                                <input name="presenter" type="hidden" value="{{ user_presenter.name }}"/>
-                                <input name="phone" type="hidden" value="{{ user_presenter.phone }}"/>
-                                <input name="email" type="hidden" value="{{ user_presenter.email }}"/>
-                            {% endfor %}
-                            {% for person_presenter in event.personPresenters %}
-                                {{ macros.person_link(person_presenter) }}
-                                 <input type="hidden" name="presenter_id" value="{{ person_presenter.id }}">
-                                 <input type="hidden" name="presenter_idtype" value="person">
-                                <input name="presenter" type="hidden" value="{{ person_presenter.name }}"/>
-                                <input name="phone" type="hidden" value="{{ person_presenter.phone }}"/>
-                                <input name="email" type="hidden" value="{{ person_presenter.email }}"/>
-                            {% endfor %}
-                        {% endif %}
-                    </p>
+                    {% if event is not none %}
+                        {% for user_presenter in event.userPresenters %}
+                            <input type="hidden" name="presenter_id" value="{{ user_presenter.id }}">
+                            <input type="hidden" name="presenter_idtype" value="user">
+                            <input name="presenter" type="hidden" value="{{ user_presenter.name }}"/>
+                            <input name="phone" type="hidden" value="{{ user_presenter.phone }}"/>
+                            <input name="email" type="hidden" value="{{ user_presenter.email }}"/>
+                        {% endfor %}
+                        {% for person_presenter in event.personPresenters %}
+                            <input type="hidden" name="presenter_id" value="{{ person_presenter.id }}">
+                            <input type="hidden" name="presenter_idtype" value="person">
+                            <input name="presenter" type="hidden" value="{{ person_presenter.name }}"/>
+                            <input name="phone" type="hidden" value="{{ person_presenter.phone }}"/>
+                            <input name="email" type="hidden" value="{{ person_presenter.email }}"/>
+                        {% endfor %}
+                    {% endif %}
+
                 </div>
-                <div class="col-md-3">
-                    <div class="checkbox small">
-                        <label>
-                            <input type="checkbox" id="suggesterPresents"> I will run this event.
-                        </label>
-                    </div>
+                <div class="checkbox small">
+                    <label>
+                        <input type="checkbox" id="suggesterPresents"> I will run this event.
+                    </label>
                 </div>
             </div>
-            <div class="row presenters-input">
+            <div class="row presenters-input panel-body">
 
                 <div class="col-md-2">
                     <p>
@@ -258,7 +258,7 @@
                         <input type="hidden" name="presenter_id" value="">
                         <input type="hidden" name="presenter_idtype" value="">
                         <label for="presenter" id="presenterLabel">
-                            <input name="presenter" autocomplete="off" type="text" size="24" class="pp form-control presenter-typeahead"/>
+                            <input name="presenter" autocomplete="off" type="text" size="24" class="pp form-control presenter-typeahead" placeholder="Name"/>
                         </label>
                         &nbsp;
                         <label>
@@ -276,14 +276,15 @@
         </div>
     </div>
     <div class="row well what">
+        <a name="what"></a>
         <div class="col-md-2">
             <h4 class="row">
                 WHAT
             </h4>
-            <div id="advice">
-                <p><br/>
+            <div class="row advice">
+                <p class="text-left">
                 Your text in this section will appear to attendees on the website and in the schedule book.
-                So please only leave comments to staff in the <a id="where">"Where"</a> and <a id="when">"When"</a> sections, above.</p>
+                So please only leave comments to staff in the <a href="#where">Where</a> and <a href="#when">When</a> sections, above.</p>
             </div>
         </div>
         <div class="col-md-10">
@@ -291,7 +292,7 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="form-group">
+                            <div class="form-group" id="titleGroup">
                                 <label for="title">Title:</label>
                                 <textarea id="title" class="form-control" name="title"
                                           rows="2" cols="40"
@@ -299,7 +300,7 @@
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <div class="form-group">
+                            <div class="form-group" id="descriptionGroup">
                                 <label for="description">Descriptive blurb:</label>
                                 <textarea name=description id="description" rows="6" cols="60"
                                           class="form-control"
@@ -310,13 +311,14 @@
                 </div>
             </div>
             <div class="row" style="margin-top:25px">
-                <div class="col-md-8" id="trackselect">
+                <a name="trackselect"></a>
+                <div class="col-md-4" id="trackselect">
                     <p>
                         Choose the staff liason you would like to route this submission to:
                     </p>
-                    <div class="control-group" id="tracks">
+                    <div class="form-group" id="tracks">
                         {% for track in tracks %}
-                            <div class="radio col-xs-3">
+                            <div class="radio">
                                 <label for="track_{{ track }}">
                                     <input type="radio" name=track value="{{ track }}"
                                            id="track_{{ track }}" {{ event | checked_if_tracked(track) }}>
@@ -327,12 +329,13 @@
                     </div>
                 </div>
                 <div class="col-md-4" id="tagselect">
+                    <a name="tagselect"></a>
                     <p>Select all topics that apply:</p>
-                    <div class="control-group" id="topics" data-toggle="buttons">
+                    <div class="form-group" id="topics" data-toggle="buttons">
                         {% for tag in tags %}
                             <label class="btn btn-xs btn-info" id="taglabel_{{ tag }}">
                                 <input type="checkbox" name=tag
-                                       value="{{ tag }}" id="tag_{{ tag }}" data-toggle="button" 
+                                       value="{{ tag }}" id="tag_{{ tag }}" data-toggle="button"
                                        {{ event | checked_if_tagged(tag) }}>{{ tag | trim }}
                             </label>
                         {% endfor %}
@@ -362,40 +365,40 @@
         </div>
         <div class="col-md-10">
             <div class="row">
-                <div class="col-md-3">
-                    <input type=submit value="{% if event is not none %}Update event{% else %}Submit event{% endif %}"
-                           class="btn btn-default btn-primary" name=submitevent id="submitevent"/>
-                    <input type=text style="display: none" name=comments id="comments"
-                           {% if event is not none %}value="{{ event.comments }}"{% endif %}/>
-                </div>
-                <div class="col-md-9">
-        <div class="row alert alert-danger" style="display:none" id="eventtyperequired"><a href="#where">Click here</a> to choose an event type.</div>
-        <div class="row alert alert-danger" style="display:none" id="durationrequired"><a href="#when">Click here</a> to choose how long the event will be.</div>
-        <div class="row alert alert-danger" style="display:none" id="titlerequired"><a href="#what">Click here</a> to title the event.</div>
-        <div class="row alert alert-danger" style="display:none" id="descriptionrequired"><a href="#what">Click here</a> to describe the event for potential attendees.</div>
-        <div class="row alert alert-danger" style="display:none" id="trackrequired"><a href="#trackselect">Click here</a> to choose which staffer to submit this suggestion to.</div>
-        <div class="row alert alert-danger" style="display:none" id="topicrequired"><a href="#tagselect">Click here</a> to choose at least one topic.</div>
-                    {% if user is not none and user.staff == 1 %}
-                        {% if event is not none %}
-                            <label for="followupstate">Submission status
-                                <select tabindex="2" id="followupstate" name=followupstate
-                                        data-style="btn-default">
-                                    <option value="0" {{ event.followUpState | is_selected(0) }}>Suggested</option>
-                                    <option value="1" {{ event.followUpState | is_selected(1) }}>Followed up</option>
-                                    <option value="2" {{ event.followUpState | is_selected(2) }}>Accepted</option>
-                                    <option value="3" {{ event.followUpState | is_selected(3) }}>Rejected</option>
-                                </select>
-                            </label>
-                            {% if event.followUpState == 2 %}
-                                <div class="question">
-                                    <span style="color:#7f8c8d;">Create an event from this submission:</span>
-                                    <input  value="create" class="buttons" name=submitevent
-                                           id="createevent"/>
-                                </div>
-                            {% endif %}
-                        {% endif %}
+                <div class="header-align">
+                    <div class="col-md-3">
+                        <input type=submit
+                               value="{% if event is not none %}Update event{% else %}Submit event{% endif %}"
+                               class="btn btn-default btn-primary" name=submitevent id="submitevent"/>
+                        <input type=text style="display: none" name=comments id="comments"
+                               {% if event is not none %}value="{{ event.comments }}"{% endif %}/>
+                    </div>
 
-                    {% endif %}
+                    <div class="col-md-9">
+                        <span class="validation hidden alert alert-danger small">Please fix all errors and resubmit.</span>
+                        {% if user is not none and user.staff == 1 %}
+                            {% if event is not none %}
+                                <label for="followupstate">Submission status
+                                    <select tabindex="2" id="followupstate" name=followupstate
+                                            data-style="btn-default">
+                                        <option value="0" {{ event.followUpState | is_selected(0) }}>Suggested</option>
+                                        <option value="1" {{ event.followUpState | is_selected(1) }}>Followed up
+                                        </option>
+                                        <option value="2" {{ event.followUpState | is_selected(2) }}>Accepted</option>
+                                        <option value="3" {{ event.followUpState | is_selected(3) }}>Rejected</option>
+                                    </select>
+                                </label>
+                                {% if event.followUpState == 2 %}
+                                    <div class="question">
+                                        <span style="color:#7f8c8d;">Create an event from this submission:</span>
+                                        <input value="create" class="buttons" name=submitevent
+                                               id="createevent"/>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -404,7 +407,6 @@
     </form>
     </div>
 {% endblock %}
-        <script type="text/javascript" src="">
 {% block page_script %}
     {% assets filters="jsmin",output="build/submissionform-%(version)s.js","submissionform.js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>

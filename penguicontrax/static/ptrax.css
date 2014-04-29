@@ -7628,7 +7628,7 @@ form .suggested-by {
   padding-left: 0;
 }
 form .twitter-typeahead {
-  display: block!important;
+  display: block !important;
 }
 form .twitter-typeahead .tt-dropdown-menu {
   background-color: #fff;
@@ -7648,6 +7648,47 @@ form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-suggestion:hover {
 }
 form .twitter-typeahead .tt-dropdown-menu .tt-suggestions .tt-suggestion strong {
   color: #2980b9;
+}
+form .advice p {
+  color: #999999;
+  font-size: 90%;
+  margin-right: 10px;
+}
+form .suggester div {
+  display: inline-block;
+}
+form .suggester .suggested-by {
+  margin-right: 10px;
+}
+form .header-align {
+  margin-top: 15px;
+}
+.validation-float {
+  -webkit-box-shadow: -3px 4px 8px 0px rgba(100, 100, 100, 0.75);
+  -moz-box-shadow: -3px 4px 8px 0px rgba(100, 100, 100, 0.75);
+  box-shadow: -3px 4px 8px 0px rgba(100, 100, 100, 0.75);
+  width: 30em;
+  z-index: 1000;
+  background-color: #fff;
+  position: fixed;
+  right: 0;
+  padding: 10px;
+  top: 70px;
+}
+.validation-float.affix {
+  top: 70px;
+}
+.validation-float .validation-errors {
+  padding-left: 0;
+  margin-bottom: 0;
+}
+.validation-float .validation-errors li {
+  list-style-type: none;
+  margin: 0 0 5px 0;
+  padding: 5px;
+}
+.validation-float .validation-errors li:last-child {
+  margin: 0;
 }
 nav {
   padding: .5em;
@@ -7693,7 +7734,7 @@ nav .navbar-brand {
 }
 #nav .floater.affix {
   top: 42px;
-  width: 16.66666667%;
+  width: 15%;
 }
 .person {
   font-style: italic;
@@ -7744,7 +7785,7 @@ nav .navbar-brand {
   -ms-transition: 1s;
   -o-transition: 1s;
 }
-#tracks .radio {
-  display: inline-block;
+.popover ul {
+  margin-left: 0;
 }
 /*# sourceMappingURL=/static/less.source.map */
