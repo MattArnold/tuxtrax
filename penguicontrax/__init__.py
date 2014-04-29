@@ -27,10 +27,8 @@ app.config.update(dict(
     DEFAULT_MAIL_SENDER = constants.DEFAULT_MAIL_SENDER
 ))
 mail = Mail(app)
-debug = os.environ.get("DEBUG")
 
-if not debug:
-
+if constants.debug != True:
     try:
         conn = redis.from_url(constants.REDIS_URL)
         conn.incr('REDIS_CONNECTION_COUNT')
@@ -218,7 +216,7 @@ js = Bundle('jquery-1.11.0.js',
             filters='rjsmin', output='build/tuxtrax-%(version)s.js')
 
 css = Bundle('ptrax.css', output='build/tuxtrax-%(version)s.css')
-assets.debug = bool(debug)
+assets.debug = constants.debug
 
 assets.versions = "hash"
 assets.register('js_base', js)

@@ -23,3 +23,4 @@ class constants:
     ORGANIZATION = 'Penguicon' if not 'ORGANIZATION' in os.environ else os.environ['ORGANIZATION']
     MAIL_REPLY_TO = 'programming@penguicon.org' if not 'MAIL_REPLY_TO' in os.environ else os.environ['DEFAULT_MAIL_SENDER']
     MAIL_ENABLE = False if not 'MAIL_ENABLE' in os.environ else bool(os.environ['MAIL_ENABLE'])
+    DEBUG = False if not 'DEBUG' in os.environ else bool(os.environ['DEBUG'])
