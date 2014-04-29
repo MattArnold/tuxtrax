@@ -21,6 +21,7 @@ class SubmissionAPI(Resource):
         output['tags'] = [_.name for _ in submission[0].tags]
         output['personPresenters'] = [_.name for _ in submission[0].personPresenters]
         user_map = ['name', 'email', 'id']
+        output['submitter'] = dict([(field, getattr(submission[0].submitter, field)) for field in user_map])
         output['userPresenters'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
                                     submission[0].userPresenters]
         output['rsvped_by'] = [dict([(field, getattr(_, field)) for field in user_map]) for _ in
