@@ -32,8 +32,12 @@ if constants.DEBUG != True:
     try:
         conn = redis.from_url(constants.REDIS_URL)
         conn.incr('REDIS_CONNECTION_COUNT')
-        if conn.get('SUBMISSION_DATASET_VERSION') is None:
+        dataset_ver = conn.get('SUBMISSION_DATASET_VERSION')
+        conn.flushall()
+        if dataset_ver is None:
             conn.set('SUBMISSION_DATASET_VERSION', 0)
+        else
+            conn.set('SUBMISSION_DATASET_VERSION', int(dataset_ver) + 1)
     except Exception as e:
         conn = None
         pass
