@@ -21,12 +21,30 @@ def setup_predefined():
     penguicontrax.db.session.add(Resource('Drinking water', 'Drinking water', False))
     penguicontrax.db.session.add(Resource('Quiet (no airwalls)', 'Quiet (no airwalls)', False))
 
-    official_tags_tracks = ['diy','action-adventure','penguicon','costuming','music','tech','eco','after-dark','mayhem','film','food','literature','science','video-gaming','life','gaming']
+    official_tags_tracks = \
+    [
+        ('diy','Making, building, and tinkering.'),
+        ('action-adventure','Weapons, guns, martial arts.'),
+        ('penguicon','All about Penguicon iteself.'),
+        ('costuming','Costumes and accessories, masks, special effects makeup.'),
+        ('music','Listening to, creating, and discussing music.'),
+        ('tech','Software, hardware, and engineering.'),
+        ('eco','The environment, energy efficiency, self-sufficiency.'),
+        ('after-dark','Sex, alcohol, parties, adult pastimes. '),
+        ('mayhem','Fun that happens outside our event spaces.'),
+        ('film','Watching or discussing film or TV.'),
+        ('food','Cooking demos, tastings, what we eat.'),
+        ('literature','Genre fiction, the craft and profession of writing.'),
+        ('science','Talks and demos from the lab, in the field, or even outer space.'),
+        ('video-gaming','Playing or discussing electronic interactive entertainment.'),
+        ('life','Lifestyles, skills, wellness, money, career, and fun!'),
+        ('gaming','Playing or discussing board games, card games, and roleplaying games.')
+    ]
 
     for track in official_tags_tracks:
-        penguicontrax.db.session.add(Track(track,None))
+        penguicontrax.db.session.add(Track(track[0],None))
     for tag in official_tags_tracks:
-        penguicontrax.db.session.add(Tag(tag,tag,True))
+        penguicontrax.db.session.add(Tag(tag[0],tag[1],True))
     penguicontrax.db.session.commit()
 
 def import_old(path, as_convention = False, random_rsvp_users = 0, submission_limit = sys.maxint, timeslot_limit = sys.maxint):
