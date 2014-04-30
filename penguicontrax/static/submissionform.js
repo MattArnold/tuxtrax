@@ -210,7 +210,7 @@ $(function () {
 
     function add_help_popovers() {
 
-        var titleadvice = "<p>The title will sometimes be used without the description, so please be informative. Only be cute if it's still easy to understand what to expect.</p>";
+        var titleadvice = '<p class="small text-left">The title will sometimes be used without the description, so please be informative. Only be cute if it\'s still easy to understand what to expect.</p>';
         var descriptionadvice = '<ul><li class="small">Don\'t say "I".</li>' +
             '<li class="small">Instead of parentheses, try making a new sentence or re-arranging phrases in the sentence.</li>' +
             '<li class="small">Many people have never heard of your topic. Help them figure out whether to attend.</li>' +
