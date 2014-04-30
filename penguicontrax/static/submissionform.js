@@ -220,7 +220,7 @@ $(function () {
 
         $('#title').popover({
             html: true,
-            placement: 'bottom',
+            placement: 'right',
             trigger: 'focus',
             content: titleadvice
         });
