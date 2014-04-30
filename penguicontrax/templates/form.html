@@ -226,7 +226,7 @@
                 </div>
                 <div class="checkbox small">
                     <label>
-                        <input type="checkbox" id="suggesterPresents" {% if event.presenters|selectattr('id','equalto','user.id') %}checked="checked"{% endif %}> I will run this event.
+                        <input type="checkbox" id="suggesterPresents" {% if event and (event.presenters|selectattr('id','equalto','user.id')) %}checked="checked"{% endif %}> I will run this event.
                     </label>
                 </div>
             </div>
