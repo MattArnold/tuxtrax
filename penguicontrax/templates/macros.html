@@ -91,15 +91,15 @@
             <div class="drawer submissions">
                 <div class="col-md-12">
                     <div class="btn-group" data-toggle="buttons">
-                      <label for="{{ submission.id }}rsvp" class="btn btn-xs btn-inverse">
-                        <input type="checkbox" name="{{ submission.id }}rsvp" id="{{ submission.id }}rsvp">
-                          0 
-                        {% if user is not none and submission in user.rsvped_to %}
-                            <i class="fa fa-thumbs-up rsvp" style="color:#e3cf7a"></i>
-                        {% else %}
-                            <i class="fa fa-thumbs-o-up rsvp"></i>
-                        {% endif %}
-                      </label>
+{#                      <label for="{{ submission.id }}rsvp" class="btn btn-xs btn-inverse">#}
+{#                        <input type="checkbox" name="{{ submission.id }}rsvp" id="{{ submission.id }}rsvp">#}
+{#                          0 #}
+{#                        {% if user is not none and submission in user.rsvped_to %}#}
+{#                            <i class="fa fa-thumbs-up rsvp" style="color:#e3cf7a"></i>#}
+{#                        {% else %}#}
+{#                            <i class="fa fa-thumbs-o-up rsvp"></i>#}
+{#                        {% endif %}#}
+{#                      </label>#}
                     </div> 
 					{% if submission.followUpState == 0 %}
 						{% set followUpDays = submission.submitted_dt | days_since_now %}
@@ -119,13 +119,13 @@
                     <span class="label">{{ submission.duration }} hrs</span>
                     {% endif %}
                     <span class="person">
-                        {% for person_presenter in submission.presenters %}
-                            {{ person_link(person_presenter) }}{% if not loop.last %}, {% endif %}
+                        {% for presenter in submission.presenters %}
+                            {{ presenter_link(presenter) }}{% if not loop.last %}, {% endif %}
                         {% endfor %}
                      </span>
 
                     {% for tag in submission.tags %}
-                    <span class="label label-default spaninclude">
+                    <span class="label label-info spaninclude">
                         <i class="fa fa-tag"></i> {{ tag.name }}
                     </span>
                     {% endfor %}
