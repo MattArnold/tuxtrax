@@ -5,7 +5,8 @@ import os
 
 from flask import g, request, session, render_template, redirect, Response, Markup, url_for
 from sqlalchemy.orm import relationship
-from .. import app, db, dump_table_json, uncacheable_response
+from .. import app, db
+from ..utils import dump_table_json, uncacheable_response
 from penguicontrax.tag import Tag, get_tag, create_tag
 from penguicontrax.user import User, Presenter, find_user, find_presenter
 

@@ -23,30 +23,17 @@ class SimpleTest(unittest.TestCase):
 
     def setUp(self):
         pass
-    
-    #def test_bad(self):
-    #    self.assertEqual(1,0)
+
+    def test_index(self):
+        t = penguicontrax.app.test_client(self)
+        r = t.get('/', content_type='html/text')
+        self.assertEqual(r.status_code, 200)
 
     def login(self):
         """Fake a social login by inserting data into the database and setting a session."""
         t = penguicontrax.app.test_client(self)
         
         r = t.get('/fakelogin', content_type='html/text')
-
-    def test_index(self):
-
-        m="test_index"
-        #print "Go time."
-        t = penguicontrax.app.test_client(self)
-
-        r = t.get('/', content_type='html/text')
-
-        #print "Testing baby!"
-        #print r
-
-        self.assertEqual(r.status_code, 200, "test_eventform GET failed with %s" % r.status_code)
-        self.assertTrue(b'penguicon-trax' in r.data, "%s: Page didn't contain 'penguicon-trax'" % m)
-        self.assertTrue(b'Zombie Tag' in r.data, "%s: Page didn't contain 'Zombie Tag'" % m)
 
     def testZombieEventForm(self):
         """Pull the Zombie Tag event down."""
