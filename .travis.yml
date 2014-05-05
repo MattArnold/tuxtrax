@@ -1,0 +1,15 @@
+language: python
+cache: apt
+python:
+    - "2.7"
+env: PYTHONPATH=.
+before_install:
+    - sudo apt-get update -qq
+install:
+    - pip install -r requirements.txt --use-mirrors
+script:
+    - nosetests
+notifications:
+    email:
+        # TODO: Just me for now, so I don't annoy anyone else
+        - me@lmorchard.com
