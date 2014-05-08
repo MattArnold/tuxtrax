@@ -48,7 +48,13 @@
                 },
                 _duration: function () {
                     var suffix = this.attr('duration') > 1 ? ' hrs' : ' hr';
-                    return this.attr('duration') + suffix;
+                    if (this.attr('duration') == 4) {
+                        return '4+ hrs';
+                    } else if (this.attr('duration') == 5) {
+                        return 'All wknd';
+                    } else {
+                        return this.attr('duration') + suffix;
+                    }
                 },
                 num_rsvp: function () {
                     return '' + this['rsvped_by'].attr().length;
