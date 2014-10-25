@@ -169,6 +169,7 @@
                     search.push(submission.title.toLowerCase());
                     search.push(submission.description.toLowerCase());
                     search.push(submission.tags.join(" ").toLowerCase());
+                    search.push(submission.submitter.name.toLowerCase());
                     search.push(submission.presenters.join(' ').toLowerCase());
 
                     submission.attr('search', search);
