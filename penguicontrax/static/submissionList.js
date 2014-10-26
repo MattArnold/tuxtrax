@@ -4,7 +4,7 @@
     {
         var name = cname + "=";
         var ca = document.cookie.split(';');
-        for(var i=0; i<ca.length; i++) 
+        for(var i=0; i<ca.length; i++)
           {
           var c = ca[i].trim();
           if (c.indexOf(name)==0) return c.substring(name.length,c.length);
@@ -102,34 +102,39 @@
             var apiUrl = '/api/submission/' + submission.attr('id') + '/rsvp';
             var $totalRsvpPointsElement = $('#totalRsvpPoints');
 
-            if (!submission.attr('updating')) {
-                submission.attr('updating', true);
+            if (ptrax.user.id === 0) {
+                $('#login_modal_body').html('Please log in to indicate you <span class="fa fa-thumbs-o-up"></span> "Wouldattend" an event.');
+                $('#login_modal').modal('show');
+            } else {
+                if (!submission.attr('updating')) {
+                    submission.attr('updating', true);
 
-                if (user_rsvp < 0) {
-                    //add it
-                    $.ajax({
-                        url: apiUrl,
-                        type: 'POST',
-                        success: function () {
-                            submission['rsvped_by'].push(ptrax.user);
-                            submission.attr('updating', false);
-                            //Take one away from the rsvp points next to  the top thumbsup
-                            $totalRsvpPointsElement.text(parseInt($totalRsvpPointsElement.text(),10)-1);
-                        }
-                    });
-                } else {
-                    //if its is already there, take it out
-                    $.ajax({
-                        url: apiUrl,
-                        type: 'DELETE',
-                        success: function () {
-                            //if its is already there, take it out
-                            submission['rsvped_by'].splice(user_rsvp, 1);
-                            submission.attr('updating', false);
-                            //add one to the user rsvp points
-                            $totalRsvpPointsElement.text(parseInt($totalRsvpPointsElement.text(),10)+1);
-                        }
-                    });
+                    if (user_rsvp < 0) {
+                        //add it
+                        $.ajax({
+                            url: apiUrl,
+                            type: 'POST',
+                            success: function () {
+                                submission['rsvped_by'].push(ptrax.user);
+                                submission.attr('updating', false);
+                                //Take one away from the rsvp points next to  the top thumbsup
+                                $totalRsvpPointsElement.text(parseInt($totalRsvpPointsElement.text(),10)-1);
+                            }
+                        });
+                    } else {
+                        //if its is already there, take it out
+                        $.ajax({
+                            url: apiUrl,
+                            type: 'DELETE',
+                            success: function () {
+                                //if its is already there, take it out
+                                submission['rsvped_by'].splice(user_rsvp, 1);
+                                submission.attr('updating', false);
+                                //add one to the user rsvp points
+                                $totalRsvpPointsElement.text(parseInt($totalRsvpPointsElement.text(),10)+1);
+                            }
+                        });
+                    }
                 }
             }
         }
