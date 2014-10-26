@@ -60,24 +60,48 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        You have indicated interest in the following events:
-                    </div>
-                    <div class="panel-body">
-                        {% for submission in view_user.rsvped_to %}
-                            {% if view_user == user or (user is not none and user.staff) %}
-                                {{ macros.event_summary(submission, user) }}
-                            {% else %}
-                                {{ macros.event_summary(submission, none) }}
-                            {% endif %}
-                        {% endfor %}
+
+        {% if view_user.rsvped_to %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            You indicated you <span class="fa fa-thumbs-o-up"></span> "<strong>Wouldattend</strong>" the following events:
+                        </div>
+                        <div class="panel-body">
+                            {% for submission in view_user.rsvped_to %}
+                                {% if view_user == user or (user is not none and user.staff) %}
+                                    {{ macros.event_summary(submission, user) }}
+                                {% else %}
+                                    {{ macros.event_summary(submission, none) }}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
+
+        {% if view_user.submissions %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            You <strong>suggested</strong> the following events:
+                        </div>
+                        <div class="panel-body">
+                            {% for submission in view_user.submissions %}
+                                {% if view_user == user or (user is not none and user.staff) %}
+                                    {{ macros.event_summary(submission, user) }}
+                                {% else %}
+                                    {{ macros.event_summary(submission, none) }}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </div>
 
 {% endblock %}
