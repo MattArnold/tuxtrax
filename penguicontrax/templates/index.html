@@ -183,6 +183,7 @@
 {% block page_script %}
     {{ super() }}
 
+    <!-- Use Flask-Assets to package and deliver static assets. See bundles defined in __init__.py -->
     {% assets filters="jsmin",output="build/submissions-%(version)s.js","tagFilter.js","submissionList.js","collapsetagnav.js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
