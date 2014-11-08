@@ -1,0 +1,4 @@
+[
+    {"id": 1001, "email": "user1@example.com", "name": "user one", "account_name": "user1", "creation_ip": "10.0.0.1", "oauth_token": "8675309", "oauth_secret": "jenny"},
+    {"id": 1002, "email": "user1@example.com", "name": "sysop", "account_name": "sysop", "creation_ip": "10.0.0.1", "oauth_token": "999", "oauth_secret": "000", "staff": true, "superuser": true}
+]

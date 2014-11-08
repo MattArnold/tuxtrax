@@ -1,8 +1,8 @@
 import os
 
 class constants:
-    DATABASE_FILE = 'penguicontrax.db'
     SESSION_SECRET_KEY = 'SESSION_SECRET_KEY' if not 'SESSION_SECRET_KEY' in os.environ else os.environ['SESSION_SECRET_KEY']
+    DATABASE_FILE = '/tmp/penguicontrax.db'
     DATABASE_URL = 'sqlite:///' + DATABASE_FILE if not 'DATABASE_URL' in os.environ else os.environ['DATABASE_URL']
     OPENID_STORE = 'openid_store'
     TWITTER_KEY = 'TWITTER_KEY' if not 'TWITTER_KEY' in os.environ else os.environ['TWITTER_KEY']

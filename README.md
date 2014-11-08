@@ -37,6 +37,22 @@ Now you can run the app locally with:
 $ python runserver.py
 ```
 
+### Development and Testing
+
+To run tests, use this command:
+```sh
+$ nosetests
+```
+
+The unit tests do not require the web app to be running. It interacts with the
+Flask application directly.
+
+Should you want to see the stdout from these tests, set a unix shell variable
+like this:
+```sh
+$ export NOSE_NOCAPTURE=1
+```
+
 ### Optional: Deploy to Heroku
 
 You will need to be added as a collaborator on the Heroku app to be able to push public changes. 

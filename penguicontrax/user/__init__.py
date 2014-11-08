@@ -31,10 +31,12 @@ class User(db.Model):
     creation_ip = db.Column(db.String())
     phone = db.Column(db.String())
     
-    def __init__(self):
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
         self.points = 5
         self.public_rsvps = False
         if User.query.count() == 0:
+            # HACK: First user in the system becomes the superuser
             self.staff = True
             self.superuser = True
             self.special_tag = "root"

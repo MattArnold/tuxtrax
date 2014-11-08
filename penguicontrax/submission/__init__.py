@@ -5,7 +5,8 @@ import os
 
 from flask import g, request, session, render_template, redirect, Response, Markup, url_for
 from sqlalchemy.orm import relationship
-from .. import app, db, dump_table_json, uncacheable_response
+from .. import app, db
+from ..utils import dump_table_json, uncacheable_response
 from penguicontrax.tag import Tag, get_tag, create_tag
 from penguicontrax.user import User, Presenter, find_user, find_presenter
 
@@ -278,8 +279,11 @@ def submitevent():
     if 'submitter_id' in request.form:
         submission.submitter = User.query.filter_by(id=request.form['submitter_id']).first()
     submission.private = 'private' in request.form
-    submission.followUpState = request.form['followupstate'] if 'followupstate' in request.form and request.form[
-        'followupstate'] is not None else 0
+
+    if 'followupstate' in request.form and request.form['followupstate'] is not None:
+        submission.followUpState = request.form['followupstate'] 
+    else:
+        submission.followUpState = 0
 
     # presenter handling
     presenters_id = request.form.getlist('presenter_id')
@@ -322,7 +326,7 @@ def submitevent():
                        submission)  # We'd like submission.id to actually be real so commit the creation first
     submission_dataset_changed()
     sendEmail(submission,old_submission)
-    return "", 200, {
+    return "", 302, {
         "Location": "/"
     }
 
