@@ -176,7 +176,10 @@ def reportcsv():
         return data if data is not None else default
     def get_obj(obj, key, default=u''):
         """ Returns the default object if the obj is None """
-        return getattr(obj, key, default) if obj is not None else default
+        if obj is None or getattr(obj, key, default) is None:
+            return default
+        else:
+            return getattr(obj, key, default)
     # list of columns, and how to get the data for them
     schema = collections.OrderedDict()
     schema['Submitter'] = lambda s: get_obj(s.submitter, 'name')
