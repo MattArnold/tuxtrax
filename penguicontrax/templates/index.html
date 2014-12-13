@@ -28,7 +28,7 @@
                                 <span class="smalllabel">User tags: </span>
                                 <span id="usertagfilter"></span>
                             </div>
- -->        </div>
+ -->    </div>
     </div>
     <div class="col-lg-10 col-md-10 col-sm-9 col-xs-12" id="report">
         <div class="row">
@@ -49,23 +49,20 @@
                             <span class="input-group-addon"><i class="glyphicon glyphicon-search "></i></span>
                         </div>
                     </div>
-                    <div class="col-md-7 col-sm-12 hidden-xs text-right legend">
-                        <span>Legend:</span>
-                        <span class="bs-callout suggested">Awaiting followup</span>
-                        <span class="bs-callout followedup">Followed up</span>
-                        <span class="bs-callout accepted">Accepted</span>
-                        {% if user is not none and user.staff == 1 %}
-                            <span class="bs-callout rejected">Rejected</span>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
+                    <div id="about" class="col-md-7 col-sm-12 col-xs-12 legend">
                         <p id="submission-info"
-                           data-default="To filter results, use the filter control at left or type a search term above."
+                           data-default="To filter results, click the tag buttons, or type a search term."
                            data-rejected="We regret that for various reasons, we can’t use these event suggestions this year. Maybe next year! Also, some of them may be here in error, in which case bear with us while we fix it."
                                 >
                         </p>
+                    </div>
+                </div>
+                <div class="row legend">
+                    <div class="col-md-12 legend">
+                        Suggest events to happen at <a href="http://2015.penguicon.org/">Penguicon 2015</a>, a convention of science fiction, open source software, and all nerd interests. Click <i class="fa fa-thumbs-up"></i> on the events that you "Wouldattend".
+                    </div>
+                    <div class="col-md-12 legend">
+                        This site tracks how many days <span class="label label-default">14 <i class="fa fa-clock-o"></i></span>/<span class="label label-warning">15+ <i class="fa fa-warning"></i></span> each suggestion has been<span class="bs-callout suggested">awaiting follow-up</span>and shows which suggestions are<span class="bs-callout followedup">followed up</span><span class="bs-callout accepted">accepted</span>or<span class="bs-callout rejected">declined</span>.
                     </div>
                 </div>
 
