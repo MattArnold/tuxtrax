@@ -194,7 +194,7 @@ def reportcsv():
     schema['Time request'] = lambda s: default(s.timeRequest)
     schema['Facility request'] = lambda s: default(s.facilityRequest)
     schema['Presenting submitter'] = lambda s: unicode(s.submitter in [p.user for p in s.presenters])
-    schema['Presenters'] = lambda s: ','.join([p.name for p in s.presenters])
+    schema['Presenters'] = lambda s: ','.join([('%s (%s)' % (p.name, p.email)) for p in s.presenters])
     # generate the table
     def generate_data_rows(data):
         yield list(schema.keys())
