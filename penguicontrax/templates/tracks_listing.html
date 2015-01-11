@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block body %}
+    {{ super() }}
+    {% if show %}
+        <H2>There are no tracks by that name</h2>
+    {% else %}
+        <ul>
+        {% for s in submissions %}
+        <h1> SUBMISSION {{ s.title }}</h1>
+        <li class="submission row bs-callout {{_followUpState}}">
+            id = {{s.id}}, 
+            title = {{s.title}},
+            description = {{description}},
+            comments = {{s.comments}},
+            submitter_id = {{s.submitter_id}},
+            trackId = {{s.trackId}},
+            {% for tag in tags %}
+                tag = {{ tag.name }}, 
+            {% endfor %}
+            duration = {{s.duration}},
+            setupTime = {{s.setupTime}},
+            repetition = {{s.repetition}},
+            timeRequest = {{s.timeRequest}},
+            eventType = {{s.eventType}},
+            players = {{s.players}},
+            roundTables = {{s.roundTables}},
+            longTables = {{s.longTables}},
+            facilityRequest = {{s.facilityRequest}},
+            {% for presenter in presenters %}
+                presenter = {{ presenter.name }}, 
+            {% endfor %}
+            private = {{s.private}},
+            event_created = {{s.event_created}},
+            submitted_dt = {{s.submitted_dt}}
+        </li>
+
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

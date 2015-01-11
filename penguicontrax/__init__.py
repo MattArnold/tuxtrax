@@ -215,6 +215,17 @@ def fake_login():
     if 'PC_FAKE_OID' in os.environ:
         session['openid'] = os.environ['PC_FAKE_OID']
 
+
+@app.route('/track/<track_name>')
+def show_tracks(track_name):
+## need to get the track by name
+    track = Track.query.filter(Track.name==track_name).all()
+    if (len(track)>0):
+        trackId = track[0].id
+        submissions = Submission.query.filter(Submission.trackId==trackId).all();
+    resp = make_response(render_template('tracks_listing.html', user=g.user,show=len(track)<=0, submissions=submissions))
+    return resp
+
 # static asset versioning and packaging
 assets = Environment(app)
 

@@ -64,7 +64,7 @@ class Submission(db.Model):
         self.submitted_dt = datetime.datetime.now()
 
     def __repr__(self):
-        return '<email: %s, title: %s>' % (self.email, self.title)
+        return '<title: %s>' % (self.title)
 
     def presenter_list_str(self):
         first = False
@@ -127,7 +127,7 @@ class Track(db.Model):
         self.staffId = staffId
 
     def __repr__(self):
-        return '<name: %s, staffId: %d>' % self.name, self.staffId
+        return '<name: %s>' % self.name
 
 
 class Resource(db.Model):
