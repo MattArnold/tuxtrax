@@ -126,11 +126,13 @@ def init():
 
 @app.route('/')
 @uncacheable_response
-def index():
-    tags = [tag.name for tag in Tag.query.all()]
-    resp = make_response(render_template('index.html', user=g.user, showhidden=False, tags=tags))
-    resp.set_cookie('submission_ver', str(submission_dataset_ver()))
-    return resp
+# def index():
+    # tags = [tag.name for tag in Tag.query.all()]
+    # resp = make_response(render_template('index.html', user=g.user, showhidden=False, tags=tags))
+    # resp.set_cookie('submission_ver', str(submission_dataset_ver()))
+    # return resp
+def hello():
+    return redirect("https://docs.google.com/forms/d/1u6k7z6E1r68sNiL1r4Udbq9Wk230MP3AXS-IrJTocNo/viewform", code=302)
 
 @app.route('/hidden')
 @uncacheable_response
