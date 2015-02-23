@@ -30,7 +30,7 @@ class User(db.Model):
     superuser = db.Column(db.Boolean())
     creation_ip = db.Column(db.String())
     phone = db.Column(db.String())
-    
+
     def __init__(self):
         self.points = 5
         self.public_rsvps = False
@@ -44,7 +44,7 @@ class User(db.Model):
 
     def __repr__(self):
         return self.name
-    
+
 class Presenter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String())
@@ -53,19 +53,19 @@ class Presenter(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User')
     presentations = db.relationship('Submission', secondary='presenter_presenting_in', backref=db.backref('presented_by', passive_deletes=True))
-    
+
     def __init__(self, name):
         self.name = name
-    
+
     def __repr__(self):
         return self.name
-    
+
 class UserLoginIP(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ip = db.Column(db.String())
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     logged_in_as = db.relationship('User', backref=db.backref('logged_in_from_ip', passive_deletes=True))
-    
+
     def __repr__(self):
         return self.ip
 
@@ -81,7 +81,7 @@ def lookup_current_user():
     elif 'oauth_token' in session:
         oa = session['oauth_token']
         g.user = User.query.filter_by(oauth_token=oa[0]).first()
-        
+
 def user_profile(view_user):
     return redirect('/') if view_user is None else render_template('user_profile.html', user=g.user, view_user=view_user)
 
@@ -125,7 +125,19 @@ def update_user():
 def user_list():
     if g.user is None or not g.user.staff:
         return redirect('/')
-    return render_template('user_list.html', user=g.user, users=User.query.all())
+    users = User.query.order_by(User.account_name)
+    all_presenters = Presenter.query.order_by(Presenter.name)
+    presenters = []
+    blank_presenter_count = 0
+    for presenter in all_presenters:
+        if not presenter.user:
+            if presenter.name:
+                presenters.append(presenter)
+            else:
+                blank_presenter_count += 1
+    return render_template('user_list.html', user=g.user, users=users,
+                           presenters=presenters,
+                           blank_presenter_count=blank_presenter_count)
 
 def find_user(name, phone=None, email=None):
     query = User.query.filter_by(name=name)

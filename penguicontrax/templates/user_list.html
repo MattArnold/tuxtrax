@@ -2,7 +2,83 @@
 {% block title %}User list{% endblock %}
 {% block head %}{{ super() }}{% endblock %}
 {% block body %}
-{% for view_user in users %}
-	{{ macros.user_link(view_user) }} 
-{% endfor %}
+<h3>Users</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Staff?</th>
+            <th>Superuser?</th>
+            <th>Points</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for new_user in users %}
+            <tr>
+                <td>
+                    <a class="userlink" href="/{{ new_user.account_name }}">
+                        <img src="{{ new_user.image_small }}" width="20" style="margin-right:2px">
+                        {{ new_user.name }}
+                        {% if new_user.special_tag is not none %} <span class="label label-primary">{{ new_user.special_tag }}</span>{% endif %}
+                    </a>
+                    {% if new_user.openid and 'google.com' in new_user.openid %}
+                        {{ macros.google_icon() }}
+                    {% elif new_user.openid and 'twitter.com' in new_user.openid %}
+                        <i class="fa fa-twitter-square"></i>
+                    {% elif new_user.openid and 'yahoo.com' in new_user.openid %}
+                        {{ macros.yahoo_icon() }}
+                    {% elif new_user.fbid %}
+                        <i class="fa fa-facebook-square"></i>
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+                </td>
+                <td>{{ new_user.email }}</td>
+                <td>{{ new_user.phone }}</td>
+                <td>
+                    {% if new_user.staff %}
+                        Staff
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+                </td>
+                <td>
+                    {% if new_user.staff %}
+                        Superuser
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+                </td>
+                <td>{{ new_user.points }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Presenters who are not users</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for presenter in presenters %}
+                <tr>
+                    <td>{{ presenter.name }}</td>
+                    <td>{{ presenter.email }}</td>
+                    <td>{{ presenter.phone }}</td>
+                </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p>There are {{ blank_presenter_count }} presenter rows without names.</p>
+
 {% endblock %}
