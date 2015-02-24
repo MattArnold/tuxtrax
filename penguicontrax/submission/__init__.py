@@ -217,6 +217,14 @@ def event_form():
 
     return render_template('form.html', tags=tags, resources=resources, tracks=tracks, event=event, user=g.user)
 
+def getPresentersFrom(request):
+    presenters_id = request.form.getlist('presenter_id')
+    presenters_name = request.form.getlist('presenter')
+    presenters_phone = request.form.getlist('phone')
+    presenters_email = request.form.getlist('email')
+    presenters = zip(presenters_id, presenters_name, presenters_phone, presenters_email)
+    return presenters
+
 def validateSubmitEvent(request):
     returnCode = 200
     returnStatus = 'success'
@@ -228,7 +236,7 @@ def validateSubmitEvent(request):
         'setuptime':{'msg':'Setup time required','type':'str'},
         'submitter_id':{'msg':'Submitter Required','type':'str'},
         'track':{'msg':'Track is required','type':'str'},
-        'eventtype':{'msg':'Event type is required','type':'str'},
+        'eventtype':{'msg':'Event type is required','type':'str'}
     }
     for index in validationRules:
         if validationRules[index]['type'] == 'list':
@@ -238,6 +246,17 @@ def validateSubmitEvent(request):
         if 0 == len(value):
             returnCode = 400
             returnMessages.append(validationRules[index]['msg']);
+
+    presenters = getPresentersFrom(request)
+    for presenter in presenters:
+      (id, name, phone, email) = presenter
+      if any([not name, not email, not phone]):
+        returnCode = 400
+        if not name: returnMessages.append('Name is required for presenter') 
+        if not email:
+          returnMessages.append('Email is required for %s' % (name)) if name else returnMessages.append('Email is required for presenter');
+        if not phone:
+          returnMessages.append('Phone is required for %s' % (name)) if name else returnMessages.append('Phone is required for presenter');
 
     if 200 != returnCode:
         returnStatus='invalid'
@@ -282,11 +301,8 @@ def submitevent():
         'followupstate'] is not None else 0
 
     # presenter handling
-    presenters_id = request.form.getlist('presenter_id')
-    presenters_name = request.form.getlist('presenter')
-    presenters_phone = request.form.getlist('phone')
-    presenters_email = request.form.getlist('email')
-    presenters = zip(presenters_id, presenters_name, presenters_phone, presenters_email)
+    presenters = getPresentersFrom(request) 
+
     del submission.presenters[:]
     for presenter in presenters:
         found_presenter = None
