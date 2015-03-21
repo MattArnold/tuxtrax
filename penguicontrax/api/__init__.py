@@ -5,6 +5,7 @@ from penguicontrax import app
 #api modules
 import submissions
 import tags
+import tracks
 import users
 import presenters
 
@@ -49,6 +50,10 @@ api.add_resource(tags.UserTagsAPI,
                  '/api/user-tags')
 api.add_resource(tags.UserTagAPI,
                  '/api/user-tag/<string:name>')
+
+#tracks
+api.add_resource(tracks.TracksAPI,
+                '/api/tracks')
 
 #users
 api.add_resource(users.UsersAPI,

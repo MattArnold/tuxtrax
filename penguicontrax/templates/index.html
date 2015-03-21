@@ -159,6 +159,15 @@
                     </div>
                 </div>
 
+
+
+                <div id="tracknav">
+                See only events in:
+                    <a href="/" >All</a>
+                </div>
+
+
+
                 <div class="row submissions-list">
                     <div class="col-md-12">
                         <div id="submissions" class="row">
@@ -249,6 +258,14 @@
             var tagFilter = new ptrax.TagFilter("#tagfilter", {
                 tpl: "{{ "js/tagfilter.mustache" | get_js_template }}",
                 submissions : $.Deferred()
+            });
+
+            var trackData = $.get('/api/tracks', function(tracks){
+                for (i=0; i<tracks.length; i++){
+                    var trackname = tracks[i].name,
+                        capitalized = trackname.charAt(0).toUpperCase() + trackname.slice(1);
+                    $('#tracknav').append(' | <a href="track/' + trackname + '">' + capitalized + '</a>');
+                }
             });
 
             ptrax.model.Submissions.findAll().done(function (submissions) {
