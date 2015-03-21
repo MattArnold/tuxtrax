@@ -243,7 +243,7 @@
                         {% for presenter in event.presenters %}
                             <p class="form-group presenters">
                                 <input type="hidden" name="presenter_id" value="{{ presenter.id }}">
-                                <label for="presenter" id="presenterLabel">
+                                <label for="presenter" class="presenterLabel">
                                     <input name="presenter" autocomplete="off" type="text" size="24"
                                            class="pp form-control presenter-typeahead" placeholder="Name"
                                            value="{{ presenter.name }}"/>
@@ -265,7 +265,7 @@
                     {% else %}
                         <p class="form-group presenters">
                             <input type="hidden" name="presenter_id">
-                            <label for="presenter" id="presenterLabel">
+                            <label for="presenter" class="presenterLabel">
                                 <input name="presenter" autocomplete="off" type="text" size="24"
                                        class="pp form-control presenter-typeahead" placeholder="Name"/>
                             </label>
