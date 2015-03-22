@@ -14,56 +14,57 @@
             <th>Phone</th>
             <th>Staff?</th>
             <th>Superuser?</th>
-            <th>Points</th>
+            <th>WouldAttends</th>
         </tr>
     </thead>
     <tbody>
         {% for info in info_list %}
+            {# info is of the form (is_user, person), where person is either a user or a presenter object #}
             <tr>
                 <td>
                     {% if info.0 %}
-                        <a class="userlink" href="/{{ info.0.account_name }}">
-                            {{ info.1 }}
-                            {% if info.special_tag is not none %} <span class="label label-primary">{{ info.special_tag }}</span>{% endif %}
+                        <a class="userlink" href="/{{ info.1.account_name }}">
+                            {{ info.1.name }}
+                            {% if info.1.special_tag is not none %} <span class="label label-primary">{{ info.1.special_tag }}</span>{% endif %}
                         </a>
-                        {% if info.0.openid and 'google.com' in info.0.openid %}
+                        {% if info.1.openid and 'google.com' in info.1.openid %}
                             {{ macros.google_icon() }}
-                        {% elif info.0.openid and 'twitter.com' in info.0.openid %}
+                        {% elif info.1.openid and 'twitter.com' in info.1.openid %}
                             <i class="fa fa-twitter-square"></i>
-                        {% elif info.0.openid and 'yahoo.com' in info.0.openid %}
+                        {% elif info.1.openid and 'yahoo.com' in info.1.openid %}
                             {{ macros.yahoo_icon() }}
-                        {% elif info.0.fbid %}
+                        {% elif info.1.fbid %}
                             <i class="fa fa-facebook-square"></i>
                         {% else %}
                             &nbsp;
                         {% endif %}
                     {% else %}
-                        {{ info.1 }}
+                        {{ info.1.name }}
                     {% endif %}
                 </td>
-                <td>{{ info.2 }}</td>
+                <td>{{ info.1.email }}</td>
                 <td>
-                    {% if info.3 %}
-                        {{ info.3 }}
+                    {% if info.1.phone %}
+                        {{ info.1.phone }}
                     {% else %}
                         &nbsp;
                     {% endif %}
                 </td>
                 <td>
-                    {% if info.4 %}
+                    {% if info.1.staff %}
                         Staff
                     {% else %}
                         &nbsp;
                     {% endif %}
                 </td>
                 <td>
-                    {% if info.5 %}
+                    {% if info.1.superuser %}
                         Superuser
                     {% else %}
                         &nbsp;
                     {% endif %}
                 </td>
-                <td>{{ info.6 }}</td>
+                <td>{{ info.1.points }}</td>
             </tr>
         {% endfor %}
     </tbody>

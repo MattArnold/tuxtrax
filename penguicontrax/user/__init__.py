@@ -123,23 +123,33 @@ def update_user():
 
 @app.route('/users')
 def user_list():
+    """
+    Construct a list of users and presenters. Each element of the list is
+    a sequence in the form (is_user, person), where person is either a
+    user or a presenter object.
+    """
     if g.user is None or not g.user.staff:
         return redirect('/')
     info_list = []
+
+    # Append the users to info_list.
     users = User.query.all()
     for user in users:
-        info_list.append([user, user.name, user.email, user.phone, user.staff,
-                          user.superuser, user.points])
+        info_list.append((True, user),)
+
+    # Append the presenters to info_list if they aren't already users,
+    # and count the number of presenters without names.
     all_presenters = Presenter.query.all()
     blank_presenter_count = 0
     for presenter in all_presenters:
         if not presenter.user:
             if presenter.name:
-                info_list.append([None, presenter.name, presenter.email,
-                                  presenter.phone, False, False, 0])
+                info_list.append((False, presenter),)
             else:
                 blank_presenter_count += 1
-    info_list.sort(key=lambda x: x[1])
+
+    # Sort info_list by person's name.
+    info_list.sort(key=lambda x: x[1].name)
     return render_template('user_list.html', user=g.user, info_list=info_list,
                            blank_presenter_count=blank_presenter_count)
 
