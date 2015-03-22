@@ -125,18 +125,22 @@ def update_user():
 def user_list():
     if g.user is None or not g.user.staff:
         return redirect('/')
-    users = User.query.order_by(User.account_name)
-    all_presenters = Presenter.query.order_by(Presenter.name)
-    presenters = []
+    info_list = []
+    users = User.query.all()
+    for user in users:
+        info_list.append([user, user.name, user.email, user.phone, user.staff,
+                          user.superuser, user.points])
+    all_presenters = Presenter.query.all()
     blank_presenter_count = 0
     for presenter in all_presenters:
         if not presenter.user:
             if presenter.name:
-                presenters.append(presenter)
+                info_list.append([None, presenter.name, presenter.email,
+                                  presenter.phone, False, False, 0])
             else:
                 blank_presenter_count += 1
-    return render_template('user_list.html', user=g.user, users=users,
-                           presenters=presenters,
+    info_list.sort(key=lambda x: x[1])
+    return render_template('user_list.html', user=g.user, info_list=info_list,
                            blank_presenter_count=blank_presenter_count)
 
 def find_user(name, phone=None, email=None):

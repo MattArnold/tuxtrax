@@ -2,7 +2,9 @@
 {% block title %}User list{% endblock %}
 {% block head %}{{ super() }}{% endblock %}
 {% block body %}
-<h3>Users</h3>
+<h3>Users and Presenters</h3>
+
+<p>There are {{ blank_presenter_count }} presenter rows without names.</p>
 
 <table class="table">
     <thead>
@@ -16,69 +18,55 @@
         </tr>
     </thead>
     <tbody>
-        {% for new_user in users %}
+        {% for info in info_list %}
             <tr>
                 <td>
-                    <a class="userlink" href="/{{ new_user.account_name }}">
-                        <img src="{{ new_user.image_small }}" width="20" style="margin-right:2px">
-                        {{ new_user.name }}
-                        {% if new_user.special_tag is not none %} <span class="label label-primary">{{ new_user.special_tag }}</span>{% endif %}
-                    </a>
-                    {% if new_user.openid and 'google.com' in new_user.openid %}
-                        {{ macros.google_icon() }}
-                    {% elif new_user.openid and 'twitter.com' in new_user.openid %}
-                        <i class="fa fa-twitter-square"></i>
-                    {% elif new_user.openid and 'yahoo.com' in new_user.openid %}
-                        {{ macros.yahoo_icon() }}
-                    {% elif new_user.fbid %}
-                        <i class="fa fa-facebook-square"></i>
+                    {% if info.0 %}
+                        <a class="userlink" href="/{{ info.0.account_name }}">
+                            {{ info.1 }}
+                            {% if info.special_tag is not none %} <span class="label label-primary">{{ info.special_tag }}</span>{% endif %}
+                        </a>
+                        {% if info.0.openid and 'google.com' in info.0.openid %}
+                            {{ macros.google_icon() }}
+                        {% elif info.0.openid and 'twitter.com' in info.0.openid %}
+                            <i class="fa fa-twitter-square"></i>
+                        {% elif info.0.openid and 'yahoo.com' in info.0.openid %}
+                            {{ macros.yahoo_icon() }}
+                        {% elif info.0.fbid %}
+                            <i class="fa fa-facebook-square"></i>
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
+                    {% else %}
+                        {{ info.1 }}
+                    {% endif %}
+                </td>
+                <td>{{ info.2 }}</td>
+                <td>
+                    {% if info.3 %}
+                        {{ info.3 }}
                     {% else %}
                         &nbsp;
                     {% endif %}
                 </td>
-                <td>{{ new_user.email }}</td>
-                <td>{{ new_user.phone }}</td>
                 <td>
-                    {% if new_user.staff %}
+                    {% if info.4 %}
                         Staff
                     {% else %}
                         &nbsp;
                     {% endif %}
                 </td>
                 <td>
-                    {% if new_user.staff %}
+                    {% if info.5 %}
                         Superuser
                     {% else %}
                         &nbsp;
                     {% endif %}
                 </td>
-                <td>{{ new_user.points }}</td>
+                <td>{{ info.6 }}</td>
             </tr>
         {% endfor %}
     </tbody>
 </table>
-
-<h3>Presenters who are not users</h3>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for presenter in presenters %}
-                <tr>
-                    <td>{{ presenter.name }}</td>
-                    <td>{{ presenter.email }}</td>
-                    <td>{{ presenter.phone }}</td>
-                </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<p>There are {{ blank_presenter_count }} presenter rows without names.</p>
 
 {% endblock %}
