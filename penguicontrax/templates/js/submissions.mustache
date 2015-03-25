@@ -1,0 +1,43 @@
+<ul>
+    {{#submissions}}
+        <li class="submission row bs-callout {{_followUpState}} {{#updating}}updating{{/updating}} {{#hidden}}hidden{{/hidden}}">
+            <div class="col-md-12">
+                {{#if user.id}}
+                <span class="toggle-user-rsvp" {{data 'submission'}}><i class="fa {{user_rsvp}}" data-toggle="tooltip"
+                    data-placement="right" title=""></i></span>
+                {{/if}}
+                {{^if user.id}}
+                <span class="toggle-user-rsvp" {{data 'submission'}}><i class="fa {{user_rsvp}}" data-toggle="tooltip"
+                    data-placement="right" title="Login is required; click to login"></i></span>
+                {{/if}}
+                <span class="label label-info">{{num_rsvp}}</span>&nbsp;
+                {{^followUpState}}
+                {{!--overdue tasks get a warning badge--}}
+                    {{#overdue}}
+                        <span class="label label-warning">{{ followUpDays }} <i class="fa fa-warning"></i></span>
+                    {{/overdue}}
+                    {{!--not overdue--}}
+                    {{^overdue}}
+                        <span class="label label-default">{{ followUpDays }} <i class="fa fa-clock-o"></i></span>
+                    {{/overdue}}
+                    &nbsp;
+                {{/followUpState}}
+                {{{submission_link}}}
+                &nbsp;
+                <span class="badge">{{ _duration }}</span>&nbsp;
+                <span>
+                    <small>
+                        Suggested by {{#submitter}}{{>user_link}}{{/submitter}}.
+                        {{#if has_presenters}}Suggested presenters: {{/if}}
+                        {{#presenters}}{{>presenter_link}}{{/presenters}}
+                    </small>
+                </span>&nbsp;
+                {{#tags}}
+                    <span class="label label-info" title="{{desc}}"><i class="fa fa-tag"></i>&nbsp;{{ id }}</span>&nbsp;
+                {{/tags}}
+               {{ description }}
+            </div>
+        </li>
+    {{/submissions}}
+</ul>
+

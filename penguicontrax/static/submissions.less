@@ -1,0 +1,152 @@
+@followedupdark: #d6a753;
+//@followeduplight:#fcf8e3;
+@followeduplight: fadeout(@followedupdark, 75%);
+
+@accepteddark: darken(#a020f0, 5%);
+@acceptedlight: fadeout(#bda0cb, 65%);
+//@acceptedlight:fadeout(@accepteddark,75%);
+
+@rejecteddark: #c04a48;
+//@rejectedlight:#f2dede;
+@rejectedlight: fadeout(@rejecteddark, 75%);
+
+//mixins
+.followedup() {
+  background-color: @followeduplight;
+  border-color: @followedupdark;
+}
+
+.accepted() {
+  background-color: @acceptedlight;
+  border-color: @accepteddark;
+}
+
+.rejected() {
+  background-color: @rejectedlight;
+  border-color: @rejecteddark;
+}
+
+.tagsinput, #shownav {
+  overflow-y: auto;
+  text-align: left;
+  height: auto;
+  overflow-x: hidden;
+}
+
+.tagsinput, #shownav, .widget-hint {
+  background: white;
+  border: 2px solid #1abc9c;
+  border-radius: 6px;
+}
+
+.tagsinput {
+  margin-bottom: 18px;
+  padding: 6px 1px 1px 6px;
+
+  h6 {
+    position: relative;
+  }
+  .info {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: larger;
+    cursor: pointer;
+  }
+}
+
+#tagfilter {
+  margin: 10px;
+  .btn {
+    &.excluded {
+      text-decoration: line-through;
+    }
+  }
+}
+
+.bs-callout {
+  margin: 20px 0;
+  padding: 20px;
+  border-left: 3px solid #eee;
+  background-color: #f7f7f9;
+}
+
+.legend {
+  font-size: small;
+  .bs-callout {
+    display: inline-block;
+  }
+}
+
+.submissions-list {
+  font-size: small;
+}
+
+.rsvp {
+  &.checked {
+    color: #FDD017;
+  }
+}
+
+.bs-callout {
+  background-color: #f7f7f9;
+  border-color: #e1e1e8;
+  padding: .5em;
+  margin: .5em;
+
+  &.followedup {
+    .followedup()
+  }
+
+  &.accepted {
+   .accepted()
+  }
+
+  &.rejected {
+    .rejected()
+  }
+}
+
+#submissions {
+  margin: 15px 0;
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+  li.submission {
+    list-style-type: none;
+    margin: 1em 0;
+
+    .submission-link {
+      font-weight: bold;
+    }
+
+    .toggle-user-rsvp {
+      cursor: pointer;
+      margin-left: -20px;
+      display: inline-block;
+      i {
+        font-size: large;
+        color: @gray;
+		margin : 0 5px;
+        &.fa-star-o {
+          color: @gray-light;
+        }
+      }
+    }
+
+    &.updating {
+      cursor: progress;
+      .toggle-user-rsvp {
+        pointer-events: none;
+      }
+    }
+
+  }
+
+  .fa {
+	line-height: 1.3em;
+  }
+
+}

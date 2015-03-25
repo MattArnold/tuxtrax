@@ -1,0 +1,426 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block title %}
+    Submit an event suggestion -
+{% endblock %}
+{% block body %}
+    {{ super() }}
+    <a name="errors"></a>
+    <div class="validation validation-float hidden" data-spy="affix" data-offset-top="60">
+        <ul class="validation-errors"></ul>
+    </div>
+    <div class="col-md-12">
+    <form id="submitEventForm" action="/submitevent" method=post>
+    {% if event is not none %}
+        <input type=hidden name=eventid value="{{ event.id }}">
+    {% endif %}
+    <p class="lead small">
+        Thanks for leaving your ideas here! Please note that we can't accept all event suggestions, and we may edit events that are accepted.
+    </p>
+    <div class="row well section where">
+        <div class="col-md-2">
+            <a name="where"></a>
+            <h4 class="row">
+                WHERE
+            </h4>
+        </div>
+        <div class="col-md-4">
+            <div id="typechange" class="form-group">
+                <div class="radio">
+                    <label for="talkbtn">
+                        <input type="radio" name=eventtype
+                               value="talk" id="talkbtn" {{ event.eventType | is_checked('talk') }}>An audience sits and
+                        watches one or more speakers.
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="workshopbtn">
+                        <input type="radio" name=eventtype
+                               value="workshop" id="workshopbtn" {{ event.eventType | is_checked('workshop') }}>Hands-on
+                        participatory activity.
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="bofbtn">
+                        <input type="radio" name=eventtype class="typelist where question roomtab"
+                               value="bof" id="bofbtn" {{ event.eventType | is_checked('bof') }}>Open discussion with no
+                        presenter or organizer.
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="demobtn">
+                        <input type="radio" name=eventtype class="typelist where question roomtab"
+                               value="demo" id="demobtn" {{ event.eventType | is_checked('demo') }}>Tables with a
+                        demonstrator up front.
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="gamebtn">
+                        <input type="radio" name=eventtype
+                               value="game" id="gamebtn" {{ event.eventType | is_checked('game') }}>Tabletop game.
+                    </label>
+                </div>
+                <div class="radio">
+                    <label for="onstagebtn">
+                        <input type="radio" name=eventtype
+                               value="onstage" id="onstagebtn" {{ event.eventType | is_checked('onstage') }}>Concert,
+                        skit,
+                        movie, or other onstage performance.
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name=eventtype
+                               value="roving" id="rovingbtn" {{ event.eventType | is_checked('roving') }}>Activity
+                        located throughout the hotel or elsewhere.
+                    </label>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6 dynamic-content">
+            <div class="form-group hidden" id="resources">
+                {% for resource in resources %}
+                    <div class="checkbox">
+                        <label for="resource_{{ resource.id }}" class="checkbox">
+                            <input type="checkbox" id="resource_{{ resource.id }}" name="resource"
+                                   value="{{ resource.id }}" {{ event | checked_if_resourced(resource) }} >
+                            {{ resource.request_form_label }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="form-group hidden" id="players">
+                <label for="players">
+                    Number of Players
+
+                    <select tabindex="" name="players" data-size="false" data-width="100%" data-style="btn-info">
+                        <option value="2" {{ event.players|is_selected(2) }}>2</option>
+                        <option value="3" {{ event.players|is_selected(3) }}>3</option>
+                        <option value="5" {{ event.players|is_selected(4) }}>4</option>
+                        <option value="5" {{ event.players|is_selected(5) }}>5</option>
+                        <option value="6" {{ event.players|is_selected(6) }}>more</option>
+                    </select>
+                </label>
+            </div>
+            <div class="form-group hidden" id="otherfacility">
+                <label for="facilityrequest">Additional Requests</label>
+                <textarea name=facilityrequest id="facilityrequest" rows="3" cols="50"
+                          placeholder="Other room and furniture setup requests go here. If you selected 'More', we'll work out the specifics with you later."
+                          class="form-control">{{ event.facilityRequest | default('',true) }}</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row well section when">
+        <div class="col-md-2">
+            <a name="when"></a>
+            <h4 class="row">
+                WHEN
+            </h4>
+        </div>
+        <div class="col-md-10">
+            <div class="col-md-2">
+                <div class="row form-group" id="duration">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" class="timechange" name="duration" value="1"
+                                   id="duration_50_mins" {{ event.duration | is_checked(1) }}>50 mins
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" class="timechange" name="duration" value="2"
+                                   id="duration_1_hr_50_mins" {{ event.duration | is_checked(2) }}>1 hr 50 mins
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" class="timechange" name="duration" value="3"
+                                   id="duration_2_hr_50_mins" {{ event.duration | is_checked(3) }}>2 hr 50 mins
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" class="timechange" name="duration" value="4"
+                                   id="duration_more" {{ event.duration | is_checked(4) }}>more
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" class="timechange" name="duration" value="5"
+                                   id="duration_all_weekend" {{ event.duration | is_checked(5) }}>all weekend
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="row hidden form-group" id="setupandrepeat">
+                    <div class="col-md-6">
+                        <label for="setuptime">Setup time
+                            <select tabindex="2" name="setuptime" data-size="false" data-width="100%"
+                                    data-style="btn-info">
+                                <option value="0" {{ event.setupTime | is_selected(0) }}>No</option>
+                                <option value="1" {{ event.setupTime | is_selected(1) }}>1 hour</option>
+                                <option value="2" {{ event.setupTime | is_selected(2) }}>2 hours</option>
+                                <option value="3" {{ event.setupTime | is_selected(3) }}>more</option>
+                            </select>
+                        </label>
+
+                    </div>
+                    <div class="col-md-6">
+
+                        <label for="repetition">Repeat
+                            <select tabindex="2" name=repetition data-size="false" data-width="100%"
+                                    data-style="btn-info">
+                                <option value="0" {{ event.repetition | is_selected(0) }}>No</option>
+                                <option value="1" {{ event.repetition | is_selected(1) }}>twice</option>
+                                <option value="2" {{ event.repetition | is_selected(2) }}>thrice</option>
+                                <option value="3" {{ event.repetition | is_selected(3) }}>more</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="row hidden form-group" id="othertime" style="margin-top:15px;">
+                    <textarea name=timerequest id="timerequest" rows="2" cols="50"
+                              placeholder="Other time requests go here. If you selected 'More', we'll work out the specifics with you later."
+                              class="form-control">{{ event.timeRequest | default('',true) }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row well who">
+        <div class="col-md-2">
+            <h4 class="row">
+                WHO
+            </h4>
+            <div class="row advice">
+                <p class="text-left">If you don't have a recommendation for who should do this, just leave this section blank.</p>
+                <p class="text-left">Phone numbers / email addresses will only be used by Penguicon Programming Operations during the
+                convention.</p>
+            </div>
+        </div>
+        <div class="col-md-10 panel panel-default">
+            <div class="row panel-heading suggester form-inline">
+                <div class="suggested-by small">
+                    Suggested by&nbsp;
+                    {% if event is none %}
+                        <input type=hidden name="submitter_id" value="{{ user.id }}"
+                               data-id="{{ user.id }}"
+                               data-name="{{ user.name }}"
+                               data-email="{{ user.email }}"
+                               data-phone="{{ user.phone }}"/>
+                        {{ macros.user_link(user) }}
+                    {% else %}
+                        <input type="hidden" name="submitter_id"
+                               value="{{ event.submitter.id }}"
+                               data-name="{{ event.submitter }}"
+                               data-email="{{ event.submitter.email }}"
+                               data-phone="{{ event.submitter.phone }}"
+                                />
+                        {{ macros.user_link(event.submitter) }}
+                    {% endif %}
+
+                </div>
+                <div class="checkbox small">
+                    <label>
+                        <input type="checkbox" id="suggesterPresents" {% if event and (event.presenters|selectattr('id','equalto','user.id')) %}checked="checked"{% endif %}> I will run this event.
+                    </label>
+                </div>
+            </div>
+            <div class="row presenters-input panel-body">
+
+                <div class="col-md-1">
+                    <p class="small">
+                        <span id="pptype" class="hidden"></span>
+                        <span id="pluralpptype" class="hidden"></span>
+                    </p>
+                </div>
+                <div class="col-md-11">
+                    {% if event is not none %}
+                        {% for presenter in event.presenters %}
+                            <p class="form-group presenters">
+                                <input type="hidden" name="presenter_id" value="{{ presenter.id }}">
+                                <label for="presenter" class="presenterLabel">
+                                    <input name="presenter" autocomplete="off" type="text" size="24"
+                                           class="pp form-control presenter-typeahead" placeholder="Name"
+                                           value="{{ presenter.name }}"/>
+                                </label>
+                                &nbsp;
+                                <label>
+                                    <input name="phone" type="tel" size="24" maxlength="15" class="pp form-control"
+                                           placeholder="555-123-4567" value="{{ presenter.phone }}"/>
+                                </label>
+                                &nbsp;
+                                <label>
+                                    <input name="email" type="email" size="24" maxlength="50" class="pp form-control"
+                                           placeholder="joe@bar.com" value="{{ presenter.email }}"/>
+                                </label>
+                                 &nbsp;
+                                <button type="button" class="btn btn-danger btn-sm remove-presenter"><span class="glyphicon glyphicon-remove"></span></button>
+                            </p>
+                        {% endfor %}
+                    {% else %}
+                        <p class="form-group presenters">
+                            <input type="hidden" name="presenter_id">
+                            <label for="presenter" class="presenterLabel">
+                                <input name="presenter" autocomplete="off" type="text" size="24"
+                                       class="pp form-control presenter-typeahead" placeholder="Name"/>
+                            </label>
+                            &nbsp;
+                            <label>
+                                <input name="phone" type="tel" size="24" maxlength="15" class="pp form-control"
+                                       placeholder="555-123-4567"/>
+                            </label>
+                            &nbsp;
+                            <label>
+                                <input name="email" type="email" size="24" maxlength="50" class="pp form-control"
+                                       placeholder="joe@bar.com"/>
+                            </label>
+                        </p>
+                    {% endif %}
+                    <button type="button" id="newperson" class="pp btn"><span class="glyphicon glyphicon-plus"></span> someone else
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row well what">
+        <a name="what"></a>
+        <div class="col-md-2">
+            <h4 class="row">
+                WHAT
+            </h4>
+            <div class="row advice">
+                <p class="text-left">
+                Your text in this section will appear to attendees on the website and in the schedule book.
+                So please only leave comments to staff in the <a href="#where">Where</a> and <a href="#when">When</a> sections, above.</p>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group" id="titleGroup">
+                                <label for="title">Title:</label>
+                                <textarea id="title" class="form-control" name="title"
+                                          rows="2" cols="40"
+                                          maxlength="80">{{ event.title | default('',true) }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group" id="descriptionGroup">
+                                <label for="description">Descriptive blurb for schedule book:</label>
+                                <textarea name=description id="description" rows="6" cols="60"
+                                          class="form-control"
+                                          maxlength="700">{{ event.description | default('',true) }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top:25px">
+                <a name="trackselect"></a>
+                <div class="col-md-4" id="trackselect">
+                    <p>
+                        Choose the staff liason you would like to route this submission to:
+                    </p>
+                    <div class="form-group" id="tracks">
+                        {% for track in tracks %}
+                            <div class="radio">
+                                <label for="track_{{ track }}">
+                                    <input type="radio" name=track value="{{ track }}"
+                                           id="track_{{ track }}" {{ event | checked_if_tracked(track) }}>
+                                    {{ track }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-4" id="tagselect">
+                    <a name="tagselect"></a>
+                    <p>Select all topics that apply:</p>
+                    <div class="form-group" id="topics" data-toggle="buttons">
+                        {% for tag in tags %}
+                            <label class="btn btn-xs btn-info" id="taglabel_{{ tag }}">
+                                <input type="checkbox" name=tag
+                                       value="{{ tag }}" id="tag_{{ tag }}" data-toggle="button"
+                                       {{ event | checked_if_tagged(tag) }}>{{ tag | trim }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <!-- TODO add user submitted tags
+                    <form action="/createtag" method=post >
+                    <div>
+                        <label for="tagname">New topic tag:
+                            <input type=text name=tagname id="tagname"
+                                   class="form-control input-sm" maxlength="24"/>
+                        </label>
+                        <button type=submit value="Submit tag" class="btn btn-default btn-sm" name=createtag
+                                id="createtag"><span class="fui-plus"></span> Submit Tag
+                        </button>
+                    </div>
+                    </form>
+                    -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row well whynot submit">
+        <div class="col-md-2">
+            <h4 class="row">
+                WHY NOT
+            </h4>
+        </div>
+        <div class="col-md-10">
+            <div class="row">
+                <div class="header-align">
+                    <div class="col-md-3">
+                        <input type=submit
+                               value="{% if event is not none %}Update event{% else %}Submit event{% endif %}"
+                               class="btn btn-default btn-primary" name=submitevent id="submitevent"/>
+                        <input type=text style="display: none" name=comments id="comments"
+                               {% if event is not none %}value="{{ event.comments }}"{% endif %}/>
+                    </div>
+
+                    <div class="col-md-9">
+                        <span class="validation validation-server hidden alert alert-danger small">Please fix all errors and resubmit.</span>
+                        {% if user is not none and user.staff == 1 %}
+                            {% if event is not none %}
+                                <label for="followupstate">Submission status
+                                    <select tabindex="2" id="followupstate" name=followupstate
+                                            data-style="btn-default">
+                                        <option value="0" {{ event.followUpState | is_selected(0) }}>Suggested</option>
+                                        <option value="1" {{ event.followUpState | is_selected(1) }}>Followed up
+                                        </option>
+                                        <option value="2" {{ event.followUpState | is_selected(2) }}>Accepted</option>
+                                        <option value="3" {{ event.followUpState | is_selected(3) }}>Rejected</option>
+                                    </select>
+                                </label>
+                                {% if event.followUpState == 2 %}
+                                    <div class="question">
+                                        <span style="color:#7f8c8d;">Create an event from this submission:</span>
+                                        <input value="create" class="buttons" name=submitevent
+                                               id="createevent"/>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </form>
+    </div>
+{% endblock %}
+{% block page_script %}
+    {% assets filters="jsmin",output="build/submissionform-%(version)s.js","submissionform.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}

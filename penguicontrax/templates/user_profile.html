@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}{{ user }}{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row well">
+            <div class="col-md-2">
+                <img src="{{ view_user.image_large }}" width="150" height="150"/>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading lead" style="margin: 0">
+                        {{ macros.user_text(view_user) }}
+                    </div>
+                    <div class="panel-body">
+                        {% if user is not none and (user == view_user or user.staff == 1) %}
+                            <form action="/updateuser" method=post>
+                                <input type=hidden name=user_id value="{{ view_user.id }}"/>
+
+                                <div class="form-group">
+                                    {% if user.superuser %}
+                                        <div class="checkbox">
+                                            <label for="staff">
+                                                <input type="checkbox" id="staff" name="staff"
+                                                       {% if view_user.staff %}checked{% endif %}/>
+                                                Staff
+                                            </label>
+                                        </div>
+                                    {% endif %}
+                                    <div class="checkbox">
+                                        <label for="public_rsvps">
+                                            <input type="checkbox" id="public_rsvps" name="public_rsvps"
+                                                   {% if view_user.public_rsvps %}checked{% endif %}/>
+                                            Make my RSVPs public
+                                        </label>
+                                    </div>
+                                    {% if user.staff %}
+                                        <div>
+                                            Special tag: <input name="special_tag" id="special_tag"
+                                                                value="{{ view_user.special_tag | default('',true) }}"/>
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input name="email" id="email" class="form-control"
+                                               value="{{ view_user.email | default('',true) }}"/>
+                                        <label for="phone">Phone</label>
+                                        <input name="phone" id="phone" class="form-control"
+                                               value="{{ view_user.phone | default('',true) }}"/>
+                                    </div>
+                                    <input type=submit value="Submit" class="btn btn-primary"/>
+                                </div>
+                            </form>
+                        {% endif %}
+                        {% if user is not none and user.staff %}
+                            Creation IP: {{ user.creation_ip }}
+                            Login IPs: {% for ip in user.logged_in_from_ip %}{{ ip }} {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if view_user.rsvped_to %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            You indicated you <span class="fa fa-thumbs-o-up"></span> "<strong>Wouldattend</strong>" the following events:
+                        </div>
+                        <div class="panel-body">
+                            {% for submission in view_user.rsvped_to %}
+                                {% if view_user == user or (user is not none and user.staff) %}
+                                    {{ macros.event_summary(submission, user) }}
+                                {% else %}
+                                    {{ macros.event_summary(submission, none) }}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if view_user.submissions %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            You <strong>suggested</strong> the following events:
+                        </div>
+                        <div class="panel-body">
+                            {% for submission in view_user.submissions %}
+                                {% if view_user == user or (user is not none and user.staff) %}
+                                    {{ macros.event_summary(submission, user) }}
+                                {% else %}
+                                    {{ macros.event_summary(submission, none) }}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

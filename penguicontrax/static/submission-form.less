@@ -1,0 +1,163 @@
+@where: #e67e22;
+@when: #9b59b6;
+@who : #1abc9c;
+@what : #bdc3c7;
+@whynot: #8cbf26;
+
+.type(@which) {
+  background-color: fadeout(@which, 50%);
+  border: 3px solid @which;
+}
+
+h4 {
+  padding: 10px;
+  width: 95%;
+  border-radius: 2px;
+}
+
+.where h4 {
+  .type(@where)
+}
+
+.when h4 {
+  .type(@when)
+}
+
+.who h4 {
+  .type(@who)
+}
+
+.what h4 {
+  .type(@what)
+}
+
+.whynot h4 {
+  .type(@whynot)
+}
+
+form {
+
+  //animate buttons when selected
+  .btn-xs {
+	.transition(padding .25s ease-out);
+	&.active {
+	  .transition(padding .25s ease);
+	  padding: 2px 7px;
+	}
+  }
+
+  .btn-sm {
+	.transition(padding .25s ease-out);
+	&.active {
+	  .transition(padding .25s ease);
+	  padding: 7px 14px;
+	}
+  }
+
+  .help-block {
+	font-size: x-small;
+	font-style: italic;
+  }
+
+  #pptype, #pluralpptype {
+	font-weight: bold;
+  }
+
+  .suggested-by {
+	padding-left: 0;
+  }
+
+  .twitter-typeahead {
+	display: block !important;
+	.tt-dropdown-menu {
+	  background-color: #fff;
+	  padding: 5px;
+	  border: 1px solid #eee;
+	  border-radius: 3px;
+	  .tt-suggestions {
+
+		.tt-suggestion {
+		  cursor: pointer;
+		  padding: 0 5px;
+		  line-height: 2em;
+		  &:hover {
+			background-color: @brand-primary;
+			color: white;
+		  }
+		  font-weight: normal;
+		  strong {
+			color: @brand-info;
+		  }
+
+		}
+
+		.tt-cursor {
+		  background-color : @brand-info;
+		  color: @gray-lighter;
+
+		  strong {
+			color : #fff;
+		  }
+		}
+
+	  }
+	}
+  }
+
+  .advice {
+	p {
+	  color: @gray-light;
+	  font-size: 90%;
+	  margin-right: 10px;
+	}
+  }
+
+  .suggester {
+	div {
+	  display: inline-block;
+	}
+
+	.suggested-by {
+	  margin-right: 10px;
+	}
+  }
+
+  .header-align {
+	margin-top: 15px;
+  }
+
+}
+
+.validation-float {
+
+  -webkit-box-shadow: -3px 4px 8px 0px rgba(100, 100, 100, 0.75);
+  -moz-box-shadow: -3px 4px 8px 0px rgba(100, 100, 100, 0.75);
+  box-shadow: -3px 4px 8px 0px rgba(100, 100, 100, 0.75);
+  width: 30em;
+  z-index: 1000;
+  background-color: #fff;
+  position: fixed;
+  right: 0;
+  padding: 10px;
+  top: 70px;
+
+  &.affix {
+	top: 70px;
+
+  }
+  .validation-errors {
+	padding-left: 0;
+	margin-bottom: 0;
+
+	li {
+	  list-style-type: none;
+	  margin: 0 0 5px 0;
+	  padding: 5px;
+
+	  &:last-child {
+		margin: 0;
+	  }
+	}
+  }
+}
+

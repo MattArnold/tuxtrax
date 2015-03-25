@@ -9,6 +9,13 @@ First, an event submission/feedback website. Later there will be a site to assig
 
 ## Installation
 
+### Basic prerequisites
+
+```sh
+$ sudo apt-get install git python python-dev libpq-dev python-pip curl
+$ sudo pip install virtualenv
+```
+
 Clone the repository and create/activate a new virtualenv.
 
 ```sh
@@ -27,59 +34,141 @@ $ pip install -r requirements.txt
 Now you can run the app locally with:
 
 ```sh
-$ python penguicontrax.py
+$ python runserver.py
 ```
 
-## Design Notes
+### Optional: Deploy to Heroku
 
-An important schema design element is the distinction between actual events and merely requests for events. See the milestone "Site Moves Event Requests Through Statuses" for more details.
+You will need to be added as a collaborator on the Heroku app to be able to push public changes. 
 
-## User Stories
+Install the Heroku toolbelt
 
-*001*: A form to submit an event suggestion. A message at the top reads “this form doesn’t work yet”. -DONE
+```sh
+$ wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+```
 
-*002*: Now the form saves to a database. The message now reads “we’re going to make these form results publicly visible soon.” - DONE (Although it's just hacked together with a PHP script.)
+You will need to add your SSH key to the Heroku website. Copy the contents of ~/.ssh/id_rsa.pub to the SSH Keys section of https://dashboard.heroku.com/account. If you don't have an SSH key, you can generate one with:
 
-*003*: A public-facing webpage lists every entry in the database. At the top of the page is the headline “Penguicon Events Suggested So Far!” Next to that is “Suggest An Event” with a link to the form. For now, just manually put the database on the page. -DONE
- 
-*004*: When the form is filled out, add the new entry immediately and automatically to the public-facing page. -DONE
+```sh
+$ ssh-keygen -t rsa
+```
 
-*005*: Create a database of users that uses OpenID. -DONE
+Log in to Heroku
 
-*006*: Add OpenID login buttons to the top of the page through Google and Facebook. -DONE, need to add Facebook
+```sh
+$ heroku login
+```
 
-*007*: Add a third OpenID provider that is not evil. -DONE, Yahoo?
+The mainline development Heroku app is `gentle-tor-1515`. Add Heroku as a remote to your repo.
 
-*008*: in the database of users, make a field for "User Type". Each user is either "staff" or "attendee". Manually confirm which specific OpenIDs are staff and add that status. - DONE
+```sh
+$ heroku git:remote -a HEROKU_APP
+```
 
-*009*: Add a "followed up" button on each entry that the concom can see. When they follow up, they should go to this page and click that button. -DONE (for ease of implementation the different states are just a drop down on the event form)
+Set the secret environment variables. After each equal sign should be the appropriate values.
 
-*010*: When a concom clicks "followed up" on an event, it now shows up as yellow. Put a line at the top of the page saying "If an event is yellow, the programming team has contacted the presenter." 
+```sh
+$ heroku config:set SESSION_SECRET_KEY=
+$ heroku config:set TWITTER_KEY=
+$ heroku config:set TWITTER_SECRET_KEY=
+$ heroku config:set FACEBOOK_APP_ID=
+$ heroku config:set FACEBOOK_SECRET=
+$ heroku config:set PUBLIC_URL=
+```
 
-*011*: Add a "confirmed" button on each entry that the concom can see. The "confirmed" button is only there if the "followed up" button was already clicked. 
+To deploy, pull and push to Heroku
 
-*012*: When a concom clicks "confirmed" on an event, it now shows up as purple. Put a line at the top of the page saying "Purple events are confirmed." 
+```sh
+$ git pull heroku master
+$ git push heroku master
+```
 
-*013*: To reject an event, when the concom clicks "hide" on an event, it is no longer displayed on the page.
+If you've changed the database schema you will need to empty the databse and reset the web app.
 
-*014*: Hidden events are now displayed on a separate page with a link from the main page. Their color changes to red when hidden. This page starts with "We regret that for various reasons, we can’t use these event suggestions this year. Maybe next year! Also, some of them may be here in error, in which case bear with us while we fix it."
+```sh
+$ heroku pg:reset DATABASE
+$ heroku restart
+```
 
-*015*: Add a "Oops, unhide" button on each entry on the page of rejected events. Only the concom can see the button. It puts the event back on the main page. 
+### Optional: Set up a redis cache to improve performance
 
-*016*: Give each OpenID user five RSVP "points".
+With large data sets certain pages (like the main submission page) can take several SQL queries to generate (and thus the user may notice significant lag). The app will automatically cache the results of some of these queries if a [redis](http://redis.io/) server is connected. To attach a redis server, set `REDISTOGO_URL` in the environment variables of the server. If deploying to Heroku, a free redis server can be added by running
 
-*017*: Create an RSVP button on each event, visible to all users. When they click it, the event index number is added to their user entry in the user database, and their points are reduced by 1. A message at the top of the page reads "Choose up to 5 events. Click RSVP to indicate your interest in attending."
+```sh
+$ heroku addons:add redistogo
+``` 
 
-*018*: Display a number on each event showing how many people are interested in attending. (Yes, events on the rejected page also show this number.)
+### Optional: Use PostgreSQL instead of SQLite
 
-*019*: Create a tiny pencil icon button on each individual field event. This transforms it into a textarea containing all the content of that field. However, this only saves a new field to that entry, called a proofread, showing the suggested edit.
+penguicon-trax is deployed on Heroku, a cloud application platform. Heroku uses PostgreSQL as its database engine. By default, penguicon-trax uses SQLite as its database engine when running locally. For the most part this is all well and good but there are some subtle differences between the two engines. If you're having problems when deployed to Heroku, you can run a local PostgreSQL server and have penguicon-trax connect to it to better simulate the production environment.
 
-*020*: When a user clicks on an event, it expands to show all the suggested proofreads.
+First, install PostgreSQL:
 
-*021*: In that list of proofreads, each proofread shows which user made it.
+```sh
+$ sudo apt-get install postgresql postgresql-contrib
+```
 
-*022*: Each proofread has a button visible to concom members, which when pushed, causes it to switch places with the original contents of that field. For instance, if there was a mis-spelled event title, and someone made a proofread correcting the mis-spelling, the proofreader’s text is now the official title, and the misspelling is now just another one of the proofreads. The reason this does not just delete the mis-spelled original is that people make mistakes and may want to reverse the mistake.
+Set the password for the postgres database role
+```sh
+$ sudo -u postgres psql postgres
+postgres=# \password postgres
+Enter new password:
+Enter it again:
+postgres=# \q
+```
 
-*023*: On each proofread, where it lists the name of the user who made it, you can click the name and it will take you to a profile page. This lists all the events this user has RSVP’ed to and all the proofreads they have made.
+Create a database for penguicon-trax
 
-*024*: For each proofread of theirs which was accepted, the user gets one more RSVP point. 
+```sh
+$ sudo -u postgres createdb penguicontrax
+```
+
+penguicon-trax relies on the DATABASE_URL environment variable to tell it what database engine to use. Heroku supplies this to the app; if it is empty the app switches to SQLite. We can write a script to provide the app with a DATABASE_URL that will point to our local PostgreSQL database. Create a file named psql_runserver.sh with the following contents:
+
+```sh
+#!/bin/bash
+export DATABASE_URL=postgresql://postgres:<password>@localhost/penguicontrax
+python runserver.py
+```
+
+You will need to replace <password> with the PostgreSQL password you previously set. Now, make the script executable and run it to use penguicon-trax with PostgreSQL!
+
+```sh
+$ chmod +x psql_runserver.sh
+$ ./psql_runserver.sh
+```
+
+### Optional: Set up notification e-mails
+
+penguicontrax will automatically e-mail submitters of events as their submissions move through the accept/reject process; for this to work you will need to configure an e-mail account on a SMTP server that the app can use. Set the following environment variables to their appropriate values.
+
+```sh
+$ heroku config:set MAIL_ENABLE=True
+$ herkou config:set MAIL_SERVER=
+$ herkou config:set MAIL_PORT=
+$ herkou config:set MAIL_USE_TLS=
+$ herkou config:set MAIL_USE_SSL=
+$ herkou config:set MAIL_USERNAME=
+$ herkou config:set MAIL_PASSWORD=
+$ herkou config:set DEFAULT_MAIL_SENDER=
+$ heroku config:set ORGANIZATION=
+$ heroku config:set DEFAULT_MAIL_SENDER=
+$ heroku config:set MAIL_REPLY_TO=
+```
+
+### Optional: Set up auto scheduler
+
+One feature of penguicontrax is an auto scheduler for conventions: the app will automatically schedule presenations in rooms so that presenters don't conflict, and it also will minimize the number of RSVP conflicts. This optimization is [NP-Hard](http://en.wikipedia.org/wiki/NP-hard), and to solve it the app generates a [linear programming](http://en.wikipedia.org/wiki/Linear_programming) model and then uses one of the freely available linear programming solvers such as [clp](http://www.coin-or.org/projects/Clp.xml), [cbc](http://www.coin-or.org/projects/Cbc.xml), or [glpk](http://www.gnu.org/software/glpk/) to solve it. Depending on the size of the convention this may a computationally intensive task. To make the scheduler faster, the app uses highly optimized C++ to create the model file. Also, the solvers themselves are native applications. Both must be built on the target machine.
+
+The native code to be built has two portions: modeler, the C++ program that reads the app's SQL database and generates a .lp file, and the actual solver. modeler relies on [soci](http://soci.sourceforge.net/) for database access. Building soci requires [cmake](http://www.cmake.org/) and [sqlite3](https://sqlite.org/), and since we cannot be sure that these packages will be available on the target machine (they are not on Heroku, for example) we will need to build everything from source. However, this is accomplished easily. From the root of the project:
+
+```sh
+$ modeler/makemodeler.sh
+```
+
+The `makemodeler.sh` script will download the source for the prerequisite packages and build everything. Once the build is finished you can confirm that the modeler works by running the following script:
+
+```sh
+$ modeler/runmodeler.sh
+```
+If you see a message along the lines `No database supplied` then the build succeeded.

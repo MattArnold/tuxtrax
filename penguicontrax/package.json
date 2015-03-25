@@ -1,0 +1,27 @@
+{
+  "name": "penguicontrax",
+  "version": "0.0.1",
+  "description": "Penguion Tentative Requested Activity Xperiment",
+  "main": "Gruntfile.js",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-less": "~0.11.0",
+    "grunt-contrib-watch": "~0.5.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MattArnold/penguicontrax"
+  },
+  "keywords": [
+    "penguicon"
+  ],
+  "author": "Penguicamp Horde",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MattArnold/penguicontrax/issues"
+  },
+  "homepage": "https://github.com/MattArnold/penguicontrax"
+}

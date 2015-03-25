@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}User list{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block body %}
+<h3>Users and Presenters</h3>
+
+<p>There are {{ blank_presenter_count }} presenter rows without names.</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Staff?</th>
+            <th>Superuser?</th>
+            <th>WouldAttends</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for info in info_list %}
+            {# info is of the form (is_user, person), where person is either a user or a presenter object #}
+            <tr>
+                <td>
+                    {% if info.0 %}
+                        <a class="userlink" href="/{{ info.1.account_name }}">
+                            {{ info.1.name }}
+                            {% if info.1.special_tag is not none %} <span class="label label-primary">{{ info.1.special_tag }}</span>{% endif %}
+                        </a>
+                        {% if info.1.openid and 'google.com' in info.1.openid %}
+                            {{ macros.google_icon() }}
+                        {% elif info.1.openid and 'twitter.com' in info.1.openid %}
+                            <i class="fa fa-twitter-square"></i>
+                        {% elif info.1.openid and 'yahoo.com' in info.1.openid %}
+                            {{ macros.yahoo_icon() }}
+                        {% elif info.1.fbid %}
+                            <i class="fa fa-facebook-square"></i>
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
+                    {% else %}
+                        {{ info.1.name }}
+                    {% endif %}
+                </td>
+                <td>{{ info.1.email }}</td>
+                <td>
+                    {% if info.1.phone %}
+                        {{ info.1.phone }}
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+                </td>
+                <td>
+                    {% if info.1.staff %}
+                        Staff
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+                </td>
+                <td>
+                    {% if info.1.superuser %}
+                        Superuser
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+                </td>
+                <td>{{ info.1.points }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

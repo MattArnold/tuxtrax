@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Logs{% endblock %}
+{% block head %}{{ super() }}{% endblock %}
+{% block body %}
+<div class="row">
+	<div class="col-md-2">User</div>
+	<div class="col-md-2">Time</div>
+	<div class="col-md-8">Action</div>
+</div>
+{% for log in logs %}
+	<div class="row">
+		<div class="col-md-2">{{ macros.user_link(log.user) }}</div>
+		<div class="col-md-2">{{ log.time }}</div>
+		<div class="col-md-8">{% autoescape false %}{{ log.log }}{% endautoescape %}</div>
+	</div>
+{% endfor %}
+{% endblock %}

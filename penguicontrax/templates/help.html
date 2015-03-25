@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block body %}
+    {{ super() }}
+    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" >
+      <img src="/static/images/trax-tux.svg" />
+      <br/><br/>
+    </div>
+
+    <div class="col-md-8">
+      <div>
+        <ul>
+          <li><a href="#contact">I'd like to report a bug, ask a question, or give feedback.</a></li>
+          <li><a href="#whatdoesitdo">What does Tuxtrax do?</a></li>
+          <li><a href="#nologin">I don't like making new accounts on websites. Can I just use my existing
+          accounts from other sites?</a></li>
+          <li><a href="#whatisawouldattend">Each event has a button that looks like a thumbs-up. <i class="fa fa-thumbs-up"></i> What's it for?</a></li>
+          <li><a href="#numwouldattends">Each listing has a blue badge with a number. <span class=
+          "label label-info">0</span> What does it mean?</a></li>
+          <li><a href="#numdays">Some listings have a grey badge with a number, and a clock symbol.
+          <span class="label label-default">1 <i class="fa fa-clock-o"></i></span> What does it mean?</a></li>
+          <li><a href="#approvedyet">Is my event suggestion approved yet?</a></li>
+          <li><a href="#seedeclined">Can I see events that were declined?</a></li>
+          <li><a href="#howmany">How many events did I submit? I don't remember. There were a lot. I might
+          have overbooked myself.</a></li>
+          <li><a href="#other">Am I scheduled to run an event too early or late in the day? Is my itinerary
+          spread out so I have time to rest and eat? Do my events qualify me for a reduced
+          registration rate or other rewards?</a></li>
+          <li><a href="#whyfive">Why do I only get to spend 5 Wouldattends?</a></li>
+          <li><a href="#whytuxtrax">Why did Penguicon make its own scheduling software?</a></li>
+        </ul>
+
+        <h4 id="contact"><i class="fa fa-envelope"></i> <a href=
+        "mailto:matt.mattarn+traxfeedback@gmail.com?Subject=Feedback%20About%20Penguicon-TRAX">
+        I'd like to report a bug, ask a question, or give feedback.</a></h4>
+
+        <h4 id="contact">Q. What does Tuxtrax do?</h4>
+
+        <div class="col-md-1">
+          A.
+        </div>
+
+        <div class="col-md-11">
+          <blockquote>
+          <p>You can use this site to suggest events to happen at <a href=
+          "http://penguicon.org">Penguicon</a>, a convention of science fiction, open
+          source software, and all nerd interests.</p>
+
+          <p>Tuxtrax makes it easy for staff members to delegate and help each other follow
+          up with you, because it tracks how long your suggestion has gone without a
+          follow-up. It also shows which events are approved and declined.</p>
+
+          <p>You can indicate up to five events that you "Wouldattend", and the site will
+          try to avoid scheduling them at the same time! (No guarantees!)</p>
+
+          <p><small>(Also see <a href="#existing">Why did Penguicon make its own scheduling
+          software?</a>)</small></p>
+          </blockquote>
+        </div>
+
+        <h4 id="nologin">Q. I don't like making new accounts on websites. Can I just use my existing
+        accounts from other sites?</h4>
+
+        <div class="col-md-1">
+          A.
+        </div>
+
+        <div class="col-md-11">
+          <blockquote>
+            <p>Yes. At the top of the page, you can log in with your existing Google, Facebook,
+          Twitter, or Yahoo account.</p>
+          </blockquote>
+        </div>
+
+        <h4 id="whatisawouldattend">Q. Each event has a button that looks like a thumbs-up. <i class="fa fa-thumbs-up"></i> What's it for?</h4>
+
+        <div class="col-md-1">
+          A.
+        </div>
+
+        <div class="col-md-11">
+          <blockquote>
+            <p>If an event is important to you, log in and click its <i class="fa fa-thumbs-up"></i> button to indicate this
+          is an event you Wouldattend. Our scheduling system will see all the events you Wouldattend, and will try (as much as possible) to avoid scheduling them at the same time.</p>
+          <p>If you're logged in, at the top of the main page you'll see this:</p>
+          <p style=
+          "padding: .5em; background-color: #eee;"><span id="totalRsvpPoints">5</span> <i 
+          class="fa fa-thumbs-up rsvp" style="color:#e3cf7a"></i> "Would-attends" left</p>
+          <p>The number will decrease each time you Wouldattend something, until you can't Wouldattend any more.</p>
+          <p><small>Also see <a href="#whyfive">Why do I only get to spend 5 Wouldattends?</a></small></p>
+          </blockquote>
+        </div>
+
+        <h4 id="numwouldattends">Q. Each listing has a blue badge with a number. <span class=
+        "label label-info">0</span> What does it mean?</h4>
+
+        <div class="col-md-1">
+          A.
+        </div>
+
+        <div class="col-md-11">
+          <blockquote>
+          <p>That's how many users indicated this is an event they Wouldattend.</p>
+          </blockquote>
+        </div>
+
+        <h4 id="numdays">Q. Some listings have a grey badge with a number, and a clock symbol.
+        <span class="label label-default">1 <i class="fa fa-clock-o"></i></span> What does it mean?</h4>
+
+        <div class="col-md-1">
+          A.
+        </div>
+
+        <div class="col-md-11">
+          <blockquote>
+          <p>That's the number of days since the event was added to the site. It goes away
+          when a staff member indicates they have followed up with the person who suggested
+          this event, and with the suggested program participants. It turns orange
+          <span class="label label-warning">15 <i class="fa fa-warning"></i></span> if this 
+          takes more than two weeks.</p>
+          </blockquote>
+        </div>
+
+        <h4 id="approvedyet">Q. Is my event suggestion approved yet?</h4>
+
+        <div class="col-md-1">
+          A.
+        </div>
+
+        <div class="col-md-11">
+          <blockquote>
+          <p>At the top of the list on the main page is a legend that shows color codes. When 
+              an event has a background color, that indicates whether that event awaiting 
+              followup, followed up, accepted, or rejected. You'll get an email from 
+              Penguicon when this happens.</p>
+          </blockquote>
+        </div>
+
+        <h4 id="seedeclined">Q. Can I see events that were declined?</h4>
+
+        <div class="col-md-1">
+          A.
+        </div>
+
+        <div class="col-md-11">
+          <blockquote>
+          <p>Yes. <a href="/hidden">Here's the page for it.</a> We regret that for various
+          reasons, we can&rsquo;t use those event suggestions this year. Maybe next year!
+          Also, some of them may be on that page in error, in which case please contact us,
+          and bear with us while we fix it.</p>
+          </blockquote>
+        </div>
+
+        <h4 id="howmany">Q. How many events did I submit? I don't remember. There were a lot. I might
+        have overbooked myself.</h4>
+
+        <div class="col-md-1">
+          A.
+        </div>
+
+        <div class="col-md-11">
+          <blockquote>
+          <p>When you log in, click on your own name to see your user page. It will list of
+          all events you are attached to. You can also get there by typing your username
+          after the end of this site's URL, in your web browser.</p>
+
+          <p>You can also search for your username in the search box above the listing on
+          the main page.</p>
+          </blockquote>
+        </div>
+
+        <h4 id="other">Q. Am I scheduled to run an event too early or late in the day? Is my itinerary
+        spread out so I have time to rest and eat? Do my events qualify me for a reduced
+        registration rate or other rewards?</h4>
+
+        <div class="col-md-1">
+          A.
+        </div>
+
+        <div class="col-md-11">
+          <blockquote>
+          <p>This website does not yet track or show that information. Until it does,
+          please continue to contact the head of your track, the person who contacted you
+          from Penguicon, or <a href="mailto:programming@penguicon.org">the head of
+          programming</a>.</p>
+          </blockquote>
+        </div>
+
+        <h4 id="whyfive">Q. Why do I only get to spend 5 Wouldattends? <span style=
+          "padding: .5em; background-color: #eee;"><span id="totalRsvpPoints">5</span> <i 
+          class="fa fa-thumbs-up rsvp" style="color:#e3cf7a"></i> "Would-attends" left</span>
+        </h4>
+
+        <div class="col-md-1">
+          A.
+        </div>
+
+        <div class="col-md-11">
+          <blockquote>
+          <p><small>Also see <a href="whatisawouldattend">Each event has a button that looks like 
+            a thumbs-up. <i class="fa fa-thumbs-up"></i> What's it for?</a></small></p>
+
+          <p>We limit Wouldattends because they influence our schedule. Our algorithm tries
+          as hard as it can to prevent the events you Wouldattend from being in the same
+          timeslot. Currently, it takes days or weeks for a computer to run the process. A
+          person who Wouldattend everything is no different from having no preferences at
+          all-- and would burden the system.</p>
+
+          <p>Eventually you'll be able to make an itinerary, and that will be unlimited. In
+          your itinerary, you can even pretend you have a time turner and clone yourself in
+          multiple places at once. But that feature will only be available after everything
+          is put into a time slot.</p>
+
+          <p>So why shall Wouldattends be four, neither shall it be six? (And seven is
+          right out?)</p>
+
+          <p>There are only forty-eight timeslots from 4PM Friday until 4PM Sunday. A human
+          being who needs sleep might attend sixteen-- that's four on Friday, eight on
+          Saturday, and four on Sunday, and then when would you eat? Realistically, a
+          marathon Penguicon attendee (such as yourself) will attend ten events. The
+          majority will attend eight or fewer.</p>
+
+          <p>There will probably only be five which you will remember for years to
+          come.</p>
+
+          <p>For most events, if they overlap and you have to miss one, that's no big deal.
+          However, there are some really special events which, if I miss one because
+          they're scheduled at the same time, I would gnash my teeth, rend my raiments, and
+          cry unto the heavens. The five Wouldattends represent those true gems. Our
+          algorithm should only try to protect those for you.</p>
+
+          <p>Version 2.0 of the site will allow anyone to work for Penguicon by
+          proofreading. If those proofreads are accepted by staff users, the system will
+          award the proofreader with more Wouldattends! The Conchair would also have power
+          to reward anyone with Wouldattends for doing something special for the
+          convention.</p>
+          </blockquote>
+        </div>
+
+        <h4 id="whytuxtrax">Q. Why did Penguicon make its own scheduling software?</h4>
+
+        <div class="col-md-1">
+          A.
+        </div>
+
+        <div class="col-md-11">
+          <blockquote>
+          <p>It's difficult to find scheduling systems that support our needs. Penguicon's
+          schedule is managed by multiple staff, because it's multiple conventions in one.
+          Our suggestion form is different if you're running a board game, performing a
+          concert, or leading a workshop. We also needed to integrate our event suggestion
+          system with the system that algorithmically turns events into a schedule free of
+          conflicts.</p>
+
+          <p>For years, Penguicon planned the schedule using two systems, and kept them in
+          sync manually. In a spreadsheet, we represented rooms as columns, and times as
+          rows, so we could catch conflicts. But it didn't store the event description, the
+          topics, whether or not it is "just an idea"/"probably happening"/"confirmed", and
+          other important data. We used a database to store and present a schedule with all
+          the details associated with each event. But the databases we have used could not
+          catch conflicts in which two events are scheduled in the same room at the same
+          time, or a presenter in two places at one time, or duplicated events or
+          presenters. Tuxtrax stores all the data we use, and also alerts us to conflicts,
+          instead of duplicating the data in two systems.</p>
+
+          <p>It takes a lot of work to format a schedule into a printable schedule book.
+          All too often, no proofreading is done until we see a PDF of the book. That means
+          the desktop publishing person receives a corrected version of the schedule (or
+          worse, receives a list of individual edits and has to edit them by hand) and has
+          to re-do a lot of work. During the months before the publishing deadline, the
+          proofreading should be done online. Eventually Tuxtrax will allow this. The
+          public will be able to see the work in progress and suggest edits. The Penguicon
+          staff will be able to click "approve" to accept each edit.</p>
+
+          <p>It's great to show our work to the public while it happens, to maintain
+          excitement throughout the year.</p>
+          </blockquote>
+        </div>
+
+        <div>
+          &nbsp;
+        </div>
+      </div>
+{% endblock %}html
