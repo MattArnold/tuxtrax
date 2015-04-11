@@ -293,6 +293,30 @@ $(function () {
                 test: function () {
                     return $("[name='tag']:checkbox:checked").length;
                 }
+            },
+            {
+                name: 'presenter',
+                copy: '<a href="#presenters">Please</a> enter a name for the presenter.',
+                group: '#presenters',
+                test: function () {
+                    return $("input[name='presenter']").filter(function(index) { return !this.value; }).length === 0;
+                }
+            },
+            {
+                name: 'email',
+                copy: '<a href="#presenters">Please</a> enter an email address for the presenter.',
+                group: '#emails',
+                test: function () {
+                    return $("input[name='email']").filter(function(index) { return !this.value; }).length === 0;
+                }
+            },
+            {
+                name: 'phone',
+                copy: '<a href="#presenters">Please</a> enter a phone number for the presenter.',
+                group: '#phones',
+                test: function () {
+                    return $("input[name='phone']").filter(function(index) { return !this.value; }).length === 0;
+                }
             }
         ];
 
